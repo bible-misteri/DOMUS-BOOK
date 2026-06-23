@@ -1,4 +1,4 @@
-name: Build DOMUS Professional PDF
+name: DOMUS Professional Publisher
 
 on:
   push:
@@ -20,14 +20,19 @@ jobs:
       - name: Create output folder
         run: mkdir -p output
 
-      - name: Build PDF from all chapters
+      - name: Build Professional PDF
         run: |
-          pandoc $(find chapters -name "*.md" | sort) \
-            -o output/DOMUS.pdf \
-            --pdf-engine=xelatex
+          pandoc chapters/*.md \
+            --toc \
+            --number-sections \
+            --pdf-engine=xelatex \
+            -V geometry:margin=2.5cm \
+            -V documentclass=report \
+            -V fontsize=12pt \
+            -o output/DOMUS.pdf
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          name: DOMUS-PDF
+          name: DOMUS-PRO-PDF
           path: output/DOMUS.pdf
