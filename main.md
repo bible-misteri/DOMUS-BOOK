@@ -13,6 +13,6 @@ Buku ini dibangun menggunakan:
 
 ---
 
-# Bab 1
+# BAB 1
 
-Lihat isi bab pada folder chapters.
+!include chapters/01-bab1.md
