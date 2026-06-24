@@ -49,7 +49,17 @@ jobs:
       # =========================
       # 📚 BUILD BOOK 2
       # =========================
+      - name: Check Book 2
+        id: book2
+        run: |
+          if [ -f books/DOMUS-Book-2/00-prolog.md ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build DOMUS Book 2
+        if: steps.book2.outputs.exists == 'true'
         run: |
           pandoc \
             books/DOMUS-Book-2/00-prolog.md \
@@ -67,7 +77,6 @@ jobs:
             books/DOMUS-Book-2/01-pendahuluan.md \
             books/DOMUS-Book-2/chapters/*.md \
             -o output/DOMUS-Book-2.epub
-
       # =========================
       # 📚 AUTO LIBRARY INDEX
       # =========================
