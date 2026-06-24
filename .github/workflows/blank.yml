@@ -11,138 +11,77 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-steps:
 
-  - name: Checkout Repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-  - name: Install Pandoc + XeLaTeX
-    run: |
-      sudo apt-get update
-      sudo apt-get install -y \
-        pandoc \
-        texlive-xetex \
-        texlive-latex-extra \
-        jq
+      - name: Install Pandoc + XeLaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pandoc \
+            texlive-xetex \
+            texlive-latex-extra \
+            jq
 
-  - name: Create Folders
-    run: |
-      mkdir -p output
-      mkdir -p release
+      - name: Create Folders
+        run: |
+          mkdir -p output
+          mkdir -p release
 
-  - name: Discover Books
-    run: |
-      mkdir -p output
+      - name: Build Books
+        run: |
+          echo '{ "books": [' > library.json
+          FIRST=true
 
-      echo '{ "books": [' > library.json
+          for BOOK in books/DOMUS-Book-*; do
+            [ -d "$BOOK" ] || continue
 
-      FIRST=true
+            NAME=$(basename "$BOOK")
 
-      for BOOK in books/DOMUS-Book-*; do
+            echo "Building $NAME"
 
-        if [ ! -d "$BOOK" ]; then
-          continue
-        fi
+            pandoc \
+              "$BOOK/00-prolog.md" \
+              "$BOOK/01-pendahuluan.md" \
+              "$BOOK"/chapters/*.md \
+              --toc \
+              --number-sections \
+              --pdf-engine=xelatex \
+              -V geometry:margin=2.5cm \
+              -V documentclass=report \
+              -o "output/$NAME.pdf"
 
-        NAME=$(basename "$BOOK")
+            pandoc \
+              "$BOOK/00-prolog.md" \
+              "$BOOK/01-pendahuluan.md" \
+              "$BOOK"/chapters/*.md \
+              -o "output/$NAME.epub"
 
-        echo "Building $NAME"
+            if [ "$FIRST" = false ]; then
+              echo "," >> library.json
+            fi
+            FIRST=false
 
-        pandoc \
-          "$BOOK/00-prolog.md" \
-          "$BOOK/01-pendahuluan.md" \
-          "$BOOK"/chapters/*.md \
-          --toc \
-          --number-sections \
-          --pdf-engine=xelatex \
-          -V geometry:margin=2.5cm \
-          -V documentclass=report \
-          -o "output/$NAME.pdf"
+            echo "{
+              \"title\": \"$NAME\",
+              \"pdf\": \"output/$NAME.pdf\",
+              \"epub\": \"output/$NAME.epub\"
+            }" >> library.json
 
-        pandoc \
-          "$BOOK/00-prolog.md" \
-          "$BOOK/01-pendahuluan.md" \
-          "$BOOK"/chapters/*.md \
-          -o "output/$NAME.epub"
+          done
 
-        if [ "$FIRST" = true ]; then
-          FIRST=false
-        else
-          echo "," >> library.json
-        fi
+          echo ']}' >> library.json
 
-        echo "{
-          \"title\":\"$NAME\",
-          \"pdf\":\"release/$NAME.pdf\",
-          \"epub\":\"release/$NAME.epub\"
-        }" >> library.json
-
-      done
-
-      echo ']}' >> library.json
-
-  - name: Create Release
-    uses: softprops/action-gh-release@v2
-    with:
-      tag_name: domus-library
-      name: DOMUS Digital Library
-      files: |
-        output/*.pdf
-        output/*.epub
-        library.json
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            "books": [
-              {
-                "title": "DOMUS Book 1",
-                "pdf": "release/DOMUS-Book-1.pdf",
-                "epub": "release/DOMUS-Book-1.epub"
-              },
-              {
-                "title": "DOMUS Book 2",
-                "pdf": "release/DOMUS-Book-2.pdf",
-                "epub": "release/DOMUS-Book-2.epub"
-              }
-            ]
-          }' > library.json
-
-      # =========================
-      # 📦 RELEASE BOOK 1
-      # =========================
-      - name: Release Book 1
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0-book1
-          name: DOMUS Book 1
+          tag_name: domus-library
+          name: DOMUS Digital Library
           files: |
-            output/DOMUS-Book-1.pdf
-            output/DOMUS-Book-1.epub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # =========================
-      # 📦 RELEASE BOOK 2
-      # =========================
-      - name: Release Book 2
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v1.0.0-book2
-          name: DOMUS Book 2
-          files: |
-            output/DOMUS-Book-2.pdf
-            output/DOMUS-Book-2.epub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # =========================
-      # 📚 UPLOAD LIBRARY INDEX
-      # =========================
-      - name: Upload Library Index
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: library-index
-          name: DOMUS Library Index
-          files: library.json
+            output/*.pdf
+            output/*.epub
+            library.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
