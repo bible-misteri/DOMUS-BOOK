@@ -1,5 +1,5 @@
 # 0.0 PROLOG PREMIUM 
-
+PROLOG TEST 123456789
 Dunia Sebelum Dunia 
 
 Kejadian 1:1–2:3 sebagai Gerbang Rumah Ishak 
