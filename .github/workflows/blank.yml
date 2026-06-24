@@ -30,6 +30,14 @@ jobs:
           rm -rf output library.json
           mkdir -p output
 
+      - name: Show Repository Structure
+        run: |
+          echo "===== ROOT ====="
+          ls -lah
+          echo ""
+          echo "===== BOOKS ====="
+          find books -type f | sort
+
       - name: Build Books Safely
         run: |
           echo '{ "books": [' > library.json
