@@ -1,38 +1,41 @@
 name: DOMUS Professional Publisher
 
 on:
-  push:
-    branches: [ "main" ]
+push:
+branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+steps:
+  - name: Checkout repo
+    uses: actions/checkout@v4
 
-      - name: Install Pandoc & LaTeX
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra
+  - name: Install Pandoc & LaTeX
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra
 
-      - name: Create output folder
-        run: mkdir -p output
+  - name: Create output folder
+    run: mkdir -p output
 
-      - name: Build Professional PDF
-        run: |
-          pandoc chapters/*.md \
-            --toc \
-            --number-sections \
-            --pdf-engine=xelatex \
-            -V geometry:margin=2.5cm \
-            -V documentclass=report \
-            -V fontsize=12pt \
-            -o output/DOMUS.pdf
+  - name: Build Professional PDF
+    run: |
+      pandoc \
+        00-prolog.md \
+        01-pendahuluan.md \
+        chapters/*.md \
+        --toc \
+        --number-sections \
+        --pdf-engine=xelatex \
+        -V geometry:margin=2.5cm \
+        -V documentclass=report \
+        -V fontsize=12pt \
+        -o output/DOMUS.pdf
 
-      - name: Upload PDF artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: DOMUS-PRO-PDF
-          path: output/DOMUS.pdf
+  - name: Upload PDF artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: DOMUS-PRO-PDF
+      path: output/DOMUS.pdf
