@@ -1,4 +1,4 @@
-PROLOG PREMIUM 
+# 0.0 PROLOG PREMIUM 
 
 Dunia Sebelum Dunia 
 
