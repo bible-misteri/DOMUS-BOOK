@@ -28,19 +28,11 @@ jobs:
       # 📚 BUILD BOOK 1
       # =========================
       - name: Build DOMUS Book 1
-  run: |
-    mkdir -p output
-
-    pandoc \
-      00-prolog.md \
-      01-pendahuluan.md \
-      chapters/*.md \
-      --toc \
-      --number-sections \
-      --pdf-engine=xelatex \
-      -V geometry:margin=2.5cm \
-      -V documentclass=report \
-      -o output/DOMUS-Book-1.pdf
+        run: |
+          pandoc \
+            00-prolog.md \
+            01-pendahuluan.md \
+            chapters/*.md \
             --toc \
             --number-sections \
             --pdf-engine=xelatex \
@@ -49,9 +41,9 @@ jobs:
             -o output/DOMUS-Book-1.pdf
 
           pandoc \
-            books/DOMUS-Book-1/00-prolog.md \
-            books/DOMUS-Book-1/01-pendahuluan.md \
-            books/DOMUS-Book-1/chapters/*.md \
+            00-prolog.md \
+            01-pendahuluan.md \
+            chapters/*.md \
             -o output/DOMUS-Book-1.epub
 
       # =========================
