@@ -19,18 +19,39 @@ jobs:
       - name: Install Pandoc + XeLaTeX
         run: |
           sudo apt-get update
+name: DOMUS Multi-Book Publisher v6 (Stable)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Pandoc + LaTeX
+        run: |
+          sudo apt-get update
           sudo apt-get install -y \
             pandoc \
             texlive-xetex \
             texlive-latex-extra \
             jq
 
-      - name: Create Folders
+      - name: Prepare Output
         run: |
+          rm -rf output library.json
           mkdir -p output
-          mkdir -p release
 
-      - name: Build Books
+      - name: Build Books Safely
         run: |
           echo '{ "books": [' > library.json
           FIRST=true
@@ -39,26 +60,54 @@ jobs:
             [ -d "$BOOK" ] || continue
 
             NAME=$(basename "$BOOK")
+            echo ""
+            echo "=============================="
+            echo "Building: $NAME"
+            echo "=============================="
 
-            echo "Building $NAME"
+            PROLOG="$BOOK/00-prolog.md"
+            INTRO="$BOOK/01-pendahuluan.md"
+            CHAPTERS="$BOOK/chapters/*.md"
 
-            pandoc \
-              "$BOOK/00-prolog.md" \
-              "$BOOK/01-pendahuluan.md" \
-              "$BOOK"/chapters/*.md \
+            # VALIDASI FILE WAJIB
+            if [ ! -f "$PROLOG" ] || [ ! -f "$INTRO" ]; then
+              echo "❌ SKIP $NAME (missing prolog/intro)"
+              continue
+            fi
+
+            if ! ls $CHAPTERS 1> /dev/null 2>&1; then
+              echo "❌ SKIP $NAME (no chapters)"
+              continue
+            fi
+
+            # BUILD PDF
+            if ! pandoc \
+              "$PROLOG" \
+              "$INTRO" \
+              $CHAPTERS \
               --toc \
               --number-sections \
               --pdf-engine=xelatex \
               -V geometry:margin=2.5cm \
               -V documentclass=report \
               -o "output/$NAME.pdf"
+            then
+              echo "❌ PDF FAILED: $NAME"
+              continue
+            fi
 
-            pandoc \
-              "$BOOK/00-prolog.md" \
-              "$BOOK/01-pendahuluan.md" \
-              "$BOOK"/chapters/*.md \
+            # BUILD EPUB
+            if ! pandoc \
+              "$PROLOG" \
+              "$INTRO" \
+              $CHAPTERS \
               -o "output/$NAME.epub"
+            then
+              echo "❌ EPUB FAILED: $NAME"
+              continue
+            fi
 
+            # ADD TO LIBRARY.JSON
             if [ "$FIRST" = false ]; then
               echo "," >> library.json
             fi
@@ -70,18 +119,31 @@ jobs:
               \"epub\": \"output/$NAME.epub\"
             }" >> library.json
 
+            echo "✔ DONE: $NAME"
           done
 
           echo ']}' >> library.json
 
-      - name: Create Release
+      - name: Validate Output (Stop Empty Release)
+        run: |
+          COUNT=$(ls output 2>/dev/null | wc -l)
+
+          echo "Generated files: $COUNT"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "❌ No output generated. Stop release."
+            exit 1
+          fi
+
+          ls -lah output
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: domus-library
-          name: DOMUS Digital Library
+          name: DOMUS Digital Library v6
           files: |
-            output/*.pdf
-            output/*.epub
+            output/**
             library.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
