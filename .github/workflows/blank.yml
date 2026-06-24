@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
       - name: Create output folder
         run: mkdir -p output
 
-      - name: Build Professional PDF
+      - name: Build PDF
         run: |
           pandoc \
             00-prolog.md \
@@ -35,6 +38,18 @@ jobs:
             -V fontsize=12pt \
             -o output/DOMUS.pdf
 
+      - name: Get version tag
+        id: tag
+        run: echo "tag=build-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release + Upload PDF
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: DOMUS PDF ${{ steps.tag.outputs.tag }}
+          files: output/DOMUS.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
