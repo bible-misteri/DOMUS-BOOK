@@ -1,4 +1,4 @@
-name: DOMUS Multi-Book Publisher v4
+name: DOMUS Multi-Book Publisher v5
 
 on:
   push:
@@ -11,78 +11,88 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+steps:
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+  - name: Checkout Repository
+    uses: actions/checkout@v4
 
-      - name: Install Pandoc & LaTeX
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra jq
+  - name: Install Pandoc + XeLaTeX
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y \
+        pandoc \
+        texlive-xetex \
+        texlive-latex-extra \
+        jq
 
-      - name: Create output folder
-        run: mkdir -p output release
+  - name: Create Folders
+    run: |
+      mkdir -p output
+      mkdir -p release
 
-      # =========================
-      # 📚 BUILD BOOK 1
-      # =========================
-      - name: Build DOMUS Book 1
-        run: |
-          pandoc \
-            00-prolog.md \
-            01-pendahuluan.md \
-            chapters/*.md \
-            --toc \
-            --number-sections \
-            --pdf-engine=xelatex \
-            -V geometry:margin=2.5cm \
-            -V documentclass=report \
-            -o output/DOMUS-Book-1.pdf
+  - name: Discover Books
+    run: |
+      mkdir -p output
 
-          pandoc \
-            00-prolog.md \
-            01-pendahuluan.md \
-            chapters/*.md \
-            -o output/DOMUS-Book-1.epub
+      echo '{ "books": [' > library.json
 
-      # =========================
-      # 📚 BUILD BOOK 2
-      # =========================
-      - name: Check Book 2
-        id: book2
-        run: |
-          if [ -f books/DOMUS-Book-2/00-prolog.md ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
+      FIRST=true
 
-      - name: Build DOMUS Book 2
-        if: steps.book2.outputs.exists == 'true'
-        run: |
-          pandoc \
-            books/DOMUS-Book-2/00-prolog.md \
-            books/DOMUS-Book-2/01-pendahuluan.md \
-            books/DOMUS-Book-2/chapters/*.md \
-            --toc \
-            --number-sections \
-            --pdf-engine=xelatex \
-            -V geometry:margin=2.5cm \
-            -V documentclass=report \
-            -o output/DOMUS-Book-2.pdf
+      for BOOK in books/DOMUS-Book-*; do
 
-          pandoc \
-            books/DOMUS-Book-2/00-prolog.md \
-            books/DOMUS-Book-2/01-pendahuluan.md \
-            books/DOMUS-Book-2/chapters/*.md \
-            -o output/DOMUS-Book-2.epub
-      # =========================
-      # 📚 AUTO LIBRARY INDEX
-      # =========================
-      - name: Generate Library Index
-        run: |
-          echo '{
+        if [ ! -d "$BOOK" ]; then
+          continue
+        fi
+
+        NAME=$(basename "$BOOK")
+
+        echo "Building $NAME"
+
+        pandoc \
+          "$BOOK/00-prolog.md" \
+          "$BOOK/01-pendahuluan.md" \
+          "$BOOK"/chapters/*.md \
+          --toc \
+          --number-sections \
+          --pdf-engine=xelatex \
+          -V geometry:margin=2.5cm \
+          -V documentclass=report \
+          -o "output/$NAME.pdf"
+
+        pandoc \
+          "$BOOK/00-prolog.md" \
+          "$BOOK/01-pendahuluan.md" \
+          "$BOOK"/chapters/*.md \
+          -o "output/$NAME.epub"
+
+        if [ "$FIRST" = true ]; then
+          FIRST=false
+        else
+          echo "," >> library.json
+        fi
+
+        echo "{
+          \"title\":\"$NAME\",
+          \"pdf\":\"release/$NAME.pdf\",
+          \"epub\":\"release/$NAME.epub\"
+        }" >> library.json
+
+      done
+
+      echo ']}' >> library.json
+
+  - name: Create Release
+    uses: softprops/action-gh-release@v2
+    with:
+      tag_name: domus-library
+      name: DOMUS Digital Library
+      files: |
+        output/*.pdf
+        output/*.epub
+        library.json
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             "books": [
               {
                 "title": "DOMUS Book 1",
