@@ -1,10 +1,16 @@
 ---
 
-title: "Teologi Dua Kesulungan"
+title: "DOMUS ISAACI"
+subtitle: "Menyingkap Allah Bapa melalui Ishak, Yakub, Esau, dan Kristus"
 author: "Norman Sandhi"
-date: ""
+date: "2026"
+rights: "© Norman Sandhi"
+cover-image: images/cover.jpg
+lang: id-ID
+toc: true
+toc-title: "Daftar Isi"
 
---- 
+\newpage
 
 # PROLOG PREMIUM 
 
@@ -84,6 +90,7 @@ Dan Rumah Ishak
 hanya bisa dipahami
 jika kita tahu dari mana dunia ini bermula.
 
+\newpage
 
 # PENGANTAR 
 
@@ -99,5 +106,5 @@ Dengan menempatkan Kejadian 1 sebagai prolog kosmik, dan kisah keluarga Ishak se
 
 Buku ini tidak ditulis untuk menyerang, tetapi untuk menata ulang cara membaca Kitab Suci—agar iman tidak berhenti pada perdebatan, melainkan menemukan rumahnya. 
 
-
+\newpage
 
