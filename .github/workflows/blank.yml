@@ -75,13 +75,17 @@ jobs:
               --toc \
               --number-sections \
               --pdf-engine=xelatex \
-              -V geometry:margin=2.5cm \
+              -V geometry:margin=3cm \
               -V documentclass=report \
+              -V fontsize=12pt \
+              -V mainfont="TeX Gyre Pagella" \
+              -V linestretch=1.15 \
               -o "output/$NAME.pdf"
             then
               echo "❌ PDF FAILED: $NAME"
               continue
             fi
+
 
             # BUILD EPUB
             if ! pandoc \
