@@ -1,4 +1,4 @@
-## PENDAHULUAN
+# 0.1 PENDAHULUAN
 
 Teologi Dua Kesulungan: Menyingkap Allah Bapa melalui Rumah Ishak
 
