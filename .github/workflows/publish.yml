@@ -58,7 +58,12 @@ jobs:
           if [ ! -d "books" ]; then
             echo "ERROR: books folder not found."
             exit 1
-          fi
+          fi 
+
+      - name: Run DOMUS Builder
+        run: |
+          chmod +x scripts/build-book.sh
+          ./scripts/build-book.sh
 
           COUNT=$(find books -maxdepth 1 -type d -name "DOMUS-Book-*" | wc -l)
 
