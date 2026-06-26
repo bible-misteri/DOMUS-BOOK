@@ -21,7 +21,7 @@ for BOOK in books/DOMUS-Book-*; do
     echo "Found: $NAME"
     echo "----------------------------------"
 
-    ls -1 "$BOOK"
+    bash scripts/build-pdf.sh "$BOOK"
 done
 
 echo
