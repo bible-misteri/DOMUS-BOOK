@@ -1,1 +1,79 @@
+---
 
+======================================================
+
+DOMUS Publisher v9
+
+Global Metadata
+
+======================================================
+
+title: "Teologi Dua Kesulungan"
+
+subtitle: "Menyingkap Allah Bapa melalui Tipologi Ishak"
+
+author: "Norman Sandhi"
+
+publisher: "DOMUS Publisher"
+
+language: "id-ID"
+
+rights: "© Norman Sandhi. Semua hak cipta dilindungi."
+
+description: >
+Buku teologi yang menyingkap Allah Bapa melalui
+tipologi kehidupan Ishak sebagai gambaran
+hubungan Bapa dan Putra.
+
+subject:
+
+- Teologi
+- Tipologi
+- Alkitab
+- Ishak
+- Kristologi
+
+keywords:
+
+- Ishak
+- Abraham
+- Yakub
+- Esau
+- Yesus Kristus
+- Allah Bapa
+
+version: "9.0"
+
+edition: "Edisi Pertama"
+
+date: "2026"
+
+identifier: ""
+
+isbn: ""
+
+cover-image: "cover.jpg"
+
+toc: true
+
+number-sections: true
+
+fontsize: "12pt"
+
+papersize: "a5"
+
+geometry: "margin=2.5cm"
+
+documentclass: "report"
+
+mainfont: "Literata"
+
+linestretch: 1.25
+
+colorlinks: true
+
+linkcolor: blue
+
+toc-depth: 3
+
+lang: id-ID
