@@ -1,0 +1,48 @@
+name: DOMUS Publisher v9.0
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Validate Repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Show Repository Structure
+        run: |
+          echo "=================================="
+          echo "DOMUS Publisher v9.0"
+          echo "=================================="
+          echo ""
+          echo "Repository Root:"
+          ls -lah
+          echo ""
+          echo "Books:"
+          find books -maxdepth 2 -type d | sort
+
+      - name: Validate Books Folder
+        run: |
+          if [ ! -d "books" ]; then
+            echo "ERROR: books folder not found."
+            exit 1
+          fi
+
+          COUNT=$(find books -maxdepth 1 -type d -name "DOMUS-Book-*" | wc -l)
+
+          echo "Books detected: $COUNT"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "ERROR: No DOMUS books found."
+            exit 1
+          fi
+
+          echo "Repository validation successful."
