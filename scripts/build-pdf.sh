@@ -28,6 +28,7 @@ pandoc \
     --number-sections \
     --resource-path="$BOOK:$BOOK/images:$BOOK/images/diagram:$BOOK/images/ilustrasi:$BOOK/chapters" \
     --pdf-engine=xelatex \
+    --template=templates/domus.tex \
     -V documentclass=report \
     -V geometry:margin=3cm \
     -V fontsize=12pt \
