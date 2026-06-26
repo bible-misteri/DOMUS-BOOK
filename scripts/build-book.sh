@@ -11,7 +11,7 @@ mkdir -p output
 
 echo "Scanning books..."
 
-for BOOK in books/DOMUS-Book-*; do
+for BOOK in books/DOMUS-Book-1; do
     [ -d "$BOOK" ] || continue
 
     NAME=$(basename "$BOOK")
