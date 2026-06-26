@@ -14,7 +14,7 @@ toc-title: "Daftar Isi"
 
 # PROLOG PREMIUM 
 
-Dunia Sebelum Dunia 
+Dunia Sebelum Dunia (Tes)
 
 Kejadian 1:1–2:3 sebagai Gerbang Rumah Ishak 
 
