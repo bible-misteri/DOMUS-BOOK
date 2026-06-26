@@ -26,6 +26,7 @@ pandoc \
     "$BOOK"/chapters/*.md \
     --toc \
     --number-sections \
+    --resource-path="$BOOK:$BOOK/images:$BOOK/images/diagram:$BOOK/images/ilustrasi:$BOOK/chapters" \
     --pdf-engine=xelatex \
     -V documentclass=report \
     -V geometry:margin=3cm \
