@@ -1,7 +1,3 @@
-# Tes Gambar
+# Test Gambar
 
-Sebelum gambar.
-
-![Hirarki](images/diagram/hirarki.png)
-
-Sesudah gambar.
+![Hirarki](../images/diagram/hirarki.png){ width=90% }
