@@ -2,7 +2,7 @@
 
 Teologi Dua Kesulungan: Menyingkap Allah Bapa melalui Rumah Ishak
 
-Dalam setiap generasi, iman selalu bergulat dengan dua kutub: warisan dan penyingkapan; tradisi dan p.embaruan; sejarah dan kebenaran. Ketika dua kutub ini tidak diselaraskan, manusia beragama terjebak dalam perselisihan tanpa ujung—mempertahankan bentuk tanpa memahami makna, atau mengejar makna sambil menyingkirkan sejarah. Di dalam persimpangan inilah, buku ini berdiri: bukan untuk meniadakan yang lama, melainkan untuk menempatkannya kembali dalam terang yang lebih utuh
+Dalam setiap generasi, iman selalu bergulat dengan dua kutub: warisan dan penyingkapan; tradisi dan pembaruan; sejarah dan kebenaran. Ketika dua kutub ini tidak diselaraskan, manusia beragama terjebak dalam perselisihan tanpa ujung—mempertahankan bentuk tanpa memahami makna, atau mengejar makna sambil menyingkirkan sejarah. Di dalam persimpangan inilah, buku ini berdiri: bukan untuk meniadakan yang lama, melainkan untuk menempatkannya kembali dalam terang yang lebih utuh
 
 Selama berabad-abad, umat percaya membaca Perjanjian Lama dan Perjanjian Baru sebagai dua bagian dari kisah besar yang sama. Namun ada pertanyaan-pertanyaan mendasar yang jarang disentuh, bahkan sering kali dianggap terlalu berbahaya untuk diajukan. Mengapa Yesus, Sang Anak, tidak pernah menyebut Allah yang Ia doa-kan sebagai “YHWH”? Mengapa para nabi berbicara atas nama entitas yang sering kali bertindak dengan karakter berbeda dari Sang Bapa yang diperkenalkan Yesus? Mengapa di balik seluruh kisah Israel terdapat motif “dua kesulungan”—dua jalur pewarisan—yang selalu hadir dari Kejadian hingga Injil
 
