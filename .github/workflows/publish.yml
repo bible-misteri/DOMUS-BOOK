@@ -65,6 +65,14 @@ jobs:
           chmod +x scripts/build-book.sh
           ./scripts/build-book.sh
 
+      - name: Upload Debug Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DOMUS-Debug
+          path: output/
+
+      - name: Validate Build
+        run: |
           COUNT=$(find books -maxdepth 1 -type d -name "DOMUS-Book-*" | wc -l)
 
           echo "Books detected: $COUNT"
