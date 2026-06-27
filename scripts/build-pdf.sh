@@ -34,8 +34,8 @@ pandoc \
     -V fontsize=12pt \
     -V mainfont="TeX Gyre Pagella" \
     -V linestretch=1.2 \
-    -o "output/$NAME.pdf"
+    -o "output/$NAME.tex"
 
 echo
-echo "✓ PDF created:"
-echo "output/$NAME.pdf"
+echo "✓ LaTeX created:"
+echo "output/$NAME.tex"
