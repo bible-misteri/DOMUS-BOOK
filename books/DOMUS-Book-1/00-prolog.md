@@ -1,14 +1,14 @@
 ---
-
 title: "DOMUS ISAACI"
 subtitle: "Menyingkap Allah Bapa melalui Ishak, Yakub, Esau, dan Kristus"
 author: "Norman Sandhi"
 date: "2026"
 rights: "© Norman Sandhi"
-cover-image: ![Hirarki](../images/diagram/hirarki.png)
+cover-image: "images/diagram/hirarki.png"
 lang: id-ID
 toc: true
 toc-title: "Daftar Isi"
+---
 
 \newpage
 
