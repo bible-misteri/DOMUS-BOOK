@@ -18,6 +18,7 @@ echo "=================================="
 mkdir -p output
 
 pandoc \
+    --verbose \
     "$BOOK/00-prolog.md" \
     "$BOOK/00a-hakcipta.md" \
     "$BOOK/00b-frontispiece.md" \
