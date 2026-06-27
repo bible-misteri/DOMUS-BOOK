@@ -27,7 +27,7 @@ pandoc \
     "$BOOK/99-test-gambar.md" \
     --toc \
     --number-sections \
-    --resource-path="$BOOK:$BOOK/images:$BOOK/images/diagram:$BOOK/images/ilustrasi:$BOOK/chapters" \
+    --resource-path="$BOOK" \
     --pdf-engine=xelatex \
     -V documentclass=report \
     -V geometry:margin=3cm \
