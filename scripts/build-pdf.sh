@@ -34,6 +34,7 @@ pandoc \
     -V fontsize=12pt \
     -V mainfont="TeX Gyre Pagella" \
     -V linestretch=1.2 \
+    "$BOOK/99-test-gambar.md" \
     -o "output/$NAME.pdf"
 
 echo
