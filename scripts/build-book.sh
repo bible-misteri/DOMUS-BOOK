@@ -5,13 +5,12 @@ set -e
 echo "=================================="
 echo " DOMUS Publisher v9.0"
 echo "=================================="
-echo
 
 mkdir -p output
 
 echo "Scanning books..."
 
-for BOOK in books/DOMUS-Book-1; do
+for BOOK in books/*; do
     [ -d "$BOOK" ] || continue
 
     NAME=$(basename "$BOOK")
