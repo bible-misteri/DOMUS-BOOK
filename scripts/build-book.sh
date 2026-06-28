@@ -10,7 +10,7 @@ mkdir -p output
 
 echo "Scanning books..."
 
-for BOOK in books/*; do
+for BOOK in books/DOMUS-ISAACI; do
     [ -d "$BOOK" ] || continue
 
     NAME=$(basename "$BOOK")
