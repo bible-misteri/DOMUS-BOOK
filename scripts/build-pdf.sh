@@ -15,27 +15,18 @@ echo "=================================="
 echo "Building PDF : $NAME"
 echo "=================================="
 
-mkdir -p output
+mkdir -p "$BOOK/output"
 
 pandoc \
-    "$BOOK/00-prolog.md" \
-    "$BOOK/00a-hakcipta.md" \
-    "$BOOK/00b-frontispiece.md" \
-    "$BOOK/00c-daftarisi.md" \
-    "$BOOK/01-pendahuluan.md" \
-    "$BOOK"/chapters/*.md \
-    "$BOOK/99-test-gambar.md" \
+    "$BOOK"/manuscript/*.md \
+    --metadata-file="$BOOK/metadata.yaml" \
+    --template=template/domus-template.tex \
+    --resource-path="$BOOK:$BOOK/images:assets" \
     --toc \
     --number-sections \
-    --resource-path="$BOOK" \
     --pdf-engine=xelatex \
-    -V documentclass=report \
-    -V geometry:margin=3cm \
-    -V fontsize=12pt \
-    -V mainfont="TeX Gyre Pagella" \
-    -V linestretch=1.2 \
-    -o "output/$NAME.tex"
+    -o "$BOOK/output/$NAME.pdf"
 
 echo
-echo "✓ LaTeX created:"
-echo "output/$NAME.tex"
+echo "✓ PDF created:"
+echo "$BOOK/output/$NAME.pdf"
