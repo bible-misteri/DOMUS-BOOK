@@ -1,8 +1,27 @@
-title: DOMUS ISAACI
-subtitle: Menyingkap Allah Bapa melalui Ishak, Yakub, Esau, dan Kristus
-author: Norman Sandhi
-publisher: DOMUS Publisher
-year: 2026
-isbn:
-cover: images/cover.jpg
-language: id-ID
+---
+title: "DOMUS ISAACI"
+subtitle: "Menyingkap Allah Bapa melalui Ishak, Yakub, Esau, dan Kristus"
+
+author: "Norman Sandhi"
+
+publisher: "DOMUS Publisher"
+edition: "Versi Digital Pertama"
+
+year: "2026"
+date: "2026"
+
+isbn: ""
+
+language: "id-ID"
+
+cover: "images/cover.jpg"
+logo: "../../assets/logo-domus.png"
+
+rights: "© 2026 Norman Sandhi. Semua hak cipta dilindungi."
+
+toc: true
+toc-title: "Daftar Isi"
+
+papersize: "a5"
+fontsize: "11pt"
+---
