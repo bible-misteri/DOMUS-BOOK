@@ -15,13 +15,16 @@ isbn: ""
 language: "id-ID"
 
 cover: "images/cover.jpg"
-logo: "../../assets/logo-domus.png"
+logo: "../../assets/logo-norman.png"
 
-rights: "© 2026 Norman Sandhi. Semua hak cipta dilindungi."
+rights: "© 2026 Norman Sandhi"
+
+theme: "digital"
+
+papersize: "a5"
+
+fontsize: "12pt"
 
 toc: true
 toc-title: "Daftar Isi"
-
-papersize: "a5"
-fontsize: "11pt"
 ---
