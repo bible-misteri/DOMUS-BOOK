@@ -2,39 +2,65 @@
 
 %========================================
 % DOMUS Publisher v2.0
-% Main Template
+% Standalone Template
 %========================================
 
-\input{preamble.tex}
-\input{layout.tex}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{fontspec}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{caption}
+
+%----------------------------------------
+% Layout
+%----------------------------------------
+
+\geometry{
+  paper=a5paper,
+  top=25mm,
+  bottom=25mm,
+  left=20mm,
+  right=20mm
+}
+
+\setstretch{1.2}
+
+\pagestyle{plain}
+
+%========================================
+% DOCUMENT
+%========================================
 
 \begin{document}
 
-%========================================
+%----------------------------------------
 % COVER
-%========================================
+%----------------------------------------
 
 $if(cover)$
 \begin{titlepage}
 \thispagestyle{empty}
-\noindent
+\centering
+
 \includegraphics[
 width=\paperwidth,
-height=\paperheight
+height=\paperheight,
+keepaspectratio
 ]{$cover$}
+
 \end{titlepage}
 \clearpage
 $endif$
 
-%========================================
-% COPYRIGHT
-%========================================
-
-\input{copyright.tex}
-
-%========================================
+%----------------------------------------
 % FRONT MATTER
-%========================================
+%----------------------------------------
 
 \frontmatter
 
@@ -43,9 +69,9 @@ $if(toc)$
 \clearpage
 $endif$
 
-%========================================
+%----------------------------------------
 % MAIN MATTER
-%========================================
+%----------------------------------------
 
 \mainmatter
 
