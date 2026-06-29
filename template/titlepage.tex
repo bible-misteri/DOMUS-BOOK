@@ -3,19 +3,16 @@
 % Full Cover Page
 %========================================
 
+$if(cover)$
+\begin{titlepage}
 \thispagestyle{empty}
 
-\begin{titlepage}
-
-\centering
-
-% Cover penuh
+\noindent
 \includegraphics[
 width=\paperwidth,
-height=\paperheight,
-keepaspectratio
+height=\paperheight
 ]{$cover$}
 
 \end{titlepage}
-
 \clearpage
+$endif$
