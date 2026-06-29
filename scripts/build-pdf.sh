@@ -37,6 +37,8 @@ pandoc \
     --resource-path=".:images:../../assets:../../template" \
     --toc \
     --number-sections \
+    --pdf-engine-opt=-file-line-error \
+    --pdf-engine-opt=-interaction=nonstopmode \
     --pdf-engine=xelatex \
     --standalone \
     -o "output/$NAME.pdf"
