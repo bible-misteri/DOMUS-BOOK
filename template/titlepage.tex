@@ -1,18 +1,46 @@
-%========================================
-% DOMUS Publisher v2.0
-% Full Cover Page
-%========================================
+\documentclass[12pt,a5paper]{book}
+
+\input{template/preamble.tex}
+\input{template/layout.tex}
+
+\begin{document}
+
+%==========================
+% COVER
+%==========================
 
 $if(cover)$
 \begin{titlepage}
 \thispagestyle{empty}
-
 \noindent
 \includegraphics[
 width=\paperwidth,
 height=\paperheight
 ]{$cover$}
-
 \end{titlepage}
 \clearpage
 $endif$
+
+%==========================
+% HAK CIPTA
+%==========================
+
+\input{template/copyright.tex}
+
+%==========================
+% FRONT MATTER
+%==========================
+
+\frontmatter
+
+\tableofcontents
+
+%==========================
+% ISI BUKU
+%==========================
+
+\mainmatter
+
+$body$
+
+\end{document}
