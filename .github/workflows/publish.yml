@@ -1,4 +1,4 @@
-name: DOMUS Publisher v9.0
+name: DOMUS Publisher v10
 
 on:
   push:
@@ -6,14 +6,15 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
-    name: Validate Repository
+    name: Build DOMUS Library
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -32,59 +33,85 @@ jobs:
           echo "=================================="
           echo "DOMUS Build Environment"
           echo "=================================="
-          echo ""
-          echo "Pandoc Version:"
+
+          echo
           pandoc --version | head -n 2
-          echo ""
-          echo "XeLaTeX Version:"
+
+          echo
           xelatex --version | head -n 2
-          echo ""
-          echo "Environment Ready."
 
       - name: Show Repository Structure
         run: |
           echo "=================================="
-          echo "DOMUS Publisher v9.0"
+          echo "Repository"
           echo "=================================="
-          echo ""
-          echo "Repository Root:"
+
           ls -lah
-          echo ""
-          echo "Books:"
+
+          echo
           find books -maxdepth 2 -type d | sort
 
       - name: Validate Books Folder
         run: |
-          if [ ! -d "books" ]; then
-            echo "ERROR: books folder not found."
+          if [ ! -d books ]; then
+            echo "Books folder not found."
             exit 1
-          fi 
+          fi
 
       - name: Run DOMUS Builder
         run: |
           chmod +x scripts/build-book.sh
-           ./scripts/build-book.sh
+          ./scripts/build-book.sh
 
       - name: Verify Generated PDF
         run: |
-            echo "===== Generated PDF ====="
-            find books -name "*.pdf"
-            ls -lh books/DOMUS-ISAACI/output/
+          echo "=================================="
+          echo "Generated PDF"
+          echo "=================================="
 
-      - name: Upload PDF
+          find books -name "*.pdf"
+
+          echo
+          ls -lh books/DOMUS-ISAACI/output/
+
+      - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
         with:
-            name: DOMUS-PDF
-            path: books/**/output/*.pdf
+          name: DOMUS-PDF
+          path: books/**/output/*.pdf
+
+      - name: Download PDF Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: DOMUS-PDF
+          path: release
+
+      - name: Publish DOMUS Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: domus-v10
+          name: DOMUS Digital Library v10
+          make_latest: true
+          body: |
+            DOMUS Publisher v10
+
+            Automatic build by GitHub Actions.
+
+            Assets:
+            • DOMUS-ISAACI.pdf
+          files: |
+            release/**/*.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate Build
         run: |
-          COUNT=$(find books -maxdepth 1 -type d -name "DOMUS-Book-*" | wc -l)
+          COUNT=$(find books -maxdepth 1 -mindepth 1 -type d | wc -l)
 
           echo "Books detected: $COUNT"
 
           if [ "$COUNT" -eq 0 ]; then
-            echo "ERROR: No DOMUS books found."
+            echo "ERROR: No books found."
             exit 1
           fi
 
