@@ -1,43 +1,20 @@
 \documentclass[12pt,a5paper]{book}
 
 %========================================
-% DOMUS Publisher v2.0
-% Standalone Template
+% DOMUS Publisher v10.1
+% Main Template
 %========================================
 
-\usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{fontspec}
-\usepackage{hyperref}
-\usepackage{bookmark}
-\usepackage{setspace}
-\usepackage{xcolor}
-\usepackage{longtable}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{tabularx}
-\usepackage{multirow}
-
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}
-  \setlength{\parskip}{0pt}
-}
-
 %----------------------------------------
-% Layout
+% MODULES
 %----------------------------------------
 
-\geometry{
-  paper=a5paper,
-  top=25mm,
-  bottom=25mm,
-  left=20mm,
-  right=20mm
-}
-
-\setstretch{1.2}
-
-\pagestyle{plain}
+\input{preamble.tex}
+\input{layout.tex}
+\input{typography.tex}
+\input{images.tex}
+\input{chapter.tex}
+\input{metadata.tex}
 
 %========================================
 % DOCUMENT
@@ -65,22 +42,25 @@ keepaspectratio
 $endif$
 
 %----------------------------------------
+% COPYRIGHT
+%----------------------------------------
+
+\input{copyright.tex}
+
+%----------------------------------------
 % FRONT MATTER
 %----------------------------------------
 
-\frontmatter
-
-$if(toc)$
-\tableofcontents
-\clearpage
-$endif$
+\input{frontmatter.tex}
 
 %----------------------------------------
-% MAIN MATTER
+% MAIN CONTENT
 %----------------------------------------
-
-\mainmatter
 
 $body$
+
+%----------------------------------------
+% END DOCUMENT
+%----------------------------------------
 
 \end{document}
