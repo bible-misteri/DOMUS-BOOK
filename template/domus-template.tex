@@ -1,9 +1,18 @@
 \documentclass[12pt,a5paper]{book}
 
-\input{../../template/preamble.tex}
-\input{../../template/layout.tex}
+%========================================
+% DOMUS Publisher v2.0
+% Main Template
+%========================================
+
+\input{preamble.tex}
+\input{layout.tex}
 
 \begin{document}
+
+%========================================
+% COVER
+%========================================
 
 $if(cover)$
 \begin{titlepage}
@@ -17,11 +26,26 @@ height=\paperheight
 \clearpage
 $endif$
 
-\input{../../template/copyright.tex}
+%========================================
+% COPYRIGHT
+%========================================
+
+\input{copyright.tex}
+
+%========================================
+% FRONT MATTER
+%========================================
 
 \frontmatter
 
+$if(toc)$
 \tableofcontents
+\clearpage
+$endif$
+
+%========================================
+% MAIN MATTER
+%========================================
 
 \mainmatter
 
