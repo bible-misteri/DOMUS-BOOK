@@ -19,6 +19,17 @@ mkdir -p "$BOOK/output"
 
 cd "$BOOK"
 
+echo "Current directory:"
+pwd
+
+echo
+echo "Markdown files:"
+ls -1 manuscript
+
+echo
+echo "Compiling:"
+printf '%s\n' manuscript/*.md
+
 pandoc \
     manuscript/*.md \
     --metadata-file=metadata.yaml \
