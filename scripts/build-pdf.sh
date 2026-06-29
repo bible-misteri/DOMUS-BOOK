@@ -21,12 +21,17 @@ pandoc \
     "$BOOK"/manuscript/*.md \
     --metadata-file="$BOOK/metadata.yaml" \
     --template=template/domus-template.tex \
-    --resource-path="$BOOK:$BOOK/images:assets" \
+    --resource-path="$BOOK:$BOOK/images:assets:template" \
     --toc \
     --number-sections \
     --pdf-engine=xelatex \
+    --pdf-engine-opt=-interaction=nonstopmode \
+    --standalone \
     -o "$BOOK/output/$NAME.pdf"
 
 echo
-echo "✓ PDF created:"
+echo "=================================="
+echo "✓ PDF CREATED SUCCESSFULLY"
+echo "=================================="
+echo
 echo "$BOOK/output/$NAME.pdf"
