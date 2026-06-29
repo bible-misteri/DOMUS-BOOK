@@ -18,15 +18,15 @@ echo "=================================="
 mkdir -p "$BOOK/output"
 
 pandoc \
-    "$BOOK"/manuscript/*.md \
-    --metadata-file="$BOOK/metadata.yaml" \
-    --template=template/domus-template.tex \
-    --resource-path="$BOOK:$BOOK/images:template:assets" \
+    manuscript/*.md \
+    --metadata-file=metadata.yaml \
+    --template=../../template/domus-template.tex \
+    --resource-path=".:./images:../../assets" \
     --toc \
     --number-sections \
     --pdf-engine=xelatex \
     --standalone \
-    -o "$BOOK/output/$NAME.pdf"
+    -o "output/$NAME.pdf"
 
 echo
 echo "=================================="
