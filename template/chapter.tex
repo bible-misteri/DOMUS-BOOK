@@ -1,0 +1,46 @@
+%========================================
+% DOMUS Publisher v2.0
+% CHAPTER STYLE
+%========================================
+
+\usepackage{titlesec}
+
+%----------------------------------------
+% Chapter Heading
+%----------------------------------------
+
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\centering}
+  {\Huge BAB \thechapter}
+  {1em}
+  {\Huge}
+  []
+
+%----------------------------------------
+% Spacing
+%----------------------------------------
+
+\titlespacing*{\chapter}
+  {0pt}
+  {0pt}
+  {2.5em}
+
+%----------------------------------------
+% Awal bab selalu halaman baru
+%----------------------------------------
+
+\let\oldchapter\chapter
+\renewcommand{\chapter}{%
+  \clearpage
+  \oldchapter
+}
+
+%----------------------------------------
+% Halaman awal bab tanpa header
+%----------------------------------------
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
