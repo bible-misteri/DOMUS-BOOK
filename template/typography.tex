@@ -1,1 +1,50 @@
+%========================================
+% DOMUS Publisher v2.0
+% Typography
+%========================================
 
+%----------------------------------------
+% Font
+%----------------------------------------
+
+\setmainfont{TeX Gyre Pagella}
+
+\linespread{1.25}
+
+\setlength{\parindent}{1.2em}
+\setlength{\parskip}{0.4em}
+
+%----------------------------------------
+% Chapter
+%----------------------------------------
+
+\titleformat{\chapter}[display]
+{\normalfont\Huge\bfseries\centering}
+{\chaptername\ \thechapter}
+{12pt}
+{\Huge}
+
+\titlespacing*{\chapter}
+{0pt}
+{0pt}
+{24pt}
+
+%----------------------------------------
+% Section
+%----------------------------------------
+
+\titleformat{\section}
+{\Large\bfseries}
+{\thesection}
+{0.8em}
+{}
+
+%----------------------------------------
+% Subsection
+%----------------------------------------
+
+\titleformat{\subsection}
+{\large\bfseries}
+{\thesubsection}
+{0.8em}
+{}
