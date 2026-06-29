@@ -18,12 +18,18 @@
 \usepackage{tabularx}
 \usepackage{multirow}
 \usepackage{titlesec}
-\usepackage{fancyhdr}
+
+%----------------------------------------
+% Pandoc Compatibility
+%----------------------------------------
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}
   \setlength{\parskip}{0pt}
 }
+
+\providecommand{\passthrough}[1]{#1}
+\providecommand{\subtitle}[1]{}
 
 %----------------------------------------
 % Layout
@@ -39,8 +45,68 @@
 
 \setstretch{1.2}
 
+\pagestyle{plain}
+
+%----------------------------------------
+% Chapter Style
+%----------------------------------------
+
+\renewcommand{\chaptername}{BAB}
+\renewcommand{\thechapter}{\Roman{chapter}}
+
+\titleformat{\chapter}[display]
+  {\centering\normalfont}
+  {\Huge\bfseries BAB \thechapter}
+  {1.5ex}
+  {\LARGE\bfseries}
+
+\titlespacing*{\chapter}
+  {0pt}
+  {0pt}
+  {3em}
+
 %========================================
-% HEADER & FOOTER
+% DOCUMENT
 %========================================
 
-\pagestyle{plain}
+\begin{document}
+
+%----------------------------------------
+% COVER
+%----------------------------------------
+
+$if(cover)$
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+
+\includegraphics[
+width=\paperwidth,
+height=\paperheight,
+keepaspectratio
+]{$cover$}
+
+\end{titlepage}
+\clearpage
+$endif$
+
+%----------------------------------------
+% FRONT MATTER
+%----------------------------------------
+
+\frontmatter
+
+$if(toc)$
+\tableofcontents
+\clearpage
+$endif$
+
+%----------------------------------------
+% MAIN MATTER
+%----------------------------------------
+
+\mainmatter
+
+$body$
+
+\end{document}
