@@ -63,13 +63,19 @@ jobs:
       - name: Run DOMUS Builder
         run: |
           chmod +x scripts/build-book.sh
-          ./scripts/build-book.sh
+           ./scripts/build-book.sh
+
+      - name: Verify Generated PDF
+        run: |
+            echo "===== Generated PDF ====="
+            find books -name "*.pdf"
+            ls -lh books/DOMUS-ISAACI/output/
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
-         name: DOMUS-PDF
-         path: books/**/output/*.pdf
+            name: DOMUS-PDF
+            path: books/**/output/*.pdf
 
       - name: Validate Build
         run: |
