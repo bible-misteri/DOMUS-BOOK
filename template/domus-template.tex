@@ -5,26 +5,14 @@
 % Main Template
 %========================================
 
-%----------------------------------------
-% MODULES
-%----------------------------------------
-
-\input{preamble.tex}
-\input{layout.tex}
-\input{typography.tex}
-\input{images.tex}
-\input{chapter.tex}
-\input{metadata.tex}
-
-%========================================
-% DOCUMENT
-%========================================
+\input{../../template/preamble.tex}
+\input{../../template/layout.tex}
+\input{../../template/typography.tex}
+\input{../../template/images.tex}
+\input{../../template/chapter.tex}
+\input{../../template/metadata.tex}
 
 \begin{document}
-
-%----------------------------------------
-% COVER
-%----------------------------------------
 
 $if(cover)$
 \begin{titlepage}
@@ -41,26 +29,10 @@ keepaspectratio
 \clearpage
 $endif$
 
-%----------------------------------------
-% COPYRIGHT
-%----------------------------------------
+\input{../../template/copyright.tex}
 
-\input{copyright.tex}
-
-%----------------------------------------
-% FRONT MATTER
-%----------------------------------------
-
-\input{frontmatter.tex}
-
-%----------------------------------------
-% MAIN CONTENT
-%----------------------------------------
+\input{../../template/frontmatter.tex}
 
 $body$
-
-%----------------------------------------
-% END DOCUMENT
-%----------------------------------------
 
 \end{document}
