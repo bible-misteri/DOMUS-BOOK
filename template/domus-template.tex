@@ -1,18 +1,53 @@
 \documentclass[12pt,a5paper]{book}
 
 %========================================
-% DOMUS Publisher v10.1
-% Main Template
+% DOMUS Publisher v2.0
+% Standalone Template
 %========================================
 
-\input{../../template/preamble.tex}
-\input{../../template/layout.tex}
-\input{../../template/typography.tex}
-\input{../../template/images.tex}
-\input{../../template/chapter.tex}
-\input{../../template/metadata.tex}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{fontspec}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}
+  \setlength{\parskip}{0pt}
+}
+
+%----------------------------------------
+% Layout
+%----------------------------------------
+
+\geometry{
+  paper=a5paper,
+  top=25mm,
+  bottom=25mm,
+  left=20mm,
+  right=20mm
+}
+
+\setstretch{1.2}
+
+\pagestyle{plain}
+
+%========================================
+% DOCUMENT
+%========================================
 
 \begin{document}
+
+%----------------------------------------
+% COVER
+%----------------------------------------
 
 $if(cover)$
 \begin{titlepage}
@@ -29,9 +64,22 @@ keepaspectratio
 \clearpage
 $endif$
 
-\input{../../template/copyright.tex}
+%----------------------------------------
+% FRONT MATTER
+%----------------------------------------
 
-\input{../../template/frontmatter.tex}
+\frontmatter
+
+$if(toc)$
+\tableofcontents
+\clearpage
+$endif$
+
+%----------------------------------------
+% MAIN MATTER
+%----------------------------------------
+
+\mainmatter
 
 $body$
 
