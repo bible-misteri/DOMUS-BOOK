@@ -35,4 +35,4 @@ echo "=================================="
 echo "✓ PDF CREATED SUCCESSFULLY"
 echo "=================================="
 echo
-echo "$BOOK/output/$NAME.pdf"
+echo "output/$NAME.pdf"
