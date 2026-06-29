@@ -41,6 +41,24 @@
 \pagestyle{plain}
 
 %========================================
+% CHAPTER STYLE
+%========================================
+
+\renewcommand{\chaptername}{BAB}
+\renewcommand{\thechapter}{\Roman{chapter}}
+
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\centering}
+  {\Huge\chaptername\ \thechapter}
+  {1em}
+  {\Huge}
+
+\titlespacing*{\chapter}
+  {0pt}
+  {0pt}
+  {2.5em}
+
+%========================================
 % DOCUMENT
 %========================================
 
