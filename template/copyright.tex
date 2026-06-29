@@ -1,10 +1,13 @@
 \clearpage
-
 \thispagestyle{empty}
 
 \section*{HAK CIPTA}
 
-$title$
+\textbf{$title$}
+
+$if(subtitle)$
+$subtitle$
+$endif$
 
 \vspace{1cm}
 
@@ -20,11 +23,18 @@ $publisher$
 
 \vspace{0.5cm}
 
+$if(isbn)$
 ISBN:
 
 $isbn$
 
+\vspace{0.5cm}
+$endif$
+
+$edition$
+
+$year$
+
 \vfill
 
 $rights$
-
