@@ -17,22 +17,20 @@ echo "=================================="
 
 mkdir -p "$BOOK/output"
 
-cd "$BOOK"
-
 pandoc \
-    manuscript/*.md \
-    --metadata-file=metadata.yaml \
-    --template=../../template/domus-template.tex \
-    --resource-path=".:images:../../assets:../../template" \
+    "$BOOK"/manuscript/*.md \
+    --metadata-file="$BOOK/metadata.yaml" \
+    --template=template/domus-template.tex \
+    --resource-path="$BOOK:$BOOK/images:template:assets" \
     --toc \
     --number-sections \
     --pdf-engine=xelatex \
     --standalone \
-    -o "output/$NAME.pdf"
+    -o "$BOOK/output/$NAME.pdf"
 
 echo
 echo "=================================="
 echo "✓ PDF CREATED SUCCESSFULLY"
 echo "=================================="
 echo
-echo "output/$NAME.pdf"
+echo "$BOOK/output/$NAME.pdf"
