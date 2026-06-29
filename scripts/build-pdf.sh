@@ -17,11 +17,13 @@ echo "=================================="
 
 mkdir -p "$BOOK/output"
 
+cd "$BOOK"
+
 pandoc \
     manuscript/*.md \
     --metadata-file=metadata.yaml \
     --template=../../template/domus-template.tex \
-    --resource-path=".:./images:../../assets" \
+    --resource-path=".:images:../../assets:../../template" \
     --toc \
     --number-sections \
     --pdf-engine=xelatex \
@@ -33,4 +35,4 @@ echo "=================================="
 echo "✓ PDF CREATED SUCCESSFULLY"
 echo "=================================="
 echo
-echo "$BOOK/output/$NAME.pdf"
+echo "output/$NAME.pdf"
