@@ -42,6 +42,21 @@ pandoc \
     --pdf-engine=xelatex \
     --standalone \
     -o "output/$NAME.pdf"
+    echo
+echo "=================================="
+echo "Building EPUB..."
+echo "=================================="
+
+pandoc \
+    manuscript/*.md \
+    --metadata-file=metadata.yaml \
+    --toc \
+    --standalone \
+    --resource-path=".:images:../../assets" \
+    -o "output/$NAME.epub"
+
+echo
+echo "✓ EPUB CREATED SUCCESSFULLY"
 
 echo
 echo "=================================="
