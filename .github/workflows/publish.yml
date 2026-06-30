@@ -78,7 +78,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DOMUS-PDF
-          path: books/**/output/*.pdf
+          path: |
+              books/**/output/*.pdf
+              books/**/output/*.epub
 
       - name: Download PDF Artifact
         uses: actions/download-artifact@v4
