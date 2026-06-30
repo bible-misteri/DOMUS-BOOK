@@ -116,18 +116,21 @@ justification=centering
 %----------------------------------------
 
 $if(cover)$
-\begin{titlepage}
-\thispagestyle{empty}
-\centering
 
+\newgeometry{margin=0pt}
+
+\thispagestyle{empty}
+
+\noindent
 \includegraphics[
 width=\paperwidth,
-height=\paperheight,
-keepaspectratio
+height=\paperheight
 ]{$cover$}
 
-\end{titlepage}
+\restoregeometry
+
 \clearpage
+
 $endif$
 
 %----------------------------------------
