@@ -82,6 +82,14 @@ jobs:
               books/**/output/*.pdf
               books/**/output/*.epub
 
+      - name: Upload Debug Files
+        uses: actions/upload-artifact@v4
+        with:
+           name: DOMUS-Debug
+           path: |
+              books/**/output/debug.tex
+              books/**/output/pandoc.log
+
       - name: Download PDF Artifact
         uses: actions/download-artifact@v4
         with:
