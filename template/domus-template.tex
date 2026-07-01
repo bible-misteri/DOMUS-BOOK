@@ -140,6 +140,38 @@ height=\paperheight
 $endif$
 
 %----------------------------------------
+% TITLE PAGE
+%----------------------------------------
+
+\clearpage
+\thispagestyle{empty}
+
+\vspace*{\fill}
+
+\begin{center}
+
+{\Huge\bfseries $title$}
+
+\vspace{0.8cm}
+
+$if(subtitle)$
+{\Large $subtitle$}
+\vspace{1.5cm}
+$endif$
+
+{\Large $author$}
+
+\vfill
+
+$if(publisher)$
+{\large $publisher$}
+$endif$
+
+\end{center}
+
+\clearpage
+
+%----------------------------------------
 % FRONT MATTER
 %----------------------------------------
 
