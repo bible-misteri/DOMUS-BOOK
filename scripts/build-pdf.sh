@@ -30,6 +30,19 @@ echo
 echo "Compiling:"
 printf '%s\n' manuscript/*.md
 
+echo
+echo "Generating LaTeX source..."
+
+pandoc \
+    manuscript/*.md \
+    --metadata-file=metadata.yaml \
+    --template=../../template/domus-template.tex \
+    --resource-path=".:images:../../assets:../../template" \
+    --toc \
+    --standalone \
+    -t latex \
+    -o output/debug.tex
+
 pandoc \
     manuscript/*.md \
     --metadata-file=metadata.yaml \
@@ -37,11 +50,12 @@ pandoc \
     --resource-path=".:images:../../assets:../../template" \
     --toc \
     --number-sections \
-    --pdf-engine-opt=-file-line-error \
-    --pdf-engine-opt=-interaction=nonstopmode \
     --pdf-engine=xelatex \
     --standalone \
-    -o "output/$NAME.pdf"
+    -s \
+    -o output/$NAME.pdf \
+    --verbose \
+    2> output/pandoc.log
     echo
 echo "=================================="
 echo "Building EPUB..."
