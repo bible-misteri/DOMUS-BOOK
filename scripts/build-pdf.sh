@@ -43,8 +43,6 @@ if [ ! -d images ]; then
 fi
 echo "✓ images"
 
-# Cover
-COVER=$(yq -r '.cover' metadata.yaml)
 
 if [ ! -f "$COVER" ]; then
     echo "ERROR: Cover image not found: $COVER"
@@ -64,14 +62,6 @@ echo "✓ markdown ($COUNT files)"
 echo
 echo "Book validation passed."
 echo
-
-echo
-echo "=================================="
-echo "Checking book structure..."
-echo "=================================="
-
-echo
-echo "Book validation passed."
 
 # ==============================
 # BUILD
