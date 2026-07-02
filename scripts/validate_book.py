@@ -5,6 +5,8 @@ import re
 import yaml
 from pathlib import Path
 
+IMAGE_PATTERN = re.compile(r'!\[[^\]]*\]\(([^)]+)\)')
+
 if len(sys.argv) < 2:
     print("Usage: validate_book.py <book-folder>")
     sys.exit(1)
@@ -113,6 +115,34 @@ if missing:
     sys.exit(1)
 
 print(f"✓ markdown ({len(files)} files)")
+
+# -------------------------------------------------
+# images referenced in markdown
+# -------------------------------------------------
+
+missing_images = []
+
+for md in files:
+
+    text = md.read_text(encoding="utf-8")
+
+    for match in IMAGE_PATTERN.findall(text):
+
+        image = (book / match).resolve()
+
+        if not image.is_file():
+            missing_images.append(match)
+
+if missing_images:
+
+    print("ERROR: Missing image(s):")
+
+    for img in sorted(set(missing_images)):
+        print(f"  {img}")
+
+    sys.exit(1)
+
+print("✓ images referenced")
 
 print()
 print("Book validation passed.")
