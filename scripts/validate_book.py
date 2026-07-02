@@ -52,8 +52,16 @@ if not metadata.is_file():
 # cover
 # -------------------------------------------------
 
-with metadata.open(encoding="utf-8") as f:
-    data = yaml.safe_load(f)
+text = metadata.read_text(encoding="utf-8")
+
+# Hilangkan delimiter Pandoc Front Matter
+if text.startswith("---"):
+    text = text[3:]
+
+if text.rstrip().endswith("---"):
+    text = text.rstrip()[:-3]
+
+data = yaml.safe_load(text)
 
 cover = book / data["cover"]
 
