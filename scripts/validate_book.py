@@ -51,6 +51,32 @@ if not metadata.is_file():
     print("ERROR: metadata.yaml not found.")
     sys.exit(1)
 
+print("✓ metadata")
+
+# -------------------------------------------------
+# template
+# -------------------------------------------------
+
+template = Path(__file__).resolve().parent.parent / "template" / "domus-template.tex"
+
+if not template.is_file():
+    print("ERROR: Template not found.")
+    sys.exit(1)
+
+print("✓ template")
+
+# -------------------------------------------------
+# assets
+# -------------------------------------------------
+
+assets = Path(__file__).resolve().parent.parent / "assets"
+
+if not assets.is_dir():
+    print("ERROR: assets folder not found.")
+    sys.exit(1)
+
+print("✓ assets")
+
 # -------------------------------------------------
 # cover
 # -------------------------------------------------
@@ -66,7 +92,51 @@ if text.rstrip().endswith("---"):
 
 data = yaml.safe_load(text)
 
+# -------------------------------------------------
+# logo
+# -------------------------------------------------
+
+logo = data.get("logo")
+
+if logo:
+
+    logo_file = (book / logo).resolve()
+
+    if not logo_file.is_file():
+
+        repo_root = Path(__file__).resolve().parent.parent
+        logo_file = (repo_root / logo).resolve()
+
+    if not logo_file.is_file():
+        print(f"ERROR: Logo not found: {logo}")
+        sys.exit(1)
+
+    print("✓ logo")
+
+# -------------------------------------------------
+# cover
+# -------------------------------------------------
+
+cover = (book / data["cover"]).resolve()
+
+if not cover.is_file():
+    print(f"ERROR: Cover image not found: {cover}")
+    sys.exit(1)
+
+print("✓ cover")
+
 cover = book / data["cover"]
+
+    if not logo_file.is_file():
+
+        repo_root = Path(__file__).resolve().parent.parent
+        logo_file = (repo_root / logo).resolve()
+
+    if not logo_file.is_file():
+        print(f"ERROR: Logo not found: {logo}")
+        sys.exit(1)
+
+    print("✓ logo")
 
 if not cover.is_file():
     print(f"ERROR: Cover image not found: {cover}")
