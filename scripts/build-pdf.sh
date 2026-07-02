@@ -50,6 +50,8 @@ if [ ! -f "$COVER" ]; then
 fi
 echo "✓ cover"
 
+COVER=$(python3 -c "import yaml; print(yaml.safe_load(open('metadata.yaml', encoding='utf-8'))['cover'])")
+
 # Markdown
 COUNT=$(find manuscript -name "*.md" | wc -l)
 
@@ -88,6 +90,9 @@ pandoc \
     -t latex \
     -o output/debug.tex
 
+#========================================
+# BUILD PDF
+#========================================
 pandoc \
     manuscript/*.md \
     --metadata-file=metadata.yaml \
@@ -102,6 +107,10 @@ pandoc \
     --verbose \
     2> output/pandoc.log
     echo
+
+#========================================
+# BUILD EPUB
+#========================================
 echo "=================================="
 echo "Building EPUB..."
 echo "=================================="
