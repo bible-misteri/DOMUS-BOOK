@@ -108,8 +108,22 @@ echo "✓ EPUB CREATED SUCCESSFULLY"
 
 echo
 echo "=================================="
-echo "BUILD FINISHED SUCCESSFULLY"
+echo "DOMUS BUILD SUMMARY"
 echo "=================================="
+
+echo "Book      : $NAME"
+
+PDFSIZE=$(du -h "output/$NAME.pdf" | cut -f1)
+EPUBSIZE=$(du -h "output/$NAME.epub" | cut -f1)
+
+echo "PDF       : $PDFSIZE"
+echo "EPUB      : $EPUBSIZE"
+
 echo
-echo "PDF  : output/$NAME.pdf"
-echo "EPUB : output/$NAME.epub"
+echo "Artifacts"
+
+echo "✓ output/$NAME.pdf"
+echo "✓ output/$NAME.epub"
+
+echo
+echo "BUILD FINISHED SUCCESSFULLY"
