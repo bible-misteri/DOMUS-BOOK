@@ -23,9 +23,20 @@ cd "$BOOK"
 echo "Current directory:"
 pwd
 
+echo
+echo "=================================="
+echo "DOMUS INSPECTOR"
+echo "=================================="
+
 python3 ../../scripts/validate_metadata.py metadata.yaml
 
+echo
+echo "✓ Metadata"
+
 python3 ../../scripts/validate_book.py .
+
+echo "✓ Book Structure"
+
 echo
 echo "Markdown files:"
 ls -1 manuscript
@@ -33,6 +44,10 @@ ls -1 manuscript
 echo
 echo "Compiling:"
 printf '%s\n' manuscript/*.md
+
+echo
+echo "✓ Ready to build."
+echo
 
 #========================================
 # BUILD LATEX
