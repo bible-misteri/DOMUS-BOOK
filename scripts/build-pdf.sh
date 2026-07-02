@@ -111,7 +111,6 @@ pandoc \
     -o output/$NAME.pdf \
     --verbose \
     2> output/pandoc.log
-    echo
 
 #========================================
 # BUILD EPUB
