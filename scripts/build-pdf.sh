@@ -26,7 +26,6 @@ pwd
 python3 ../../scripts/validate_metadata.py metadata.yaml
 
 python3 ../../scripts/validate_book.py .
-
 echo
 echo "Markdown files:"
 ls -1 manuscript
