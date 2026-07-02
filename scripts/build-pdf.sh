@@ -44,11 +44,13 @@ if [ ! -d images ]; then
 fi
 echo "✓ images"
 
-COVER=$(python3 -c "import yaml; print(yaml.safe_load(open('metadata.yaml', encoding='utf-8'))['cover'])")
+COVER=$(awk -F': *' '/^cover:/ {gsub(/"/,"",$2); print $2}' metadata.yaml)
+
 if [ ! -f "$COVER" ]; then
     echo "ERROR: Cover image not found: $COVER"
     exit 1
 fi
+
 echo "✓ cover"
 
 
