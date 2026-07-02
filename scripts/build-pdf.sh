@@ -22,37 +22,7 @@ cd "$BOOK"
 echo "Current directory:"
 pwd
 
-# ==============================
-# METADATA VALIDATION
-# ==============================
-
-echo
-echo "=================================="
-echo "Checking metadata..."
-echo "=================================="
-
-META="metadata.yaml"
-
-required=(
-  title
-  author
-  publisher
-  cover
-)
-
-for key in "${required[@]}"; do
-    value=$(yq -r ".$key" "$META")
-
-    if [ "$value" = "null" ] || [ -z "$value" ]; then
-        echo "ERROR: '$key' is missing in metadata.yaml"
-        exit 1
-    fi
-
-    echo "✓ $key : $value"
-done
-
-echo
-echo "Metadata validation passed."
+python3 ../../scripts/validate_metadata.py metadata.yaml
 
 echo
 echo "=================================="
@@ -95,16 +65,10 @@ echo
 echo "Book validation passed."
 echo
 
-# ==============================
-# BOOK VALIDATION
-# ==============================
-
 echo
 echo "=================================="
 echo "Checking book structure..."
 echo "=================================="
-
-...kode Book Structure Validator...
 
 echo
 echo "Book validation passed."
