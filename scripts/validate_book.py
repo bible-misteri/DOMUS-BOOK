@@ -4,6 +4,10 @@ import sys
 import yaml
 from pathlib import Path
 
+if len(sys.argv) < 2:
+    print("Usage: validate_book.py <book-folder>")
+    sys.exit(1)
+
 book = Path(sys.argv[1])
 
 print("==================================")
