@@ -43,14 +43,14 @@ if [ ! -d images ]; then
 fi
 echo "✓ images"
 
-
+COVER=$(python3 -c "import yaml; print(yaml.safe_load(open('metadata.yaml', encoding='utf-8'))['cover'])")
 if [ ! -f "$COVER" ]; then
     echo "ERROR: Cover image not found: $COVER"
     exit 1
 fi
 echo "✓ cover"
 
-COVER=$(python3 -c "import yaml; print(yaml.safe_load(open('metadata.yaml', encoding='utf-8'))['cover'])")
+
 
 # Markdown
 COUNT=$(find manuscript -name "*.md" | wc -l)
@@ -76,6 +76,10 @@ ls -1 manuscript
 echo
 echo "Compiling:"
 printf '%s\n' manuscript/*.md
+
+#========================================
+# BUILD LATEX
+#========================================
 
 echo
 echo "Generating LaTeX source..."
@@ -128,7 +132,8 @@ echo "✓ EPUB CREATED SUCCESSFULLY"
 
 echo
 echo "=================================="
-echo "✓ PDF CREATED SUCCESSFULLY"
+echo "BUILD FINISHED SUCCESSFULLY"
 echo "=================================="
 echo
-echo "output/$NAME.pdf"
+echo "PDF  : output/$NAME.pdf"
+echo "EPUB : output/$NAME.epub"
