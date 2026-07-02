@@ -16,6 +16,7 @@ echo "Building PDF : $NAME"
 echo "=================================="
 
 mkdir -p "$BOOK/output"
+echo "✓ output"
 
 cd "$BOOK"
 
@@ -65,10 +66,6 @@ echo
 echo "Book validation passed."
 echo
 
-# ==============================
-# BUILD
-# ==============================
-
 echo
 echo "Markdown files:"
 ls -1 manuscript
@@ -97,6 +94,10 @@ pandoc \
 #========================================
 # BUILD PDF
 #========================================
+
+echo
+echo "Building PDF..."
+
 pandoc \
     manuscript/*.md \
     --metadata-file=metadata.yaml \
