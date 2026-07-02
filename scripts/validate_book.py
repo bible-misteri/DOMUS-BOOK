@@ -22,8 +22,16 @@ if not images.is_dir():
     sys.exit(1)
 print("✓ images")
 
-with open(book / "metadata.yaml", encoding="utf-8") as f:
-    meta = yaml.safe_load(f)
+text = meta.read_text(encoding="utf-8")
+
+# Hapus delimiter front matter Pandoc
+if text.startswith("---"):
+    text = text[3:]
+
+if text.rstrip().endswith("---"):
+    text = text.rstrip()[:-3]
+
+data = yaml.safe_load(text)
 
 cover = book / meta["cover"]
 
