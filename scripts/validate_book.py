@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 import yaml
 from pathlib import Path
 
@@ -75,13 +76,43 @@ print("✓ cover")
 # markdown
 # -------------------------------------------------
 
-count = len(list(manuscript.glob("*.md")))
+files = sorted(manuscript.glob("*.md"))
 
-if count == 0:
+if not files:
     print("ERROR: No markdown files found.")
     sys.exit(1)
 
-print(f"✓ markdown ({count} files)")
+numbers = []
+
+for file in files:
+
+    m = re.match(r"^(\d+)-", file.name)
+
+    if not m:
+        print(f"ERROR: Invalid filename: {file.name}")
+        sys.exit(1)
+
+    numbers.append(int(m.group(1)))
+
+# Duplicate number
+if len(numbers) != len(set(numbers)):
+    print("ERROR: Duplicate markdown number detected.")
+    sys.exit(1)
+
+# Missing number
+expected = list(range(min(numbers), max(numbers) + 1))
+
+missing = sorted(set(expected) - set(numbers))
+
+if missing:
+    print("ERROR: Missing markdown number(s):")
+
+    for n in missing:
+        print(f"  {n:02d}")
+
+    sys.exit(1)
+
+print(f"✓ markdown ({len(files)} files)")
 
 print()
 print("Book validation passed.")
