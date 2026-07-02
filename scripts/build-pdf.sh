@@ -25,48 +25,7 @@ pwd
 
 python3 ../../scripts/validate_metadata.py metadata.yaml
 
-echo
-echo "=================================="
-echo "Checking book structure..."
-echo "=================================="
-
-# Folder manuscript
-if [ ! -d manuscript ]; then
-    echo "ERROR: manuscript folder not found."
-    exit 1
-fi
-echo "✓ manuscript"
-
-# Folder images
-if [ ! -d images ]; then
-    echo "ERROR: images folder not found."
-    exit 1
-fi
-echo "✓ images"
-
-COVER=$(awk -F': *' '/^cover:/ {gsub(/"/,"",$2); print $2}' metadata.yaml)
-
-if [ ! -f "$COVER" ]; then
-    echo "ERROR: Cover image not found: $COVER"
-    exit 1
-fi
-
-echo "✓ cover"
-
-
-
-# Markdown
-COUNT=$(find manuscript -name "*.md" | wc -l)
-
-if [ "$COUNT" -eq 0 ]; then
-    echo "ERROR: No markdown files found."
-    exit 1
-fi
-echo "✓ markdown ($COUNT files)"
-
-echo
-echo "Book validation passed."
-echo
+python3 ../../scripts/validate_book.py 
 
 echo
 echo "Markdown files:"
