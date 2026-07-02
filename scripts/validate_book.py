@@ -125,25 +125,6 @@ if not cover.is_file():
 
 print("✓ cover")
 
-cover = book / data["cover"]
-
-    if not logo_file.is_file():
-
-        repo_root = Path(__file__).resolve().parent.parent
-        logo_file = (repo_root / logo).resolve()
-
-    if not logo_file.is_file():
-        print(f"ERROR: Logo not found: {logo}")
-        sys.exit(1)
-
-    print("✓ logo")
-
-if not cover.is_file():
-    print(f"ERROR: Cover image not found: {cover}")
-    sys.exit(1)
-
-print("✓ cover")
-
 # -------------------------------------------------
 # markdown
 # -------------------------------------------------
