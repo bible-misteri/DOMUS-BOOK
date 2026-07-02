@@ -31,7 +31,25 @@ echo "=================================="
 echo "Checking metadata..."
 echo "=================================="
 
-...kode Metadata Validation...
+META="metadata.yaml"
+
+required=(
+  title
+  author
+  publisher
+  cover
+)
+
+for key in "${required[@]}"; do
+    value=$(yq -r ".$key" "$META")
+
+    if [ "$value" = "null" ] || [ -z "$value" ]; then
+        echo "ERROR: '$key' is missing in metadata.yaml"
+        exit 1
+    fi
+
+    echo "✓ $key : $value"
+done
 
 echo
 echo "Metadata validation passed."
