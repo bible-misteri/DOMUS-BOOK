@@ -80,14 +80,38 @@ total_lines += len(lines)
 
 print(f"✓ {file.name:20} {len(lines):4} lines")
 
-parsed = parse_reference(ref)
+for ref in references:
 
-if parsed is None:
-    print()
-    print("ERROR: Invalid Bible Reference")
-    print(f"File      : {file.name}")
-    print(f"Reference : {ref}")
-    raise SystemExit(1)
+    print(f"    📖 {ref}")
+
+    parsed = parse_reference(ref)
+
+    if parsed is None:
+        print()
+        print("ERROR: Invalid Bible Reference")
+        print(f"File      : {file.name}")
+        print(f"Reference : {ref}")
+        raise SystemExit(1)
+
+    book_name = parsed["book"]
+
+    book_name = ALIAS.get(book_name, book_name)
+
+    book_name = ABBR.get(book_name, book_name)
+
+    chapter = parsed["chapter"]
+    verse = parsed["verse"]
+
+    print(f"       chapter={chapter}, verse={verse}")
+
+    if book_name in BOOKS:
+        print("       ✓ valid")
+    else:
+        print()
+        print("ERROR: Unknown Bible Book")
+        print(f"File      : {file.name}")
+        print(f"Reference : {ref}")
+        raise SystemExit(1)
 
 book_name = parsed["book"]
 
