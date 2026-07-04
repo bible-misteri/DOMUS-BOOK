@@ -20,10 +20,10 @@ with alias_db.open("r", encoding="utf-8") as f:
     ALIAS = yaml.safe_load(f)
 
 with abbr_db.open("r", encoding="utf-8") as f:
+    ABBR = yaml.safe_load(f)
 
 with structure_db.open("r", encoding="utf-8") as f:
     STRUCTURE = yaml.safe_load(f)
-    ABBR = yaml.safe_load(f)
 
 BOOKS = set()
 
