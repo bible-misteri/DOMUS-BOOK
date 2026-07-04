@@ -97,10 +97,14 @@ for ref in references:
 
     book_name = re.sub(r"\s+\d.*$", "", ref).strip()
 
-    if book_name in BOOKS:
-        print("       ✓ valid")
-    else:
-        print("       ✗ UNKNOWN BOOK")
+if book_name in BOOKS:
+    print("       ✓ valid")
+else:
+    print()
+    print("ERROR: Unknown Bible Book")
+    print(f"File      : {file.name}")
+    print(f"Reference : {ref}")
+    raise SystemExit(1)
 
 print("----------------------------------")
 print(f"Total Markdown Files : {len(files)}")
