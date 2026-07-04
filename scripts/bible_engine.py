@@ -19,11 +19,20 @@ for file in files:
 
     text = file.read_text(encoding="utf-8")
 
+    # ----------------------------------
+    # Detect Bible References
+    # ----------------------------------
+
+    references = re.findall(r"\[([^\]]+)\]", text)
+
     lines = text.splitlines()
 
     total_lines += len(lines)
 
     print(f"✓ {file.name:20} {len(lines):4} lines")
+
+    for ref in references:
+        print(f"    📖 {ref}")
 
 print("----------------------------------")
 print(f"Total Markdown Files : {len(files)}")
