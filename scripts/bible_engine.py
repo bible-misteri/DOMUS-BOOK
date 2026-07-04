@@ -96,31 +96,30 @@ for ref in references:
     book_name = parsed["book"]
 
     book_name = ALIAS.get(book_name, book_name)
-
     book_name = ABBR.get(book_name, book_name)
 
     chapter = parsed["chapter"]
     verse = parsed["verse"]
 
-# ----------------------------------
-# Chapter Validator
-# ----------------------------------
+    # ----------------------------------
+    # Chapter Validator
+    # ----------------------------------
 
-max_chapter = STRUCTURE.get(book_name)
+    max_chapter = STRUCTURE.get(book_name)
 
-if max_chapter is None:
-    print()
-    print("ERROR: Book structure missing")
-    print(f"Book : {book_name}")
-    raise SystemExit(1)
+    if max_chapter is None:
+        print()
+        print("ERROR: Book structure missing")
+        print(f"Book : {book_name}")
+        raise SystemExit(1)
 
-if chapter > max_chapter:
-    print()
-    print("ERROR: Invalid Chapter")
-    print(f"Book      : {book_name}")
-    print(f"Chapter   : {chapter}")
-    print(f"Maximum   : {max_chapter}")
-    raise SystemExit(1)
+    if chapter > max_chapter:
+        print()
+        print("ERROR: Invalid Chapter")
+        print(f"Book      : {book_name}")
+        print(f"Chapter   : {chapter}")
+        print(f"Maximum   : {max_chapter}")
+        raise SystemExit(1)
 
     print(f"       chapter={chapter}, verse={verse}")
 
