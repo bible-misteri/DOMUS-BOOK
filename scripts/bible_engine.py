@@ -91,7 +91,7 @@ for file in files:
 
     print(f"✓ {file.name:20} {len(lines):4} lines")
 
-    for ref in references:
+for ref in references:
 
     print(f"    📖 {ref}")
 
