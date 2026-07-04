@@ -102,6 +102,26 @@ for ref in references:
     chapter = parsed["chapter"]
     verse = parsed["verse"]
 
+# ----------------------------------
+# Chapter Validator
+# ----------------------------------
+
+max_chapter = STRUCTURE.get(book_name)
+
+if max_chapter is None:
+    print()
+    print("ERROR: Book structure missing")
+    print(f"Book : {book_name}")
+    raise SystemExit(1)
+
+if chapter > max_chapter:
+    print()
+    print("ERROR: Invalid Chapter")
+    print(f"Book      : {book_name}")
+    print(f"Chapter   : {chapter}")
+    print(f"Maximum   : {max_chapter}")
+    raise SystemExit(1)
+
     print(f"       chapter={chapter}, verse={verse}")
 
     if book_name in BOOKS:
