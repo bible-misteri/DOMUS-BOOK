@@ -5,26 +5,24 @@ import yaml
 from pathlib import Path
 repo_root = Path(__file__).resolve().parent.parent
 
-db = repo_root / "data" / "bible_books.yaml"
+# ----------------------------------
+# YAML Loader
+# ----------------------------------
 
-alias_db = repo_root / "data" / "bible_alias.yaml"
+def load_yaml(filename):
 
-abbr_db = repo_root / "data" / "bible_abbreviations.yaml"
+    path = repo_root / "data" / filename
 
-structure_db = repo_root / "data" / "bible_structure.yaml"
+    with path.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
-with db.open("r", encoding="utf-8") as f:
-    data = yaml.safe_load(f)
+data = load_yaml("bible_books.yaml")
 
-with alias_db.open("r", encoding="utf-8") as f:
-    ALIAS = yaml.safe_load(f)
+ALIAS = load_yaml("bible_alias.yaml")
 
-with abbr_db.open("r", encoding="utf-8") as f:
-    ABBR = yaml.safe_load(f)
+ABBR = load_yaml("bible_abbreviations.yaml")
 
-with structure_db.open("r", encoding="utf-8") as f:
-    STRUCTURE = yaml.safe_load(f)
-
+STRUCTURE = load_yaml("bible_structure.yaml")
 BOOKS = set()
 
 BOOKS.update(data["old_testament"])
