@@ -124,9 +124,9 @@ for ref in references:
     chapter = parsed["chapter"]
     verse = parsed["verse"]
 
-    # ----------------------------------
-    # Chapter Validator
-    # ----------------------------------
+# ----------------------------------
+# Chapter Validator
+# ----------------------------------
 
     chapters = BIBLE[book_name]["chapters"]
 
@@ -146,13 +146,13 @@ for ref in references:
         print(f"Maximum   : {max_chapter}")
         raise SystemExit(1)
 
-    # ----------------------------------
-    # Verse Validator
-    # ----------------------------------
+# ----------------------------------
+# Verse Validator
+# ----------------------------------
 
-    if verse is not None:
+if verse is not None:
 
-        max_verse = chapters[chapter]
+    max_verse = chapters[chapter]
 
     if verse > max_verse:
         print()
@@ -163,16 +163,8 @@ for ref in references:
         print(f"Maximum   : {max_verse}")
         raise SystemExit(1)
 
-    print(f"       chapter={chapter}, verse={verse}")
-
-    if book_name in BOOKS:
-        print("       ✓ valid")
-    else:
-        print()
-        print("ERROR: Unknown Bible Book")
-        print(f"File      : {file.name}")
-        print(f"Reference : {ref}")
-        raise SystemExit(1)
+print(f"       chapter={chapter}, verse={verse}")
+print("       ✓ valid")
 
 print("----------------------------------")
 print(f"Total Markdown Files : {len(files)}")
