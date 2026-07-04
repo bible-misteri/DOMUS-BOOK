@@ -6,13 +6,19 @@ from pathlib import Path
 repo_root = Path(__file__).resolve().parent.parent
 
 db = repo_root / "data" / "bible_books.yaml"
+
 alias_db = repo_root / "data" / "bible_alias.yaml"
+
+abbr_db = repo_root / "data" / "bible_abbreviations.yaml"
+
+with db.open("r", encoding="utf-8") as f:
+    data = yaml.safe_load(f)
 
 with alias_db.open("r", encoding="utf-8") as f:
     ALIAS = yaml.safe_load(f)
 
-with db.open("r", encoding="utf-8") as f:
-    data = yaml.safe_load(f)
+with abbr_db.open("r", encoding="utf-8") as f:
+    ABBR = yaml.safe_load(f)
 
 BOOKS = set()
 
@@ -54,6 +60,8 @@ for ref in references:
     book_name = re.sub(r"\s+\d.*$", "", ref).strip()
 
     book_name = ALIAS.get(book_name, book_name)
+
+    book_name = ABBR.get(book_name, book_name)
 
     if book_name in BOOKS:
         print("       ✓ valid")
