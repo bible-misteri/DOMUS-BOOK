@@ -2,6 +2,66 @@
 
 import re
 from pathlib import Path
+BOOKS = {
+
+    "Kejadian",
+    "Keluaran",
+    "Imamat",
+    "Bilangan",
+    "Ulangan",
+
+    "Yosua",
+    "Hakim-hakim",
+    "Rut",
+
+    "1 Samuel",
+    "2 Samuel",
+
+    "1 Raja-raja",
+    "2 Raja-raja",
+
+    "Mazmur",
+    "Amsal",
+    "Pengkhotbah",
+
+    "Yesaya",
+    "Yeremia",
+    "Yehezkiel",
+    "Daniel",
+
+    "Matius",
+    "Markus",
+    "Lukas",
+    "Yohanes",
+
+    "Kisah Para Rasul",
+
+    "Roma",
+
+    "1 Korintus",
+    "2 Korintus",
+
+    "Galatia",
+    "Efesus",
+    "Filipi",
+    "Kolose",
+
+    "Ibrani",
+
+    "Yakobus",
+
+    "1 Petrus",
+    "2 Petrus",
+
+    "1 Yohanes",
+    "2 Yohanes",
+    "3 Yohanes",
+
+    "Yudas",
+
+    "Wahyu"
+
+}
 
 print("==================================")
 print("DOMUS Bible Engine")
