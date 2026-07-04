@@ -44,10 +44,7 @@ def parse_reference(ref):
 BIBLE = load_yaml("bible_database.yaml")
 
 
-BOOKS = set()
-
-BOOKS.update(data["old_testament"])
-BOOKS.update(data["new_testament"])
+BOOKS = set(BIBLE.keys())
 
 print("==================================")
 print("DOMUS Bible Engine")
