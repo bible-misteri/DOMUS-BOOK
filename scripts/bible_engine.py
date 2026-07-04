@@ -68,7 +68,7 @@ for file in files:
 
     text = file.read_text(encoding="utf-8")
 
-    # ----------------------------------
+# ----------------------------------
 # Detect Bible References
 # ----------------------------------
 
@@ -80,15 +80,26 @@ total_lines += len(lines)
 
 print(f"✓ {file.name:20} {len(lines):4} lines")
 
-for ref in references:
+parsed = parse_reference(ref)
 
-    print(f"    📖 {ref}")
+if parsed is None:
+    print()
+    print("ERROR: Invalid Bible Reference")
+    print(f"File      : {file.name}")
+    print(f"Reference : {ref}")
+    raise SystemExit(1)
 
-    book_name = re.sub(r"\s+\d.*$", "", ref).strip()
+book_name = parsed["book"]
 
-    book_name = ALIAS.get(book_name, book_name)
+book_name = ALIAS.get(book_name, book_name)
 
-    book_name = ABBR.get(book_name, book_name)
+book_name = ABBR.get(book_name, book_name)
+
+chapter = parsed["chapter"]
+
+verse = parsed["verse"]
+
+print(f"       chapter={chapter}, verse={verse}")
 
     if book_name in BOOKS:
         print("       ✓ valid")
