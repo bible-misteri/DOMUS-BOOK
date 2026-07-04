@@ -6,7 +6,7 @@ Puji syukur kepada Tuhan.
 
 Dokumen ini digunakan sebagai pengujian DOMUS Template v2.0.
 
-framework Ishak mampu menjelaskan:
+>framework Ishak mampu menjelaskan:
 • Mengapa kitab-kitab dari Kejadian sampai Wahyu membentuk pola tersebut.
 • Mengapa pola itu lebih konsisten daripada pendekatan lain.
 • Mengapa ada teks-teks yang sebelumnya sulit dipahami, tetapi menjadi lebih jelas melalui kerangka Ishak.
