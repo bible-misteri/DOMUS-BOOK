@@ -13,6 +13,30 @@ repo_root = Path(__file__).resolve().parent.parent
 
 def load_yaml(filename):
 
+# ----------------------------------
+# Book Normalizer
+# ----------------------------------
+
+def normalize_book(book_name):
+
+    for canonical, info in BIBLE.items():
+
+        # Nama resmi
+        if book_name == canonical:
+            return canonical
+
+        # Singkatan
+        for abbr in info.get("abbreviations", []):
+            if book_name == abbr:
+                return canonical
+
+        # Alias
+        for alias in info.get("aliases", []):
+            if book_name == alias:
+                return canonical
+
+    return None
+
     path = repo_root / "data" / filename
 
     with path.open("r", encoding="utf-8") as f:
@@ -87,11 +111,13 @@ for ref in references:
         print(f"Reference : {ref}")
         raise SystemExit(1)
 
-    book_name = parsed["book"]
+    book_name = normalize_book(parsed["book"])
 
-    book_name = ALIAS.get(book_name, book_name)
-    book_name = ABBR.get(book_name, book_name)
-
+    if book_name is None:
+        print()
+        print("ERROR: Unknown Bible Book")
+        print(f"Reference : {ref}")
+        raise SystemExit(1)
     chapter = parsed["chapter"]
     verse = parsed["verse"]
 
