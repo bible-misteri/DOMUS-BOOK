@@ -146,6 +146,23 @@ for ref in references:
         print(f"Maximum   : {max_chapter}")
         raise SystemExit(1)
 
+    # ----------------------------------
+    # Verse Validator
+    # ----------------------------------
+
+    if verse is not None:
+
+        max_verse = chapters[chapter]
+
+    if verse > max_verse:
+        print()
+        print("ERROR: Invalid Verse")
+        print(f"Book      : {book_name}")
+        print(f"Chapter   : {chapter}")
+        print(f"Verse     : {verse}")
+        print(f"Maximum   : {max_verse}")
+        raise SystemExit(1)
+
     print(f"       chapter={chapter}, verse={verse}")
 
     if book_name in BOOKS:
