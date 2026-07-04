@@ -11,6 +11,8 @@ alias_db = repo_root / "data" / "bible_alias.yaml"
 
 abbr_db = repo_root / "data" / "bible_abbreviations.yaml"
 
+structure_db = repo_root / "data" / "bible_structure.yaml"
+
 with db.open("r", encoding="utf-8") as f:
     data = yaml.safe_load(f)
 
@@ -18,6 +20,9 @@ with alias_db.open("r", encoding="utf-8") as f:
     ALIAS = yaml.safe_load(f)
 
 with abbr_db.open("r", encoding="utf-8") as f:
+
+with structure_db.open("r", encoding="utf-8") as f:
+    STRUCTURE = yaml.safe_load(f)
     ABBR = yaml.safe_load(f)
 
 BOOKS = set()
