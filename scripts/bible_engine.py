@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import yaml
 from pathlib import Path
 repo_root = Path(__file__).resolve().parent.parent
