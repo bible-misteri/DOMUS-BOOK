@@ -2,7 +2,9 @@
 
 import re
 import yaml
+
 from pathlib import Path
+
 repo_root = Path(__file__).resolve().parent.parent
 
 # ----------------------------------
@@ -16,13 +18,35 @@ def load_yaml(filename):
     with path.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
+
+# ----------------------------------
+# Reference Parser
+# ----------------------------------
+
+def parse_reference(ref):
+
+    m = re.match(r"^(.*?)\s+(\d+)(?::(\d+))?$", ref.strip())
+
+    if not m:
+        return None
+
+    return {
+        "book": m.group(1).strip(),
+        "chapter": int(m.group(2)),
+        "verse": int(m.group(3)) if m.group(3) else None,
+    }
+
+
+# ----------------------------------
+# Load Database
+# ----------------------------------
+
 data = load_yaml("bible_books.yaml")
-
 ALIAS = load_yaml("bible_alias.yaml")
-
 ABBR = load_yaml("bible_abbreviations.yaml")
-
 STRUCTURE = load_yaml("bible_structure.yaml")
+
+
 BOOKS = set()
 
 BOOKS.update(data["old_testament"])
