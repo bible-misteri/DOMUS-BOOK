@@ -113,27 +113,6 @@ for ref in references:
         print(f"Reference : {ref}")
         raise SystemExit(1)
 
-book_name = parsed["book"]
-
-book_name = ALIAS.get(book_name, book_name)
-
-book_name = ABBR.get(book_name, book_name)
-
-chapter = parsed["chapter"]
-
-verse = parsed["verse"]
-
-print(f"       chapter={chapter}, verse={verse}")
-
-    if book_name in BOOKS:
-        print("       ✓ valid")
-    else:
-        print()
-        print("ERROR: Unknown Bible Book")
-        print(f"File      : {file.name}")
-        print(f"Reference : {ref}")
-        raise SystemExit(1)
-
 print("----------------------------------")
 print(f"Total Markdown Files : {len(files)}")
 print(f"Total Lines          : {total_lines}")
