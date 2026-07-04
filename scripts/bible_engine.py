@@ -128,7 +128,9 @@ for ref in references:
     # Chapter Validator
     # ----------------------------------
 
-    max_chapter = STRUCTURE.get(book_name)
+    chapters = BIBLE[book_name]["chapters"]
+
+    max_chapter = len(chapters)
 
     if max_chapter is None:
         print()
