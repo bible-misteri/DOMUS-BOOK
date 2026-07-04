@@ -38,13 +38,6 @@ def normalize_book(book_name):
             if book_name == alias:
                 return canonical
 
-    return None
-
-    path = repo_root / "data" / filename
-
-    with path.open("r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
 
 # ----------------------------------
 # Reference Parser
@@ -70,8 +63,6 @@ def parse_reference(ref):
 
 BIBLE = load_yaml("bible_database.yaml")
 
-
-BOOKS = set(BIBLE.keys())
 
 print("==================================")
 print("DOMUS Bible Engine")
