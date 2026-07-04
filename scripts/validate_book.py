@@ -179,7 +179,7 @@ for md in files:
 
     for match in IMAGE_PATTERN.findall(text):
 
-        image = (book / match).resolve()
+        image = (md.parent / match).resolve()
 
         if not image.is_file():
             missing_images.append(match)
