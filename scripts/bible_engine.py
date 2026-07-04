@@ -10,16 +10,23 @@ book = Path(".")
 
 manuscript = book / "manuscript"
 
-if not manuscript.is_dir():
-    print("ERROR: manuscript folder not found.")
-    raise SystemExit(1)
-
 files = sorted(manuscript.glob("*.md"))
 
-print(f"✓ {len(files)} markdown files found")
+total_lines = 0
 
 for file in files:
-    print(f"  - {file.name}")
+
+    text = file.read_text(encoding="utf-8")
+
+    lines = text.splitlines()
+
+    total_lines += len(lines)
+
+    print(f"✓ {file.name:20} {len(lines):4} lines")
+
+print("----------------------------------")
+print(f"Total Markdown Files : {len(files)}")
+print(f"Total Lines          : {total_lines}")
 
 print()
 print("Bible Engine ready.")
