@@ -1,0 +1,37 @@
+Kejadian:
+  id: GEN
+  order: 1
+  testament: OT
+
+  abbreviations:
+    - Kej
+    - Gen
+
+  aliases:
+    - Genesis
+
+  chapters:
+    1: 31
+    2: 25
+    3: 24
+    ...
+    50: 26
+
+Yohanes:
+  id: JHN
+  order: 43
+  testament: NT
+
+  abbreviations:
+    - Yoh
+    - Joh
+
+  aliases:
+    - John
+
+  chapters:
+    1: 51
+    2: 25
+    3: 36
+    ...
+    21: 25
