@@ -34,6 +34,7 @@ echo
 echo "✓ Metadata"
 
 python3 ../../scripts/validate_book.py .
+python3 ../../scripts/bible_engine.py
 
 echo "✓ Book Structure"
 
