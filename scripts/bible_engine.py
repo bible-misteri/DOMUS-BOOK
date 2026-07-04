@@ -92,7 +92,15 @@ for file in files:
     print(f"✓ {file.name:20} {len(lines):4} lines")
 
     for ref in references:
-        print(f"    📖 {ref}")
+
+    print(f"    📖 {ref}")
+
+    book_name = re.sub(r"\s+\d.*$", "", ref).strip()
+
+    if book_name in BOOKS:
+        print("       ✓ valid")
+    else:
+        print("       ✗ UNKNOWN BOOK")
 
 print("----------------------------------")
 print(f"Total Markdown Files : {len(files)}")
