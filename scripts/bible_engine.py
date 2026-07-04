@@ -1,67 +1,18 @@
 #!/usr/bin/env python3
 
-import re
+import yaml
 from pathlib import Path
-BOOKS = {
+repo_root = Path(__file__).resolve().parent.parent
 
-    "Kejadian",
-    "Keluaran",
-    "Imamat",
-    "Bilangan",
-    "Ulangan",
+db = repo_root / "data" / "bible_books.yaml"
 
-    "Yosua",
-    "Hakim-hakim",
-    "Rut",
+with db.open("r", encoding="utf-8") as f:
+    data = yaml.safe_load(f)
 
-    "1 Samuel",
-    "2 Samuel",
+BOOKS = set()
 
-    "1 Raja-raja",
-    "2 Raja-raja",
-
-    "Mazmur",
-    "Amsal",
-    "Pengkhotbah",
-
-    "Yesaya",
-    "Yeremia",
-    "Yehezkiel",
-    "Daniel",
-
-    "Matius",
-    "Markus",
-    "Lukas",
-    "Yohanes",
-
-    "Kisah Para Rasul",
-
-    "Roma",
-
-    "1 Korintus",
-    "2 Korintus",
-
-    "Galatia",
-    "Efesus",
-    "Filipi",
-    "Kolose",
-
-    "Ibrani",
-
-    "Yakobus",
-
-    "1 Petrus",
-    "2 Petrus",
-
-    "1 Yohanes",
-    "2 Yohanes",
-    "3 Yohanes",
-
-    "Yudas",
-
-    "Wahyu"
-
-}
+BOOKS.update(data["old_testament"])
+BOOKS.update(data["new_testament"])
 
 print("==================================")
 print("DOMUS Bible Engine")
