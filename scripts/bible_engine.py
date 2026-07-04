@@ -13,6 +13,12 @@ repo_root = Path(__file__).resolve().parent.parent
 
 def load_yaml(filename):
 
+    path = repo_root / "data" / filename
+
+    with path.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
 # ----------------------------------
 # Book Normalizer
 # ----------------------------------
@@ -21,16 +27,13 @@ def normalize_book(book_name):
 
     for canonical, info in BIBLE.items():
 
-        # Nama resmi
         if book_name == canonical:
             return canonical
 
-        # Singkatan
         for abbr in info.get("abbreviations", []):
             if book_name == abbr:
                 return canonical
 
-        # Alias
         for alias in info.get("aliases", []):
             if book_name == alias:
                 return canonical
