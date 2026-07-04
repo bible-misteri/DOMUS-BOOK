@@ -80,16 +80,16 @@ for file in files:
     text = file.read_text(encoding="utf-8")
 
     # ----------------------------------
-    # Detect Bible References
-    # ----------------------------------
+# Detect Bible References
+# ----------------------------------
 
-    references = re.findall(r"\[([^\]]+)\]", text)
+references = re.findall(r"\[([^\]]+)\]", text)
 
-    lines = text.splitlines()
+lines = text.splitlines()
 
-    total_lines += len(lines)
+total_lines += len(lines)
 
-    print(f"✓ {file.name:20} {len(lines):4} lines")
+print(f"✓ {file.name:20} {len(lines):4} lines")
 
 for ref in references:
 
@@ -97,14 +97,14 @@ for ref in references:
 
     book_name = re.sub(r"\s+\d.*$", "", ref).strip()
 
-if book_name in BOOKS:
-    print("       ✓ valid")
-else:
-    print()
-    print("ERROR: Unknown Bible Book")
-    print(f"File      : {file.name}")
-    print(f"Reference : {ref}")
-    raise SystemExit(1)
+    if book_name in BOOKS:
+        print("       ✓ valid")
+    else:
+        print()
+        print("ERROR: Unknown Bible Book")
+        print(f"File      : {file.name}")
+        print(f"Reference : {ref}")
+        raise SystemExit(1)
 
 print("----------------------------------")
 print(f"Total Markdown Files : {len(files)}")
