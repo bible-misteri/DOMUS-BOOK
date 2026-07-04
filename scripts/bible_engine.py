@@ -41,10 +41,7 @@ def parse_reference(ref):
 # Load Database
 # ----------------------------------
 
-data = load_yaml("bible_books.yaml")
-ALIAS = load_yaml("bible_alias.yaml")
-ABBR = load_yaml("bible_abbreviations.yaml")
-STRUCTURE = load_yaml("bible_structure.yaml")
+BIBLE = load_yaml("bible_database.yaml")
 
 
 BOOKS = set()
