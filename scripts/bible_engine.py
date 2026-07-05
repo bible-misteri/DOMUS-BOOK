@@ -65,7 +65,22 @@ def sort_references(refs):
 
 def compress_references(refs):
 
-    return refs
+    if not refs:
+        return []
+
+    result = []
+
+    current = refs[0]
+
+    for ref in refs[1:]:
+
+        result.append(current)
+
+        current = ref
+
+    result.append(current)
+
+    return result
 
 # ----------------------------------
 # Bible Index Writer
