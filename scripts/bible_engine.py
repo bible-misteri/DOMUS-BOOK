@@ -53,6 +53,10 @@ def write_bible_index():
 
     output.mkdir(exist_ok=True)
 
+    index_file = output / "bible-index.md"
+
+    index_file.write_text("", encoding="utf-8")
+
 
 # ----------------------------------
 # Reference Parser
