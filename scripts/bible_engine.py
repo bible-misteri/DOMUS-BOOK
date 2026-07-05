@@ -38,6 +38,33 @@ def normalize_book(book_name):
             if book_name == alias:
                 return canonical
 
+    return None
+
+
+# ----------------------------------
+# Bible Sort
+# ----------------------------------
+
+def get_sorted_books():
+
+    return sorted(
+        BIBLE_INDEX.keys(),
+        key=lambda book: BIBLE[book]["order"]
+    )
+
+    for canonical, info in BIBLE.items():
+
+        if book_name == canonical:
+            return canonical
+
+        for abbr in info.get("abbreviations", []):
+            if book_name == abbr:
+                return canonical
+
+        for alias in info.get("aliases", []):
+            if book_name == alias:
+                return canonical
+
 
 # ----------------------------------
 # Reference Parser
