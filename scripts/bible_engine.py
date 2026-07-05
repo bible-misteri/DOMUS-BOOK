@@ -77,9 +77,19 @@ def compress_references(refs):
     for ref in refs[1:]:
         chapter, verse = map(int, ref.split(":"))
 
+        if (
+            chapter == current_chapter
+            and verse == current_verse + 1
+        ):
+            current_verse = verse
+            continue
+
         result.append(current)
 
         current = ref
+        
+        current_chapter = chapter
+        current_verse = verse
 
     result.append(current)
 
