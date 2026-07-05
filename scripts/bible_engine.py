@@ -199,3 +199,4 @@ print(f"Total Lines          : {total_lines}")
 
 print()
 print("Bible Engine ready.")
+write_bible_index()
