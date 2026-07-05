@@ -62,6 +62,12 @@ def write_bible_index():
         for book in get_sorted_books():
 
             f.write(f"## {book}\n\n")
+            verses = sorted(BIBLE_INDEX[book])
+
+            for ref in verses:
+            f.write(f"- {ref}\n")
+
+            f.write("\n")
 
 
 # ----------------------------------
