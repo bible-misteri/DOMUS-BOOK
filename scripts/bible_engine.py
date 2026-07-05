@@ -25,18 +25,8 @@ def load_yaml(filename):
 
 def normalize_book(book_name):
 
-    for canonical, info in BIBLE.items():
-
-        if book_name == canonical:
-            return canonical
-
-        for abbr in info.get("abbreviations", []):
-            if book_name == abbr:
-                return canonical
-
-        for alias in info.get("aliases", []):
-            if book_name == alias:
-                return canonical
+    # isi normalize_book yang sekarang
+    # (tetap seperti yang sudah hijau)
 
     return None
 
@@ -52,18 +42,14 @@ def get_sorted_books():
         key=lambda book: BIBLE[book]["order"]
     )
 
-    for canonical, info in BIBLE.items():
 
-        if book_name == canonical:
-            return canonical
+# ----------------------------------
+# Bible Index Writer
+# ----------------------------------
 
-        for abbr in info.get("abbreviations", []):
-            if book_name == abbr:
-                return canonical
+def write_bible_index():
 
-        for alias in info.get("aliases", []):
-            if book_name == alias:
-                return canonical
+    pass
 
 
 # ----------------------------------
@@ -71,6 +57,8 @@ def get_sorted_books():
 # ----------------------------------
 
 def parse_reference(ref):
+
+    
 
     m = re.match(r"^(.*?)\s+(\d+)(?::(\d+))?$", ref.strip())
 
