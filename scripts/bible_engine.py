@@ -71,8 +71,11 @@ def compress_references(refs):
     result = []
 
     current = refs[0]
+    current_chapter, current_verse = map(int, 
+    current.split(":"))
 
     for ref in refs[1:]:
+        chapter, verse = map(int, ref.split(":"))
 
         result.append(current)
 
