@@ -63,6 +63,12 @@ def parse_reference(ref):
 
 BIBLE = load_yaml("bible_database.yaml")
 
+# ----------------------------------
+# Bible Index
+# ----------------------------------
+
+BIBLE_INDEX = {}
+
 
 print("==================================")
 print("DOMUS Bible Engine")
@@ -114,6 +120,13 @@ for ref in references:
         raise SystemExit(1)
     chapter = parsed["chapter"]
     verse = parsed["verse"]
+    if book_name not in BIBLE_INDEX:
+    BIBLE_INDEX[book_name] = set()
+
+if verse is None:
+    BIBLE_INDEX[book_name].add(f"{chapter}")
+else:
+    BIBLE_INDEX[book_name].add(f"{chapter}:{verse}")
 
 # ----------------------------------
 # Chapter Validator
