@@ -55,10 +55,13 @@ def write_bible_index():
 
     index_file = output / "bible-index.md"
 
-    index_file.write_text(
-        "# Bible Index\n\n",
-        encoding="utf-8"
-    )
+    with index_file.open("w", encoding="utf-8") as f:
+
+        f.write("# Bible Index\n\n")
+
+        for book in get_sorted_books():
+
+            f.write(f"## {book}\n\n")
 
 
 # ----------------------------------
