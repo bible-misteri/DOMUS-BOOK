@@ -114,8 +114,8 @@ for file in files:
     total_lines += len(lines)
 
     print(f"✓ {file.name:20} {len(lines):4} lines")
-
-    for ref in references:
+    
+for ref in references:
 
     print(f"    📖 {ref}")
 
@@ -131,6 +131,7 @@ for file in files:
     book_name = normalize_book(parsed["book"])
 
     if book_name is None:
+        ...
         print()
         print("ERROR: Unknown Bible Book")
         print(f"Reference : {ref}")
