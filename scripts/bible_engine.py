@@ -60,6 +60,14 @@ def sort_references(refs):
 
 
 # ----------------------------------
+# Compress References
+# ----------------------------------
+
+def compress_references(refs):
+
+    return refs
+
+# ----------------------------------
 # Bible Index Writer
 # ----------------------------------
 
@@ -81,8 +89,9 @@ def write_bible_index():
 
             f.write(f"## {book_name}\n\n")
 
-            verses = sort_references(BIBLE_INDEX[book_name])
-
+            verses = compress_references(
+                sort_references(BIBLE_INDEX[book_name])
+            )
             for ref in verses:
                 f.write(f"- {ref}\n")
 
