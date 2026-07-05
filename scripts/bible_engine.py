@@ -107,15 +107,15 @@ for file in files:
 # Detect Bible References
 # ----------------------------------
 
-references = re.findall(r"\[([^\]]+)\]", text)
+    references = re.findall(r"\[([^\]]+)\]", text)
 
-lines = text.splitlines()
+    lines = text.splitlines()
 
-total_lines += len(lines)
+    total_lines += len(lines)
 
-print(f"✓ {file.name:20} {len(lines):4} lines")
+    print(f"✓ {file.name:20} {len(lines):4} lines")
 
-for ref in references:
+    for ref in references:
 
     print(f"    📖 {ref}")
 
