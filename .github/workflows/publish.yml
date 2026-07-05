@@ -95,11 +95,18 @@ jobs:
               books/**/output/debug.tex
               books/**/output/pandoc.log
 
+      - name: Upload Bible Index
+        uses: actions/upload-artifact@v4
+        with:
+           name: DOMUS-Bible-Index
+           path: |
+              books/**/output/bible-index.md
+
       - name: Download PDF Artifact
         uses: actions/download-artifact@v4
         with:
-          name: DOMUS-PDF
-          path: release
+           name: DOMUS-PDF
+           path: release
 
       - name: Publish DOMUS Release
         uses: softprops/action-gh-release@v2
