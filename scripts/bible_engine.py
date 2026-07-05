@@ -42,6 +42,22 @@ def get_sorted_books():
         key=lambda book: BIBLE[book]["order"]
     )
 
+# ----------------------------------
+# Verse Sort
+# ----------------------------------
+
+def sort_references(refs):
+
+    def key(ref):
+
+        if ":" in ref:
+            c, v = ref.split(":")
+            return (int(c), int(v))
+
+        return (int(ref), 0)
+
+    return sorted(refs, key=key)
+
 
 # ----------------------------------
 # Bible Index Writer
@@ -62,7 +78,7 @@ def write_bible_index():
         for book_name in get_sorted_books():
 
             f.write(f"## {book}\n\n")
-            verses = sorted(BIBLE_INDEX[book])
+            verses = sort_references(BIBLE_INDEX[book_name])
 
             for ref in verses:
                 f.write(f"- {ref}\n")
