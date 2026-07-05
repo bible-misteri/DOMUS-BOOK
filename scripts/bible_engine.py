@@ -55,7 +55,10 @@ def write_bible_index():
 
     index_file = output / "bible-index.md"
 
-    index_file.write_text("", encoding="utf-8")
+    index_file.write_text(
+        "# Bible Index\n\n",
+        encoding="utf-8"
+    )
 
 
 # ----------------------------------
