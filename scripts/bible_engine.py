@@ -96,6 +96,12 @@ def write_bible_index():
 BIBLE_INDEX.values())
 
         f.write(f"References : {reference_count}\n")
+        f.write("\n")
+        f.write("## Books\n\n")
+
+        for book_name in get_sorted_books():
+            count = len(BIBLE_INDEX[book_name])
+            f.write(f"- {book_name} : {count}\n")
 
 
 # ----------------------------------
