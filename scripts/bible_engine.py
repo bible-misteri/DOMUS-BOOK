@@ -226,5 +226,15 @@ print(f"Total Markdown Files : {len(files)}")
 print(f"Total Lines          : {total_lines}")
 
 print()
+print("Bible Index Summary")
+print("-------------------")
+print(f"Books Referenced : {len(BIBLE_INDEX)}")
+
+reference_count = sum(len(v) for v in 
+BIBLE_INDEX.values())
+
+print(f"References       : {reference_count}")
+
+print()
 print("Bible Engine ready.")
 write_bible_index()
