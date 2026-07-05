@@ -49,7 +49,9 @@ def get_sorted_books():
 
 def write_bible_index():
 
-    pass
+    output = Path("output")
+
+    output.mkdir(exist_ok=True)
 
 
 # ----------------------------------
