@@ -194,7 +194,10 @@ for file in files:
 # Detect Bible References
 # ----------------------------------
 
-    references = re.findall(r"\[([^\]]+)\]", text)
+    references = re.findall(
+    r"(?<!!)\[([^\]]+)\]",
+    text
+)
 
     print(f"References found: {len(references)}")
 
