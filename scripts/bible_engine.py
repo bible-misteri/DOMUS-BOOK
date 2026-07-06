@@ -206,80 +206,80 @@ for file in files:
     
     for ref in references:
 
-    print(f"    📖 {ref}")
+        print(f"    📖 {ref}")
 
-    parsed = parse_reference(ref)
+        parsed = parse_reference(ref)
 
-    if parsed is None:
-        print()
-        print("ERROR: Invalid Bible Reference")
-        print(f"File      : {file.name}")
-        print(f"Reference : {ref}")
-        raise SystemExit(1)
+        if parsed is None:
+            print()
+            print("ERROR: Invalid Bible Reference")
+            print(f"File      : {file.name}")
+            print(f"Reference : {ref}")
+            raise SystemExit(1)
 
-    book_name = normalize_book(parsed["book"])
+        book_name = normalize_book(parsed["book"])
 
-    if book_name is None:
-        ...
-        print()
-        print("ERROR: Unknown Bible Book")
-        print(f"Reference : {ref}")
-        raise SystemExit(1)
-    chapter = parsed["chapter"]
-    verse = parsed["verse"]
+        if book_name is None:
+            ...
+            print()
+            print("ERROR: Unknown Bible Book")
+            print(f"Reference : {ref}")
+            raise SystemExit(1)
+        chapter = parsed["chapter"]
+        verse = parsed["verse"]
     
-    if book_name not in BIBLE_INDEX:
-        BIBLE_INDEX[book_name] = set()
+        if book_name not in BIBLE_INDEX:
+            BIBLE_INDEX[book_name] = set()
 
-    if verse is None:
-        BIBLE_INDEX[book_name].add(f"{chapter}")
-        print(f"Added: {book_name} {chapter}")
-    else:
-        BIBLE_INDEX[book_name].add(f"{chapter}:{verse}")
-        print(f"Added: {book_name} {chapter}:{verse}")
+        if verse is None:
+            BIBLE_INDEX[book_name].add(f"{chapter}")
+            print(f"Added: {book_name} {chapter}")
+        else:
+            BIBLE_INDEX[book_name].add(f"{chapter}:{verse}")
+            print(f"Added: {book_name} {chapter}:{verse}")
         
 
 # ----------------------------------
 # Chapter Validator
 # ----------------------------------
 
-    chapters = BIBLE[book_name]["chapters"]
+        chapters = BIBLE[book_name]["chapters"]
 
-    max_chapter = len(chapters)
+        max_chapter = len(chapters)
 
-    if max_chapter is None:
-        print()
-        print("ERROR: Book structure missing")
-        print(f"Book : {book_name}")
-        raise SystemExit(1)
+        if max_chapter is None:
+            print()
+            print("ERROR: Book structure missing")
+            print(f"Book : {book_name}")
+            raise SystemExit(1)
 
-    if chapter > max_chapter:
-        print()
-        print("ERROR: Invalid Chapter")
-        print(f"Book      : {book_name}")
-        print(f"Chapter   : {chapter}")
-        print(f"Maximum   : {max_chapter}")
-        raise SystemExit(1)
+        if chapter > max_chapter:
+            print()
+            print("ERROR: Invalid Chapter")
+            print(f"Book      : {book_name}")
+            print(f"Chapter   : {chapter}")
+            print(f"Maximum   : {max_chapter}")
+            raise SystemExit(1)
 
     # ----------------------------------
     # Verse Validator
     # ----------------------------------
 
-    if verse is not None:
+        if verse is not None:
 
-        max_verse = chapters[chapter]
+            max_verse = chapters[chapter]
 
-        if verse > max_verse:
-            print()
-            print("ERROR: Invalid Verse")
-            print(f"Book      : {book_name}")
-            print(f"Chapter   : {chapter}")
-            print(f"Verse     : {verse}")
-            print(f"Maximum   : {max_verse}")
-            raise SystemExit(1)
+            if verse > max_verse:
+                print()
+                print("ERROR: Invalid Verse")
+                print(f"Book      : {book_name}")
+                print(f"Chapter   : {chapter}")
+                print(f"Verse     : {verse}")
+                print(f"Maximum   : {max_verse}")
+                raise SystemExit(1)
 
-    print(f"       chapter={chapter}, verse={verse}")
-    print("       ✓ valid")
+        print(f"       chapter={chapter}, verse={verse}")
+        print("       ✓ valid")
 
 print("----------------------------------")
 print(f"Total Markdown Files : {len(files)}")
