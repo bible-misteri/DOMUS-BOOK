@@ -204,7 +204,7 @@ for file in files:
 
     print(f"✓ {file.name:20} {len(lines):4} lines")
     
-for ref in references:
+    for ref in references:
 
     print(f"    📖 {ref}")
 
@@ -232,8 +232,10 @@ for ref in references:
         BIBLE_INDEX[book_name] = set()
 
     if verse is None:
+        BIBLE_INDEX[book_name].add(f"{chapter}")
         print(f"Added: {book_name} {chapter}")
     else:
+        BIBLE_INDEX[book_name].add(f"{chapter}:{verse}")
         print(f"Added: {book_name} {chapter}:{verse}")
         
 
