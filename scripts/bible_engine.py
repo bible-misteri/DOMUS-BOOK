@@ -232,10 +232,9 @@ for ref in references:
         BIBLE_INDEX[book_name] = set()
 
     if verse is None:
-        BIBLE_INDEX[book_name].add(f"{chapter}")
+        print(f"Added: {book_name} {chapter}")
     else:
-        BIBLE_INDEX[book_name].add(f"{chapter}:{verse}")print
-        (BIBLE_INDEX)
+        print(f"Added: {book_name} {chapter}:{verse}")
         
 
 # ----------------------------------
