@@ -68,6 +68,14 @@ jobs:
           chmod +x scripts/build-book.sh
           ./scripts/build-book.sh
 
+      - name: Show Bible Index
+        run: |
+          echo "=================================="
+          echo "Bible Index"
+          echo "=================================="
+
+          cat books/DOMUS-ISAACI/output/bible-index.md
+
       - name: Verify Generated PDF
         run: |
           echo "=================================="
