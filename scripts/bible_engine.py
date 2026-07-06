@@ -196,6 +196,8 @@ for file in files:
 
     references = re.findall(r"\[([^\]]+)\]", text)
 
+    print(f"References found: {len(references)}")
+
     lines = text.splitlines()
 
     total_lines += len(lines)
@@ -232,7 +234,9 @@ for ref in references:
     if verse is None:
         BIBLE_INDEX[book_name].add(f"{chapter}")
     else:
-        BIBLE_INDEX[book_name].add(f"{chapter}:{verse}")
+        BIBLE_INDEX[book_name].add(f"{chapter}:{verse}")print
+        (BIBLE_INDEX)
+        
 
 # ----------------------------------
 # Chapter Validator
