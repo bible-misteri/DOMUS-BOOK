@@ -25,8 +25,20 @@ def load_yaml(filename):
 
 def normalize_book(book_name):
 
-    # isi normalize_book yang sekarang
-    # (tetap seperti yang sudah hijau)
+    book_name = book_name.strip()
+
+    for canonical, info in BIBLE.items():
+
+        if book_name == canonical:
+            return canonical
+
+        for abbr in info.get("abbreviations", []):
+            if book_name == abbr:
+                return canonical
+
+        for alias in info.get("aliases", []):
+            if book_name == alias:
+                return canonical
 
     return None
 
