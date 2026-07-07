@@ -3,6 +3,17 @@
 from pathlib import Path
 import yaml
 
+# ----------------------------------
+# YAML Loader
+# ----------------------------------
+
+def load_source():
+
+    source = repo_root / "data" / "bible_source.yaml"
+
+    with source.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
 print("==================================")
 print("DOMUS Bible Database Generator")
 print("==================================")
@@ -54,9 +65,16 @@ NEW_TESTAMENT = [
 
 def generate_database():
 
+    source = load_source()
+
     database = {}
 
-    for book in OLD_TESTAMENT + NEW_TESTAMENT:
+    for book in source["books"]:
+
+        chapters = {}
+
+        for i, verse_count in enumerate(book["chapters"], start=1):
+            chapters[i] = verse_count
 
         database[book["name"]] = {
 
@@ -65,7 +83,7 @@ def generate_database():
             "testament": book["testament"],
             "abbreviations": book["abbreviations"],
             "aliases": book["aliases"],
-            "chapters": book["chapters"],
+            "chapters": chapters,
         }
 
     return database
