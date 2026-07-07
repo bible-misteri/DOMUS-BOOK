@@ -33,11 +33,6 @@ python3 ../../scripts/validate_metadata.py metadata.yaml
 echo
 echo "✓ Metadata"
 
-python3 ../../scripts/validate_metadata.py metadata.yaml
-
-echo
-echo "✓ Metadata"
-
 python3 ../../scripts/validate_book.py .
 
 echo
@@ -46,6 +41,13 @@ echo "DOMUS Bible Database Generator"
 echo "=================================="
 
 python3 ../../scripts/generate_bible_database.py
+
+echo
+echo "=================================="
+echo "Generated Bible Database"
+echo "=================================="
+
+head -40 ../../data/bible_database.yaml
 
 python3 ../../scripts/bible_engine.py
 
