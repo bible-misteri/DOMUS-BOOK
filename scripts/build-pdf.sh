@@ -44,10 +44,22 @@ python3 ../../scripts/generate_bible_database.py
 
 echo
 echo "=================================="
-echo "Generated Bible Database"
+echo "Current Bible Database"
+echo "=================================="
+
+grep -A25 "^Yohanes:" ../../data/bible_database.yaml
+
+echo
+echo "=================================="
+echo "Generated Bible Database (Top)"
 echo "=================================="
 
 head -40 ../../data/bible_database.yaml
+
+echo
+echo "=================================="
+echo "DOMUS Bible Engine"
+echo "=================================="
 
 python3 ../../scripts/bible_engine.py
 
