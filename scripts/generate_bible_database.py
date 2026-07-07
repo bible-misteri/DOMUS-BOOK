@@ -22,7 +22,31 @@ OLD_TESTAMENT = []
 # NEW TESTAMENT
 # ----------------------------------
 
-NEW_TESTAMENT = []
+NEW_TESTAMENT = [
+
+    {
+        "name": "Yohanes",
+        "id": "JHN",
+        "order": 43,
+        "testament": "NT",
+
+        "abbreviations": [
+            "Yoh",
+            "Joh"
+        ],
+
+        "aliases": [
+            "John"
+        ],
+
+        "chapters": {
+            1: 51,
+            2: 25,
+            3: 36
+        }
+    }
+
+]
 
 # ----------------------------------
 # Generate YAML
@@ -31,6 +55,18 @@ NEW_TESTAMENT = []
 def generate_database():
 
     database = {}
+
+    for book in OLD_TESTAMENT + NEW_TESTAMENT:
+
+        database[book["name"]] = {
+
+            "id": book["id"],
+            "order": book["order"],
+            "testament": book["testament"],
+            "abbreviations": book["abbreviations"],
+            "aliases": book["aliases"],
+            "chapters": book["chapters"],
+        }
 
     return database
 
