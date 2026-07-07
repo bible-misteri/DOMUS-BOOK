@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 
-from pathlib import Path
+import json
 import yaml
+
+from pathlib import Path
+
+repo_root = Path(__file__).resolve().parent.parent
+
+print("==================================")
+print("DOMUS Bible Database Generator")
+print("==================================")
+print()
+
+output = repo_root / "data" / "bible_database.yaml"
 
 # ----------------------------------
 # YAML Loader
@@ -14,53 +25,20 @@ def load_source():
     with source.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
-print("==================================")
-print("DOMUS Bible Database Generator")
-print("==================================")
-print()
-
-repo_root = Path(__file__).resolve().parent.parent
-
-output = repo_root / "data" / "bible_database.yaml"
-
 # ----------------------------------
-# OLD TESTAMENT
+# Midvash Loader
 # ----------------------------------
 
-OLD_TESTAMENT = []
+def load_midvash():
+
+    source = repo_root / "data" / "raw" / "midvash.json"
+
+    with source.open("r", encoding="utf-8") as f:
+        return json.load(f)
+        # Future Midvash Import
 
 # ----------------------------------
-# NEW TESTAMENT
-# ----------------------------------
-
-NEW_TESTAMENT = [
-
-    {
-        "name": "Yohanes",
-        "id": "JHN",
-        "order": 43,
-        "testament": "NT",
-
-        "abbreviations": [
-            "Yoh",
-            "Joh"
-        ],
-
-        "aliases": [
-            "John"
-        ],
-
-        "chapters": {
-            1: 51,
-            2: 25,
-            3: 36
-        }
-    }
-
-]
-
-# ----------------------------------
-# Generate YAML
+# Generate Bible Database
 # ----------------------------------
 
 def generate_database():
@@ -87,9 +65,9 @@ def generate_database():
         }
 
     return database
-
+    
 # ----------------------------------
-# Save bible_database.yaml
+# Save Bible Database
 # ----------------------------------
 
 def save_database(database):
@@ -107,7 +85,7 @@ def save_database(database):
         )
 
     print(f"✓ Saved : {output}")
-
+    
 # ----------------------------------
 # Main
 # ----------------------------------
