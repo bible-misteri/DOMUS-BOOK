@@ -61,6 +61,8 @@ echo "=================================="
 echo "DOMUS Bible Engine"
 echo "=================================="
 
+echo "========== DEBUG BUILD-PDF =========="
+
 python3 ../../scripts/bible_engine.py
 
 echo "✓ Book Structure"
