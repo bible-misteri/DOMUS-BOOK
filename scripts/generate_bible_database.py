@@ -94,13 +94,19 @@ def generate_database():
 
 def save_database(database):
 
+    output.parent.mkdir(exist_ok=True)
+
     with output.open("w", encoding="utf-8") as f:
+
         yaml.dump(
             database,
             f,
             allow_unicode=True,
-            sort_keys=False
+            sort_keys=False,
+            default_flow_style=False
         )
+
+    print(f"✓ Saved : {output}")
 
 # ----------------------------------
 # Main
@@ -108,6 +114,9 @@ def save_database(database):
 
 database = generate_database()
 
+print(f"Books : {len(database)}")
+
 save_database(database)
 
-print(f"Saved: {output}")
+print()
+print("Bible Database Generator finished.")
