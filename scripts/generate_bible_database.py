@@ -92,6 +92,17 @@ def save_database(database):
 
 database = generate_database()
 
+chapter_count = 0
+verse_count = 0
+
+for book in database.values():
+    chapter_count += len(book["chapters"])
+    verse_count += sum(book["chapters"].values())
+
+print(f"Books    : {len(database)}")
+print(f"Chapters : {chapter_count}")
+print(f"Verses   : {verse_count}")
+
 print(f"Books : {len(database)}")
 
 save_database(database)
