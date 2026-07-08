@@ -18,9 +18,18 @@ output = repo_root / "data" / "bible_database.yaml"
 # YAML Loader
 # ----------------------------------
 
+# ----------------------------------
+# Canonical Source Loader
+# ----------------------------------
+
 def load_source():
 
-    source = repo_root / "data" / "bible_source.yaml"
+    source = (
+        repo_root
+        / "data"
+        / "canonical"
+        / "bible_source.yaml"
+    )
 
     with source.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f)
@@ -31,11 +40,27 @@ def load_source():
 
 def load_midvash():
 
-    source = repo_root / "data" / "raw" / "midvash.json"
+    source = (
+        repo_root
+        / "data"
+        / "raw"
+        / "midvash.json"
+    )
 
     with source.open("r", encoding="utf-8") as f:
         return json.load(f)
-        # Future Midvash Import
+
+# ----------------------------------
+# Source Selector
+# ----------------------------------
+
+def get_source():
+
+    # Current Development Mode
+    return load_source()
+
+    # Future Release Mode
+    # return load_midvash()
 
 # ----------------------------------
 # Generate Bible Database
@@ -43,7 +68,7 @@ def load_midvash():
 
 def generate_database():
 
-    source = load_source()
+    source = get_source()
 
     database = {}
 
