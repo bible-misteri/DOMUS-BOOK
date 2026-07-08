@@ -1,1 +1,18 @@
+books:
 
+  - name: Yohanes
+    id: JHN
+    order: 43
+    testament: NT
+
+    abbreviations:
+      - Yoh
+      - Joh
+
+    aliases:
+      - John
+
+    chapters:
+      - 51
+      - 25
+      - 36
