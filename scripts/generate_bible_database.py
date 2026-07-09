@@ -110,6 +110,76 @@ def save_database(database):
         )
 
     print(f"✓ Saved : {output}")
+
+# ----------------------------------
+# Book Order Generator
+# ----------------------------------
+
+def save_book_order(database):
+
+    output = (
+        repo_root
+        / "data"
+        / "generated"
+        / "book_order.yaml"
+    )
+
+    order = {}
+
+    for book_name, book in database.items():
+        order[book["id"]] = book["order"]
+
+    with output.open("w", encoding="utf-8") as f:
+
+        yaml.dump(
+            order,
+            f,
+            allow_unicode=True,
+            sort_keys=False,
+            default_flow_style=False
+        )
+
+    print(f"✓ Saved : {output}")
+
+# ----------------------------------
+# Book Alias Generator
+# ----------------------------------
+
+def save_book_aliases(database):
+
+    output = (
+        repo_root
+        / "data"
+        / "generated"
+        / "book_aliases.yaml"
+    )
+
+    aliases = {}
+
+    for book_name, book in database.items():
+
+        # Nama resmi
+        aliases[book_name] = book_name
+
+        # Alias
+        for alias in book["aliases"]:
+            aliases[alias] = book_name
+
+        # Singkatan
+        for abbr in book["abbreviations"]:
+            aliases[abbr] = book_name
+
+    with output.open("w", encoding="utf-8") as f:
+
+        yaml.dump(
+            aliases,
+            f,
+            allow_unicode=True,
+            sort_keys=True,
+            default_flow_style=False
+        )
+
+    print(f"✓ Saved : {output}")
     
 # ----------------------------------
 # Main
@@ -131,6 +201,8 @@ print(f"Verses   : {verse_count}")
 print(f"Books : {len(database)}")
 
 save_database(database)
+save_book_order(database)
+save_book_aliases(database)
 
 print()
 print("Bible Database Generator finished.")
