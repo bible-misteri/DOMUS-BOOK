@@ -68,28 +68,23 @@ def get_source():
 
 def generate_database():
 
-    source = get_source()
+    source = load_source()
 
-    database = {}
+database = {}
 
-    for book in source["books"]:
+for book_name, book in source.items():
 
-        chapters = {}
+    database[book_name] = {
 
-        for i, verse_count in enumerate(book["chapters"], start=1):
-            chapters[i] = verse_count
+        "id": book["id"],
+        "order": book["order"],
+        "testament": book["testament"],
+        "abbreviations": book["abbreviations"],
+        "aliases": book["aliases"],
+        "chapters": book["chapters"],
+    }
 
-        database[book["name"]] = {
-
-            "id": book["id"],
-            "order": book["order"],
-            "testament": book["testament"],
-            "abbreviations": book["abbreviations"],
-            "aliases": book["aliases"],
-            "chapters": chapters,
-        }
-
-    return database
+return database
     
 # ----------------------------------
 # Save Bible Database
