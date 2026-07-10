@@ -68,7 +68,7 @@ def get_source():
 
 def generate_database():
 
-    source = load_source()
+    source = get_source()
 
     database = {}
 
