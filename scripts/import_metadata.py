@@ -10,3 +10,22 @@ print("==================================")
 print("DOMUS Metadata Importer")
 print("==================================")
 print()
+
+# ----------------------------------
+# Configuration Loader
+# ----------------------------------
+
+def load_config():
+
+    config = (
+        repo_root
+        / "config"
+        / "metadata_sources.yaml"
+    )
+
+    with config.open(
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        return yaml.safe_load(f)
