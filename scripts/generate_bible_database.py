@@ -70,21 +70,21 @@ def generate_database():
 
     source = load_source()
 
-database = {}
+    database = {}
 
-for book_name, book in source.items():
+    for book_name, book in source.items():
 
-    database[book_name] = {
+        database[book_name] = {
 
-        "id": book["id"],
-        "order": book["order"],
-        "testament": book["testament"],
-        "abbreviations": book["abbreviations"],
-        "aliases": book["aliases"],
-        "chapters": book["chapters"],
-    }
+            "id": book["id"],
+            "order": book["order"],
+            "testament": book["testament"],
+            "abbreviations": book["abbreviations"],
+            "aliases": book["aliases"],
+            "chapters": book["chapters"],
+        }
 
-return database
+    return database
     
 # ----------------------------------
 # Save Bible Database
