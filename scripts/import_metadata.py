@@ -29,3 +29,32 @@ def load_config():
     ) as f:
 
         return yaml.safe_load(f)
+
+# ----------------------------------
+# Configuration Loader
+# ----------------------------------
+
+def load_config():
+
+    config = (
+        repo_root
+        / "config"
+        / "metadata_sources.yaml"
+    )
+
+    with config.open(
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        return yaml.safe_load(f)
+
+config = load_config()
+
+metadata = load_metadata()
+
+print("Provider :", config["metadata"]["provider"])
+print("Books    :", len(metadata["books"]))
+
+print()
+print("Metadata loaded successfully.")
