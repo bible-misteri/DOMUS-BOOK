@@ -66,7 +66,7 @@ def get_source():
 # Generate Bible Database
 # ----------------------------------
 
- def generate_database():
+def generate_database():
 
     source = load_source()
 
