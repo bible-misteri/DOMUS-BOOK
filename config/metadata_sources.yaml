@@ -1,0 +1,58 @@
+# ==================================
+# DOMUS Metadata Sources
+# ==================================
+
+metadata:
+
+  version: "1.0"
+
+  auto_update: true
+
+  provider: OpenBible
+
+  description: >
+    DOMUS Metadata Configuration
+
+# ==================================
+# Sources
+# ==================================
+
+sources:
+
+  bible:
+
+    enabled: true
+
+    provider: OpenBible
+
+    format: json
+
+    output: data/raw/bible_metadata.json
+
+# ==================================
+# Cache
+# ==================================
+
+cache:
+
+  enabled: true
+
+  folder: data/raw
+
+# ==================================
+# Validation
+# ==================================
+
+validation:
+
+  enabled: true
+
+# ==================================
+# Backup
+# ==================================
+
+backup:
+
+  enabled: true
+
+  folder: backup/metadata
