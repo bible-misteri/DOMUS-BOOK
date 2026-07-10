@@ -35,16 +35,16 @@ def load_source():
         return yaml.safe_load(f)
 
 # ----------------------------------
-# Midvash Loader
+# OpenBible Loader
 # ----------------------------------
 
-def load_midvash():
+def load_openbible():
 
     source = (
         repo_root
         / "data"
         / "raw"
-        / "midvash.json"
+        / "openbible.json"
     )
 
     with source.open("r", encoding="utf-8") as f:
