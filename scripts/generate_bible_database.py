@@ -4,8 +4,11 @@ import json
 import yaml
 
 from pathlib import Path
+import sys
 
 repo_root = Path(__file__).resolve().parent.parent
+
+sys.path.insert(0, str(repo_root))
 
 from domus.logger import header
 from domus.config import load_config
