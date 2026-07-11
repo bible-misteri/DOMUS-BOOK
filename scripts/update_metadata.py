@@ -85,3 +85,67 @@ save_metadata(config, metadata)
 print()
 
 print("Metadata update finished.")
+
+# ----------------------------------
+# Temporary Folder
+# ----------------------------------
+
+def get_temp_folder(config):
+
+    folder = (
+        repo_root
+        / config["temp"]["folder"]
+    )
+
+    folder.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    return folder
+
+# ----------------------------------
+# Download Metadata
+# ----------------------------------
+
+def download_metadata(config):
+
+    temp = get_temp_folder(config)
+
+    destination = (
+        temp
+        / "bible_metadata.json"
+    )
+
+    metadata = load_metadata(config)
+
+    with destination.open(
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            metadata,
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
+
+    print(f"✓ Download : {destination}")
+
+    return destination
+
+config = load_config()
+
+temp_file = download_metadata(config)
+
+metadata = load_metadata(config)
+
+validate_metadata(metadata)
+
+backup_metadata(config)
+
+save_metadata(config, metadata)
+
+print()
+print("Metadata update finished.")
