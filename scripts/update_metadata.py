@@ -4,6 +4,7 @@
 
 from datetime import datetime
 import shutil
+import urllib.request
 
 def backup_metadata(config):
 
@@ -110,30 +111,25 @@ def get_temp_folder(config):
 
 def download_metadata(config):
 
-    temp = get_temp_folder(config)
+    url = get_metadata_url(config)
 
-    destination = (
-        temp
-        / "bible_metadata.json"
-    )
+    if url == "":
 
-    metadata = load_metadata(config)
+        print("✓ No remote URL configured.")
 
-    with destination.open(
-        "w",
-        encoding="utf-8"
-    ) as f:
+        return None
 
-        json.dump(
-            metadata,
-            f,
-            indent=2,
-            ensure_ascii=False
-        )
+    print(f"Downloading: {url}")
 
-    print(f"✓ Download : {destination}")
+    return None
 
-    return destination
+# ----------------------------------
+# Metadata URL
+# ----------------------------------
+
+def get_metadata_url(config):
+
+    return config["sources"]["bible"]["url"]
 
 config = load_config()
 
