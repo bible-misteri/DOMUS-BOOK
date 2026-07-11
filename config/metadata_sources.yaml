@@ -56,3 +56,9 @@ backup:
   enabled: true
 
   folder: backup/metadata
+
+temp:
+
+  enabled: true
+
+  folder: temp
