@@ -27,6 +27,8 @@ sources:
 
     format: json
 
+    url: ""
+
     output: data/raw/bible_metadata.json
 
 # ==================================
