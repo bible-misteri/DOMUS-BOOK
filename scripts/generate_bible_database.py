@@ -7,10 +7,20 @@ from pathlib import Path
 
 repo_root = Path(__file__).resolve().parent.parent
 
-print("==================================")
-print("DOMUS Bible Database Generator")
-print("==================================")
-print()
+from domus.logger import header
+from domus.config import load_config
+from domus.metadata import (
+    get_metadata_path,
+    load_metadata,
+)
+from domus.validation import validate_books
+from domus.bible import (
+    count_books,
+    count_chapters,
+    count_verses,
+)
+
+header("DOMUS Bible Database Generator")
 
 output = repo_root / "data" / "bible_database.yaml"
 
