@@ -5,6 +5,14 @@ from pathlib import Path
 repo_root = Path(__file__).resolve().parent.parent
 
 
+def get_metadata_path(config):
+
+    return (
+        repo_root
+        / config["sources"]["bible"]["output"]
+    )
+
+
 def load_metadata(path):
 
     with path.open(
