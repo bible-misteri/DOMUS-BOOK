@@ -30,3 +30,19 @@ def parse(reference):
         "type": detect_type(reference)
 
   }
+
+# ----------------------------------
+# Detect Reference Type
+# ----------------------------------
+
+def detect_type(reference):
+
+    if reference["verse"] is None:
+
+        return "chapter"
+
+    if reference["verse_end"] is None:
+
+        return "single"
+
+    return "range"
