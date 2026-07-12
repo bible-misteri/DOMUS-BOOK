@@ -4,6 +4,7 @@
 # ----------------------------------
 
 from domus.processor import MarkdownProcessor
+from domus.models import CitationResult
 
 
 class CitationEngine:
@@ -16,10 +17,10 @@ class CitationEngine:
 
         references = self.processor.process(markdown)
 
-        return {
+        return CitationResult(
 
-            "markdown": markdown,
+            markdown=markdown,
 
-            "references": references
+            references=references
 
-        }
+        )
