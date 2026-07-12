@@ -10,6 +10,7 @@ import test_parser
 import test_resolver
 import test_validator
 import test_engine
+import test_processor
 
 print()
 print("==================================")
