@@ -26,7 +26,7 @@ def load_aliases():
 
 def resolve(reference, aliases):
 
-    book = reference["book"]
+    book = reference.book
 
     if book in aliases:
 
