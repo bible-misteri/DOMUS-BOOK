@@ -1,5 +1,7 @@
 # ----------------------------------
 # DOMUS Bible Engine
+# Version : 1.0.0
+# Status  : Stable
 # ----------------------------------
 
 from domus.scanner import scan
