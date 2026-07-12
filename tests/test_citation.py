@@ -1,13 +1,28 @@
 from domus.citation import CitationEngine
 
-database = {}
+database = {
+
+    "Yohanes": {
+
+        "chapters": {
+
+            3: 36
+
+        }
+
+    }
+
+}
 
 engine = CitationEngine(database)
 
-text = "Yoh 3:16"
+result = engine.replace(
 
-result = engine.replace(text)
+    "Kasih Allah dinyatakan dalam Yoh 3:16."
 
-assert result == text
+)
+
+assert "markdown" in result
+assert "references" in result
 
 print("✓ Citation Engine")
