@@ -1,6 +1,6 @@
 # ----------------------------------
 # DOMUS Citation Engine
-# Version : 1.0.0
+# Version : 1.1.0
 # ----------------------------------
 
 from domus.processor import MarkdownProcessor
@@ -14,9 +14,12 @@ class CitationEngine:
 
     def replace(self, markdown):
 
-        """
-        Memproses seluruh referensi
-        Alkitab di dalam markdown.
-        """
+        references = self.processor.process(markdown)
 
-        return markdown
+        return {
+
+            "markdown": markdown,
+
+            "references": references
+
+        }
