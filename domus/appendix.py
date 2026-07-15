@@ -5,9 +5,9 @@
 from domus.indexer import build_index
 
 
-def build_appendix(references):
+def build_appendix(registry):
 
-    index = build_index(references)
+    index = build_index(registry)
 
     lines = []
 
