@@ -131,3 +131,12 @@ assert "## Yohanes" in appendix
 assert "- 3:16" in appendix
 
 print("✓ Scripture Appendix")
+
+from domus.build import BuildPipeline
+from domus.publisher import Publisher
+
+publisher = Publisher(database)
+
+pipeline = BuildPipeline(publisher)
+
+print("✓ Build Pipeline")
