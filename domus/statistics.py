@@ -5,7 +5,9 @@
 from collections import Counter
 
 
-def summarize(references):
+def summarize(registry):
+
+    references = registry.find_by_namespace("bible")
 
     books = Counter()
 
