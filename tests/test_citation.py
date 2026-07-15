@@ -22,7 +22,8 @@ result = engine.replace(
 
 )
 
-assert "markdown" in result
-assert "references" in result
+assert result.markdown ==
+
+"Kasih Allah dinyatakan dalam {{bible:JHN:3:16}}."
 
 print("✓ Citation Engine")
