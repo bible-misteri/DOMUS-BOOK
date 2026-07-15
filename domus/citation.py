@@ -5,6 +5,7 @@
 
 from domus.processor import MarkdownProcessor
 from domus.models import CitationResult
+from domus.markup import build
 
 
 class CitationEngine:
@@ -15,12 +16,19 @@ class CitationEngine:
 
     def replace(self, markdown):
 
-        references = self.processor.process(markdown)
+    result = self.processor.process(markdown)
 
-        return CitationResult(
+    new_markdown = markdown
 
-            markdown=markdown,
+    for ref in result.references:
 
-            references=references
+        dim = build(ref)
 
+        new_markdown = new_markdown.replace(
+            ref.raw,
+            dim
         )
+
+    result.markdown = new_markdown
+
+    return result
