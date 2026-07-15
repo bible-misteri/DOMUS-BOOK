@@ -13,4 +13,6 @@ class Publisher:
 
     def publish(self, markdown):
 
-        return self.citation.replace(markdown)
+        result = self.citation.replace(markdown)
+
+        return result.markdown
