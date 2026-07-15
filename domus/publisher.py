@@ -7,6 +7,7 @@ from domus.citation import CitationEngine
 from domus.registry_manager import RegistryManager
 from domus.statistics import summarize
 from domus.appendix import build_appendix
+from domus.hyperlink import HyperlinkEngine
 
 
 class Publisher:
@@ -16,6 +17,10 @@ class Publisher:
         self.registry_manager = RegistryManager()
 
         self.citation = CitationEngine(database)
+
+        self.hyperlink = HyperlinkEngine(
+            self.registry_manager.get_registry()
+        )
 
     # ----------------------------------
 
@@ -30,6 +35,16 @@ class Publisher:
             self.registry_manager.register_reference(ref)
 
         registry = self.registry_manager.get_registry()
+
+    hyperlinks = []
+
+    for ref in result.references:
+
+        hyperlinks.append(
+
+            self.hyperlink.hyperlink(ref)
+
+        )
 
         # Statistics
         statistics = summarize(registry)
