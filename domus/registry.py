@@ -37,3 +37,37 @@ class Registry:
     def all(self):
 
         return list(self.items.values())
+
+    def build_anchor(reference):
+
+    anchor = f"bible-{reference.id.lower()}-{reference.chapter}"
+
+    if reference.verse is not None:
+
+        anchor += f"-{reference.verse}"
+
+        if reference.verse_end:
+
+            anchor += f"-{reference.verse_end}"
+
+    return anchor
+
+    def register_reference(registry, reference):
+
+    key = build_anchor(reference)
+
+    registry.add(
+
+        RegistryItem(
+
+            type="bible",
+
+            key=key,
+
+            anchor=key
+
+        )
+
+    )
+
+    return key
