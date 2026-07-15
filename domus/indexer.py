@@ -5,7 +5,9 @@
 from collections import defaultdict
 
 
-def build_index(references):
+def build_index(registry):
+
+    references = registry.find_by_namespace("bible")
 
     index = defaultdict(list)
 
