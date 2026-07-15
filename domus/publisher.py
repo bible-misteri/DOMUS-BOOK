@@ -36,9 +36,9 @@ class Publisher:
 
         registry = self.registry_manager.get_registry()
 
-    hyperlinks = []
+        hyperlinks = []
 
-    for ref in result.references:
+        for ref in result.references:
 
         hyperlinks.append(
 
@@ -63,5 +63,7 @@ class Publisher:
             "statistics": statistics,
 
             "appendix": appendix
+
+            "hyperlinks": hyperlinks
 
         }
