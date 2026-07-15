@@ -11,6 +11,7 @@ import test_resolver
 import test_validator
 import test_engine
 import test_processor
+import test_publisher
 
 print()
 print("==================================")
