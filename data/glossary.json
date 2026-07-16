@@ -16,3 +16,18 @@
   }
 
 }
+
+{
+  "Yahweh": {
+    "title": "Yahweh",
+    "description": "Nama perjanjian Allah dalam Perjanjian Lama."
+  },
+  "Logos": {
+    "title": "Logos",
+    "description": "Firman Allah yang menjadi manusia menurut Yohanes 1."
+  },
+  "Elohim": {
+    "title": "Elohim",
+    "description": "Istilah Ibrani untuk Allah."
+  }
+}
