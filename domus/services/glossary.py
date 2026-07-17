@@ -1,16 +1,16 @@
-import json
+from .base import BaseService
 
-from pathlib import Path
+from domus.glossary.engine import GlossaryEngine
 
 
-class GlossaryService:
+class GlossaryService(BaseService):
 
-    def __init__(self, path):
+    name = "Glossary"
 
-        with open(path, "r", encoding="utf-8") as f:
+    def __init__(self, provider):
 
-            self.data = json.load(f)
+        self.engine = GlossaryEngine(provider)
 
-    def lookup(self, word):
+    def lookup(self, term):
 
-        return self.data.get(word)
+        return self.engine.find(term)
