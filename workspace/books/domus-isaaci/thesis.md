@@ -1,17 +1,29 @@
 # Thesis
 
-Buku ini ingin menunjukkan bahwa keluarga Ishak
-bukan sekadar sejarah keluarga.
+## Tujuan
 
-Keluarga Ishak merupakan rancangan ilahi
-untuk memperkenalkan Allah Bapa,
-Kristus,
-dan karya keselamatan
-melalui tipologi.
+Buku ini bertujuan mengungkap keluarga Ishak sebagai rancangan ilahi yang menyatakan Allah Bapa, Kristus, dan karya keselamatan melalui tipologi.
 
-Karena itu,
-minimnya kisah Ishak
-justru menjadi petunjuk
-bahwa Roh Kudus sedang
-mengarahkan pembaca
-kepada makna simbolisnya.
+---
+
+## Pernyataan Utama
+
+Keluarga Ishak bukan sekadar sejarah keluarga, melainkan pola ilahi yang menunjuk kepada karya keselamatan.
+
+---
+
+## Hipotesis
+
+Minimnya kisah Ishak bukan karena ia kurang penting, tetapi karena Roh Kudus mengarahkan perhatian kepada makna tipologis hidupnya.
+
+---
+
+## Pertanyaan Besar
+
+Bagaimana keluarga Ishak menyatakan Allah Bapa, Kristus, dan sejarah keselamatan?
+
+---
+
+## Ruang Lingkup
+
+Buku ini tidak bertujuan menggantikan penafsiran historis Alkitab, tetapi mengusulkan pembacaan tipologis terhadap keluarga Ishak sebagai kesatuan yang menunjuk kepada karya Allah dalam Kristus.
