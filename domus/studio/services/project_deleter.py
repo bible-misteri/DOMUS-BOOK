@@ -1,4 +1,4 @@
-class ProjectService:
+class ProjectDeleter:
   
     def delete_project(self, name):
 
