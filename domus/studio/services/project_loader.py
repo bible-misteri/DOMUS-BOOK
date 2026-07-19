@@ -1,4 +1,4 @@
-class ProjectService:
+class ProjectLoader:
 
     def load_projects(self):
 
