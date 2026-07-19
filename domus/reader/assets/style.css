@@ -1,1 +1,39 @@
+body{
 
+    max-width:850px;
+
+    margin:auto;
+
+    padding:50px;
+
+    font-family:Georgia,serif;
+
+    line-height:1.8;
+
+    background:#fafafa;
+
+    color:#222;
+
+}
+
+h1{
+
+    text-align:center;
+
+}
+
+h2{
+
+    margin-top:50px;
+
+    border-bottom:1px solid #ccc;
+
+}
+
+pre{
+
+    white-space:pre-wrap;
+
+    font-family:inherit;
+
+}
