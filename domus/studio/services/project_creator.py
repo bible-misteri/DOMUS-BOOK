@@ -1,1 +1,13 @@
+class ProjectService:
 
+    def create_project(
+        self,
+        title,
+        author,
+        language,
+        theme
+    ):
+
+        """Membuat project baru."""
+
+        pass
