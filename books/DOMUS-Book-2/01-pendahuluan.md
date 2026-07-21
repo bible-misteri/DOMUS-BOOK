@@ -1,1 +1,20 @@
 Pernahkah kita bertanya mengapa Ishak hampir tidak pernah menjadi pusat perhatian ketika kisah para leluhur Israel diceritakan? Abraham dikenal sebagai bapa orang beriman. Yakub memenuhi sebagian besar kitab Kejadian dengan pergumulannya. Yusuf bahkan menjadi tokoh utama pada bagian penutup kitab itu. Namun di antara ketiga tokoh tersebut berdiri seorang pribadi yang justru menjadi mata rantai terpenting dalam perjanjian Allah, tetapi hampir tidak pernah mendapat sorotan yang sama. Kesunyian Ishak bukanlah sekadar kekurangan bahan cerita. Justru di dalam kesunyian itulah mungkin tersembunyi salah satu pesan teologis yang paling dalam dalam seluruh Kitab Kejadian.
+
+📅 Writing Session #001
+
+Bab:
+Mengapa Ishak Dilupakan?
+
+Target:
+Pembuka Bab
+
+Hasil:
+✓ 1 paragraf
+✓ 186 kata
+
+Catatan Editor:
+Pembuka berhasil membangun rasa ingin tahu.
+Bab berikutnya akan mulai menunjukkan fakta bahwa Ishak memang "sunyi" dalam narasi Kejadian.
+
+Status:
+Siap melanjutkan Session #002
