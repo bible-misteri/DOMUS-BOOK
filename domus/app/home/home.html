@@ -1,1 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOMUS</title>
+
+    <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="header">
+        <h1>DOMUS</h1>
+        <p>Digital Manuscript Operating System</p>
+    </header>
+
+    <section class="welcome">
+        <h2 id="userName">Selamat Datang</h2>
+    </section>
+
+    <section class="book-card">
+
+        <img id="bookCover"
+             src="../../assets/covers/default-cover.jpg"
+             alt="Cover Buku">
+
+        <h2 id="bookTitle"></h2>
+
+        <p id="bookSubtitle"></p>
+
+        <p>Status :
+            <span id="bookStatus"></span>
+        </p>
+
+        <p>Progress :
+            <span id="bookProgress"></span>
+        </p>
+
+        <p>Bab Aktif :
+            <span id="bookChapter"></span>
+        </p>
+
+        <button id="continueBtn">
+            Lanjut Menulis
+        </button>
+
+    </section>
+
+    <nav class="menu">
+
+        <button>Buku Saya</button>
+
+        <button>Editor</button>
+
+        <button>Review</button>
+
+        <button>Preview</button>
+
+        <button>Publish</button>
+
+        <button>Pengaturan</button>
+
+    </nav>
+
+</div>
+
+<script src="home.js"></script>
+
+</body>
+</html>
