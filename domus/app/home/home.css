@@ -1,1 +1,125 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
+body{
+
+    background:#f5f3ed;
+
+    color:#2b2b2b;
+
+    font-family:Georgia, serif;
+
+}
+
+.container{
+
+    max-width:900px;
+
+    margin:auto;
+
+    padding:30px;
+
+}
+
+.header{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.header h1{
+
+    font-size:42px;
+
+    letter-spacing:4px;
+
+}
+
+.header p{
+
+    color:#777;
+
+}
+
+.welcome{
+
+    margin-bottom:25px;
+
+}
+
+.book-card{
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+
+    text-align:center;
+
+}
+
+.book-card img{
+
+    width:180px;
+
+    border-radius:6px;
+
+    margin-bottom:15px;
+
+}
+
+.book-card h2{
+
+    margin-bottom:10px;
+
+}
+
+.book-card p{
+
+    margin:8px;
+
+}
+
+button{
+
+    margin-top:15px;
+
+    padding:12px 24px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    background:#5c4b3b;
+
+    color:white;
+
+}
+
+button:hover{
+
+    opacity:.9;
+
+}
+
+.menu{
+
+    margin-top:35px;
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+
+}
