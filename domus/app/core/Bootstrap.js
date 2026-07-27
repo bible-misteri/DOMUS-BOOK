@@ -67,3 +67,9 @@ Router.register(
 PublishPage
 
 );
+
+import routes from "../config/routes.js";
+
+routes.forEach(route => {
+    Router.register(route.path, route.page);
+});
