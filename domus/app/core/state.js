@@ -62,3 +62,137 @@ setState,
 getState,
 loadState
 };
+
+/*
+=================================
+DOMUS GLOBAL STATE
+=================================
+*/
+
+
+import {
+
+save,
+
+load
+
+}
+
+from "./storage.js";
+
+
+
+import DOMUS_CONFIG from "../config/config.js";
+
+
+
+let STATE = {
+
+
+user:null,
+
+
+activeBook:null,
+
+
+activeChapter:null,
+
+
+
+settings:
+
+
+{
+
+theme:
+"light"
+
+}
+
+
+};
+
+
+
+function initializeState(){
+
+
+const saved =
+
+load(
+
+DOMUS_CONFIG.storageKey
+
+);
+
+
+
+if(saved){
+
+
+STATE=saved;
+
+
+}
+
+
+}
+
+
+
+function setState(key,value){
+
+
+STATE[key]=value;
+
+
+
+save(
+
+DOMUS_CONFIG.storageKey,
+
+STATE
+
+);
+
+
+
+}
+
+
+
+function getState(key){
+
+
+return STATE[key];
+
+
+}
+
+
+
+function getAllState(){
+
+
+return STATE;
+
+
+}
+
+
+
+export {
+
+
+STATE,
+
+initializeState,
+
+setState,
+
+getState,
+
+getAllState
+
+
+};
