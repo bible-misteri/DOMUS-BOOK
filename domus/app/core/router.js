@@ -1,32 +1,93 @@
-const routes={
+/*
+====================================================
+DOMUS Router
+====================================================
+*/
 
-home:
-"app/pages/home/home.html",
+import Renderer from "./Renderer.js";
 
-books:
-"app/pages/books/books.html",
+class Router{
 
-editor:
-"app/pages/editor/editor.html",
+    constructor(){
 
-review:
-"app/pages/review/review.html",
+        this.routes=new Map();
 
-preview:
-"app/pages/preview/preview.html",
+        this.current=null;
 
-publish:
-"app/pages/publish/publish.html"
+    }
 
-};
+    register(name,page){
 
+        this.routes.set(name,page);
 
-function navigate(page){
+    }
 
-window.location.href =
-"../../../"+routes[page];
+    async go(name){
+
+        if(!this.routes.has(name)){
+
+            console.error(
+
+                "Route tidak ditemukan",
+
+                name
+
+            );
+
+            return;
+
+        }
+
+        const Page=this.routes.get(name);
+
+        const page=new Page();
+
+        await page.initialize();
+
+        Renderer.render(page);
+
+        this.current=name;
+
+        history.pushState(
+
+            {page:name},
+
+            "",
+
+            "#"+name
+
+        );
+
+    }
+
+    start(){
+
+        const page=
+
+            location.hash
+
+            .replace("#","")
+
+            ||"home";
+
+        this.go(page);
+
+        window.onpopstate=()=>{
+
+            const p=
+
+                location.hash
+
+                .replace("#","")
+
+                ||"home";
+
+            this.go(p);
+
+        };
+
+    }
 
 }
 
-
-export default navigate;
+export default new Router();
