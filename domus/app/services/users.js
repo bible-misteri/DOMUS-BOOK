@@ -11,3 +11,24 @@ name:"Norman"
 };
 
 }
+
+async function getCurrentUser(){
+
+return {
+
+id:"U001",
+
+name:"Norman",
+
+role:"Author"
+
+};
+
+}
+
+
+export {
+
+getCurrentUser
+
+};
