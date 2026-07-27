@@ -1,0 +1,45 @@
+.domus-header{
+
+
+padding:25px;
+
+
+text-align:center;
+
+
+background:#f8f5ef;
+
+
+border-bottom:1px solid #ddd;
+
+
+}
+
+
+
+.domus-header h1{
+
+
+font-family:Georgia,serif;
+
+
+letter-spacing:5px;
+
+
+font-size:38px;
+
+
+}
+
+
+
+.domus-header p{
+
+
+color:#777;
+
+
+margin-top:5px;
+
+
+}
