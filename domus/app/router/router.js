@@ -37,3 +37,72 @@ location.href="../publish/publish.html";
 }
 
 };
+
+/*
+=================================
+DOMUS ROUTER
+=================================
+*/
+
+
+import DOMUS_CONFIG from "../config/config.js";
+
+
+
+function navigate(page){
+
+
+
+const route =
+
+DOMUS_CONFIG.routes[page];
+
+
+
+if(!route){
+
+
+console.error(
+
+"Route tidak ditemukan:",
+
+page
+
+);
+
+
+return;
+
+
+}
+
+
+
+window.location.href =
+"/"+route;
+
+
+
+}
+
+
+
+function currentPage(){
+
+
+return window.location.pathname;
+
+
+}
+
+
+
+export {
+
+
+navigate,
+
+currentPage
+
+
+};
