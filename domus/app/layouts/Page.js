@@ -1,11 +1,17 @@
-renderContent() {
+class HomePage extends Page {
 
-    return "";
+    async load(){
 
-}
+    }
 
-render() {
+    renderContent(){
 
-    return this.renderContent();
+        return `
+
+<h1>Home</h1>
+
+`;
+
+    }
 
 }
