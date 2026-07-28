@@ -6,6 +6,7 @@ Base Page
 */
 
 import Component from "./Component.js";
+import MainLayout from "../layouts/MainLayout.js";
 
 export default class Page extends Component {
 
@@ -19,27 +20,29 @@ export default class Page extends Component {
 
     async load() {
 
-        // override
+        // Override bila diperlukan
 
     }
 
-    async beforeRender() {
+    renderContent() {
 
-        // override
+        return "";
 
     }
 
-    async afterRender() {
+    render() {
 
-        // override
+        return new MainLayout(
+
+            this.renderContent()
+
+        ).render();
 
     }
 
     async initialize() {
 
         await this.load();
-
-        await this.beforeRender();
 
     }
 
