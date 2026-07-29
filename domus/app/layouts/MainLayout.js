@@ -16,7 +16,9 @@ export default class MainLayout extends Layout {
 
     constructor(content = "") {
 
-        super(content);
+        super();
+
+        this.content = content;
 
     }
 
@@ -28,29 +30,29 @@ export default class MainLayout extends Layout {
 
         const footer = new Footer().render();
 
-        const status = new StatusBar().render();
+        const statusBar = new StatusBar().render();
 
         return `
 
 <div class="domus-page">
 
-${sidebar}
+    ${sidebar}
 
-<div class="domus-main">
+    <div class="domus-main">
 
-${header}
+        ${header}
 
-<main class="domus-content fade-in">
+        <main class="domus-content fade-in">
 
-${this.content}
+            ${this.content}
 
-</main>
+        </main>
 
-${status}
+        ${statusBar}
 
-${footer}
+        ${footer}
 
-</div>
+    </div>
 
 </div>
 
