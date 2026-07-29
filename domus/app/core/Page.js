@@ -30,13 +30,29 @@ export default class Page extends Component {
 
     }
 
+    afterRender() {
+
+    }
+
     render() {
 
-        return new MainLayout(
+        const html = new MainLayout(
 
             this.renderContent()
 
         ).render();
+
+        queueMicrotask(() => {
+
+            if (typeof this.afterRender === "function") {
+
+                this.afterRender();
+
+            }
+
+        });
+
+        return html;
 
     }
 
