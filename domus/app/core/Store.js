@@ -155,21 +155,23 @@ class Store {
     reset(){
 
 
-        this.state={
+        this.state = {
 
-            user:null,
+        user: null,
 
-            activeBook:null,
+        books: [],
 
-            activeChapter:null,
+        activeBook: null,
 
-            settings:{
+        activeChapter: null,
 
-                theme:"light"
+        settings: {
 
-            }
+            theme: "light"
 
-        };
+        }
+
+    };
 
 
         Storage.remove("state");
