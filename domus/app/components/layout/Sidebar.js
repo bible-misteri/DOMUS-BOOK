@@ -1,26 +1,38 @@
+/*
+====================================================
+DOMUS Framework v1.0
+Sidebar Component
+====================================================
+*/
+
 import Component from "../../core/Component.js";
 import Router from "../../core/Router.js";
+import menus from "../../config/menus.js";
 
 export default class Sidebar extends Component {
 
     template() {
 
+        const items = menus.map(menu => `
+
+<button class="domus-menu-item"
+
+data-page="${menu.page}">
+
+${menu.title}
+
+</button>
+
+`).join("");
+
         return `
+
 <nav class="domus-sidebar">
 
-<button data-page="home">Home</button>
-
-<button data-page="books">Books</button>
-
-<button data-page="editor">Editor</button>
-
-<button data-page="review">Review</button>
-
-<button data-page="preview">Preview</button>
-
-<button data-page="publish">Publish</button>
+${items}
 
 </nav>
+
 `;
 
     }
@@ -31,7 +43,7 @@ export default class Sidebar extends Component {
             .querySelectorAll("[data-page]")
             .forEach(button => {
 
-                button.onclick = () => {
+                button.addEventListener("click", () => {
 
                     Router.go(
 
@@ -39,7 +51,7 @@ export default class Sidebar extends Component {
 
                     );
 
-                };
+                });
 
             });
 
