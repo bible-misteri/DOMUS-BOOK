@@ -1,10 +1,27 @@
+/*
+====================================================
+DOMUS Home Page
+====================================================
+*/
+
 import Page from "../../core/Page.js";
+import BookService from "../../services/BookService.js";
 
 export default class HomePage extends Page {
 
+    constructor() {
+
+        super();
+
+        this.books = [];
+
+    }
+
     async load() {
 
-        // Muat data Home
+        await BookService.initialize();
+
+        this.books = BookService.getAll();
 
     }
 
@@ -12,11 +29,89 @@ export default class HomePage extends Page {
 
         return `
 
-<h1>Home</h1>
+<section class="domus-home">
 
-<p>Selamat datang di DOMUS.</p>
+<h1>Selamat Datang di DOMUS</h1>
+
+<p>
+
+Pilih buku untuk mulai menulis.
+
+</p>
+
+<div id="books">
+
+${this.renderBooks()}
+
+</div>
+
+</section>
 
 `;
+
+    }
+
+    renderBooks() {
+
+        if(this.books.length===0){
+
+            return `
+
+<p>
+
+Belum ada buku.
+
+</p>
+
+`;
+
+        }
+
+        return this.books.map(book=>`
+
+<div
+
+class="domus-card domus-book"
+
+data-id="${book.id}">
+
+<h3>${book.title}</h3>
+
+<p>
+
+${book.description ?? ""}
+
+</p>
+
+</div>
+
+`).join("");
+
+    }
+
+    afterRender(){
+
+        this.element
+
+        .querySelectorAll(".domus-book")
+
+        .forEach(card=>{
+
+            card.onclick=()=>{
+
+                const id=card.dataset.id;
+
+                const book=this.books.find(
+
+                    b=>b.id===id
+
+                );
+
+                BookService.setActive(book);
+
+            };
+
+        });
 
     }
 
