@@ -20,56 +20,30 @@ export default async function Bootstrap(){
 
 }
 
-Router.register(
+/*
+====================================================
+DOMUS Bootstrap
+====================================================
+*/
 
-"home",
-
-HomePage
-
-);
-
-Router.register(
-
-"books",
-
-BooksPage
-
-);
-
-Router.register(
-
-"editor",
-
-EditorPage
-
-);
-
-Router.register(
-
-"review",
-
-ReviewPage
-
-);
-
-Router.register(
-
-"preview",
-
-PreviewPage
-
-);
-
-Router.register(
-
-"publish",
-
-PublishPage
-
-);
+import Renderer from "./Renderer.js";
+import Application from "./Application.js";
+import Router from "./Router.js";
 
 import routes from "../config/routes.js";
 
-routes.forEach(route => {
-    Router.register(route.path, route.page);
-});
+export default async function Bootstrap() {
+
+    Renderer.initialize("#app");
+
+    routes.forEach(route => {
+
+        Router.register(route.path, route.page);
+
+    });
+
+    Application.registerRouter(Router);
+
+    await Application.start();
+
+}
