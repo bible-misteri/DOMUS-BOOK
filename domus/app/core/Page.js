@@ -36,15 +36,11 @@ export default class Page extends Component {
 
     render() {
 
-        const html = new MainLayout(
+        return new MainLayout(
 
             this.renderContent()
 
         ).render();
-
-    }
-
-        return html;
 
     }
 
