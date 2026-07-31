@@ -1,7 +1,7 @@
 /*
 ====================================================
 DOMUS Framework v1.0
-Application Engine
+Application
 ====================================================
 */
 
@@ -9,17 +9,9 @@ class Application {
 
     constructor() {
 
-        this.name = "DOMUS";
-
-        this.version = "1.0.0";
-
-        this.started = false;
-
         this.router = null;
 
-        this.store = null;
-
-        this.plugins = [];
+        this.started = false;
 
     }
 
@@ -29,55 +21,27 @@ class Application {
 
     }
 
-    registerStore(store) {
-
-        this.store = store;
-
-    }
-
-    use(plugin) {
-
-        this.plugins.push(plugin);
-
-    }
-
     async start() {
 
-        if(this.started){
+        if (this.started) {
 
             return;
 
         }
 
-        this.started=true;
+        this.started = true;
 
-        console.log(
+        if (!this.router) {
 
-            `${this.name} ${this.version} starting...`
+            throw new Error(
 
-        );
+                "Router belum didaftarkan."
 
-        for(const plugin of this.plugins){
-
-            if(plugin.install){
-
-                await plugin.install(this);
-
-            }
+            );
 
         }
 
-        if(this.router){
-
-            this.router.start();
-
-        }
-
-        console.log(
-
-            "DOMUS Ready"
-
-        );
+        await this.router.start();
 
     }
 
