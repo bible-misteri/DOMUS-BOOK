@@ -1,36 +1,39 @@
 /*
 ====================================================
-DOMUS Router
+DOMUS Framework v1.0
+Router
 ====================================================
 */
 
 import Renderer from "./Renderer.js";
 
-class Router{
+class Router {
 
-    constructor(){
+    constructor() {
 
-        this.routes=new Map();
+        this.routes = new Map();
 
-        this.current=null;
+        this.currentPage = null;
 
-    }
-
-    register(name,page){
-
-        this.routes.set(name,page);
+        this.defaultRoute = "home";
 
     }
 
-    async go(name){
+    register(path, PageClass) {
 
-        if(!this.routes.has(name)){
+        this.routes.set(path, PageClass);
+
+    }
+
+    async go(path) {
+
+        const PageClass = this.routes.get(path);
+
+        if (!PageClass) {
 
             console.error(
 
-                "Route tidak ditemukan",
-
-                name
+                `Route "${path}" tidak ditemukan.`
 
             );
 
@@ -38,53 +41,49 @@ class Router{
 
         }
 
-        const Page=this.routes.get(name);
+        this.currentPage = new PageClass();
 
-        const page=new Page();
+        await this.currentPage.initialize();
 
-        await page.initialize();
+        Renderer.render(
 
-        Renderer.render(page);
-
-        this.current=name;
-
-        history.pushState(
-
-            {page:name},
-
-            "",
-
-            "#"+name
+            this.currentPage.render()
 
         );
 
     }
 
-    start(){
+    async start() {
 
-        const page=
+        await this.go(
 
-            location.hash
+            this.defaultRoute
 
-            .replace("#","")
+        );
 
-            ||"home";
+    }
 
-        this.go(page);
+    reload() {
 
-        window.onpopstate=()=>{
+        if (!this.currentPage) {
 
-            const p=
+            return;
 
-                location.hash
+        }
 
-                .replace("#","")
+        this.go(
 
-                ||"home";
+            [...this.routes.entries()]
 
-            this.go(p);
+            .find(
 
-        };
+                ([, page]) =>
+
+                this.currentPage instanceof page
+
+            )?.[0] || this.defaultRoute
+
+        );
 
     }
 
