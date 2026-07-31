@@ -47,7 +47,7 @@ class Router {
 
         Renderer.render(
 
-            this.currentPage.render()
+            this.currentPage
 
         );
 
