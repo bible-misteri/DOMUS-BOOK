@@ -42,15 +42,7 @@ export default class Page extends Component {
 
         ).render();
 
-        queueMicrotask(() => {
-
-            if (typeof this.afterRender === "function") {
-
-                this.afterRender();
-
-            }
-
-        });
+    }
 
         return html;
 
