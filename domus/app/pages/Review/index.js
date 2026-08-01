@@ -16,7 +16,7 @@ export default class ReviewPage extends Page {
         super();
 
         this.book = null;
-        this.chapter = null;
+        this.chapters = [];
 
     }
 
@@ -24,19 +24,29 @@ export default class ReviewPage extends Page {
 
         this.book = BookService.getActive();
 
-        this.chapter = ChapterService.getActive();
+        if (!this.book) {
+
+            return;
+
+        }
+
+        this.chapters = ChapterService.getAll();
 
     }
 
-    countWords(text) {
+    countWords(text = "") {
 
-        if (!text) {
+        if (!text.trim()) {
 
             return 0;
 
         }
 
-        return text.trim().split(/\s+/).length;
+        return text
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .length;
 
     }
 
@@ -58,27 +68,37 @@ export default class ReviewPage extends Page {
 
         }
 
-        if (!this.chapter) {
+        let totalWords = 0;
+
+        const chapters = this.chapters.map(chapter => {
+
+            const text = chapter.content || "";
+
+            const words = this.countWords(text);
+
+            totalWords += words;
 
             return `
 
-<section class="domus-review">
+<div class="domus-review-chapter">
 
-<h1>Review</h1>
+<h3>${chapter.title}</h3>
 
-<p>Tidak ada bab aktif.</p>
+<p><strong>Jumlah Kata :</strong> ${words}</p>
 
-</section>
+<div class="domus-review-content">
+
+${text.replace(/\n/g,"<br>")}
+
+</div>
+
+<hr>
+
+</div>
 
 `;
 
-        }
-
-        const text = this.chapter.content || "";
-
-        const words = this.countWords(text);
-
-        const chars = text.length;
+        }).join("");
 
         return `
 
@@ -88,23 +108,13 @@ export default class ReviewPage extends Page {
 
 <h2>${this.book.title}</h2>
 
-<h3>${this.chapter.title}</h3>
+<p><strong>Total Bab :</strong> ${this.chapters.length}</p>
 
-<div class="domus-review-summary">
-
-<p><strong>Jumlah Kata :</strong> ${words}</p>
-
-<p><strong>Jumlah Karakter :</strong> ${chars}</p>
-
-</div>
+<p><strong>Total Kata :</strong> ${totalWords}</p>
 
 <hr>
 
-<article class="domus-review-content">
-
-${text.replace(/\n/g,"<br>")}
-
-</article>
+${chapters}
 
 </section>
 
