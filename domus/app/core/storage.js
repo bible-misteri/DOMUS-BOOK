@@ -1,89 +1,4 @@
 /*
-=================================
-DOMUS STORAGE ENGINE
-=================================
-*/
-
-
-import DOMUS_CONFIG from "../config/config.js";
-
-
-
-function save(key,data){
-
-
-localStorage.setItem(
-
-key,
-
-JSON.stringify(data)
-
-);
-
-
-}
-
-
-
-function load(key){
-
-
-const data =
-localStorage.getItem(key);
-
-
-
-if(!data){
-
-return null;
-
-}
-
-
-
-return JSON.parse(data);
-
-
-
-}
-
-
-
-function remove(key){
-
-
-localStorage.removeItem(key);
-
-
-}
-
-
-
-function clear(){
-
-
-localStorage.clear();
-
-
-}
-
-
-
-export {
-
-
-save,
-
-load,
-
-remove,
-
-clear
-
-
-};
-
-/*
 ====================================================
 DOMUS Framework v1.0
 Storage Engine
@@ -98,15 +13,13 @@ class Storage {
 
     }
 
-
-    key(name){
+    key(name) {
 
         return `${this.prefix}_${name}`;
 
     }
 
-
-    save(name, data){
+    save(name, data) {
 
         try {
 
@@ -118,9 +31,9 @@ class Storage {
 
             );
 
-        }
+            return true;
 
-        catch(error){
+        } catch (error) {
 
             console.error(
 
@@ -130,34 +43,31 @@ class Storage {
 
             );
 
+            return false;
+
         }
 
     }
 
-
-
-    load(name, fallback = null){
+    load(name, fallback = null) {
 
         try {
 
-            const data =
-                localStorage.getItem(
-                    this.key(name)
-                );
+            const data = localStorage.getItem(
 
+                this.key(name)
 
-            if(!data){
+            );
+
+            if (data === null) {
 
                 return fallback;
 
             }
 
-
             return JSON.parse(data);
 
-        }
-
-        catch(error){
+        } catch (error) {
 
             console.error(
 
@@ -173,9 +83,17 @@ class Storage {
 
     }
 
+    has(name) {
 
+        return localStorage.getItem(
 
-    remove(name){
+            this.key(name)
+
+        ) !== null;
+
+    }
+
+    remove(name) {
 
         localStorage.removeItem(
 
@@ -185,29 +103,48 @@ class Storage {
 
     }
 
-
-
-    clear(){
+    clear() {
 
         Object.keys(localStorage)
 
-        .filter(key =>
+            .filter(key =>
 
-            key.startsWith(
-                this.prefix
+                key.startsWith(this.prefix)
+
             )
 
-        )
+            .forEach(key =>
 
-        .forEach(key =>
+                localStorage.removeItem(key)
 
-            localStorage.removeItem(key)
+            );
 
-        );
+    }
+
+    keys() {
+
+        return Object.keys(localStorage)
+
+            .filter(key =>
+
+                key.startsWith(this.prefix)
+
+            )
+
+            .map(key =>
+
+                key.replace(
+
+                    `${this.prefix}_`,
+
+                    ""
+
+                )
+
+            );
 
     }
 
 }
-
 
 export default new Storage();
