@@ -48,9 +48,9 @@ export default class EditorPage extends Page {
 
     renderContent() {
 
-        if (!this.book) {
+    if (!this.book) {
 
-            return `
+        return `
 
 <section class="domus-editor">
 
@@ -62,9 +62,9 @@ export default class EditorPage extends Page {
 
 `;
 
-        }
+    }
 
-        return `
+    return `
 
 <section class="domus-editor">
 
@@ -79,6 +79,11 @@ Tersimpan
 </div>
 
 <textarea
+id="editor"
+class="domus-textarea"
+rows="20"
+placeholder="Mulailah menulis..."
+>${this.chapter.content}</textarea>
 
 <div id="word-count">
 
@@ -86,57 +91,47 @@ Tersimpan
 
 </div>
 
-id="editor"
-
-class="domus-textarea"
-
-rows="20"
-
-placeholder="Mulailah menulis..."
-
->${this.chapter.content}</textarea>
-
 </section>
 
 `;
 
-    }
+}
 
-    afterRender() {
+afterRender() {
 
-        const counter = this.element.querySelector("#word-count");
+    if (!this.chapter) {
 
-        const status = this.element.querySelector("#save-status");
-
-        if (!this.chapter) {
-
-            return;
-
-        }
-
-        const editor = this.element.querySelector("#editor");
-
-        editor.addEventListener("input", (event) => {
-
-            ChapterService.update(
-
-                this.chapter.id,
-
-                event.target.value
-
-                const words = event.target.value
-                    .trim()
-                    .split(/\s+/)
-                    .filter(Boolean).length;
-
-                counter.textContent = `${words} kata`;
-
-            );
-
-            status.textContent = "Tersimpan";
-
-        });
+        return;
 
     }
+
+    const editor = this.element.querySelector("#editor");
+
+    const status = this.element.querySelector("#save-status");
+
+    const counter = this.element.querySelector("#word-count");
+
+    editor.addEventListener("input", (event) => {
+
+        status.textContent = "Menyimpan...";
+
+        ChapterService.update(
+
+            this.chapter.id,
+
+            event.target.value
+
+        );
+
+        const words = event.target.value
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean).length;
+
+        counter.textContent = `${words} kata`;
+
+        status.textContent = "Tersimpan";
+
+    });
 
 }
