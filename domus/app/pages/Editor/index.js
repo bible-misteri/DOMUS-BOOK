@@ -125,11 +125,11 @@ placeholder="Mulailah menulis..."
                 event.target.value
 
                 const words = event.target.value
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean).length;
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean).length;
 
-counter.textContent = `${words} kata`;
+                counter.textContent = `${words} kata`;
 
             );
 
