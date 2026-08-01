@@ -1,15 +1,36 @@
 /*
 ====================================================
-DOMUS Entry Point
+DOMUS Entry Point (Debug Mode)
 ====================================================
 */
 
-import Bootstrap from "./core/Bootstrap.js";
+const app = document.querySelector("#app");
 
-Bootstrap().catch(error => {
+function debug(message) {
+    console.log(message);
+    app.innerHTML += `<div style="padding:6px;font-family:monospace;">${message}</div>`;
+}
 
-    console.error("DOMUS gagal dijalankan:");
+debug("1. main.js dimulai");
+
+try {
+
+    debug("2. Mengimpor Bootstrap...");
+
+    const module = await import("./core/Bootstrap.js");
+
+    debug("3. Bootstrap berhasil diimpor");
+
+    await module.default();
+
+    debug("4. Bootstrap selesai");
+
+} catch (error) {
+
+    debug("❌ ERROR:");
+
+    debug(error.message);
 
     console.error(error);
 
-});
+}
