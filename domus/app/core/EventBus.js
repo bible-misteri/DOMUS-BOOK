@@ -5,77 +5,108 @@ Event Bus
 ====================================================
 */
 
-
 class EventBus {
 
+    constructor() {
 
-    constructor(){
-
-        this.events={};
+        this.events = {};
 
     }
 
+    on(name, callback) {
 
+        if (!this.events[name]) {
 
-    on(name, callback){
-
-        if(!this.events[name]){
-
-            this.events[name]=[];
+            this.events[name] = [];
 
         }
-
 
         this.events[name].push(callback);
 
+        return callback;
+
     }
 
+    once(name, callback) {
 
+        const wrapper = (data) => {
 
-    emit(name, data){
+            callback(data);
 
-        if(!this.events[name]){
+            this.off(name, wrapper);
 
-            return;
+        };
+
+        this.on(name, wrapper);
+
+    }
+
+    emit(name, data = null) {
+
+        if (!this.events[name]) {
+
+            return false;
 
         }
 
-
-        this.events[name]
-
-        .forEach(callback => {
+        this.events[name].forEach(callback => {
 
             callback(data);
 
         });
 
+        return true;
+
     }
 
+    off(name, callback) {
 
-
-    off(name, callback){
-
-        if(!this.events[name]){
+        if (!this.events[name]) {
 
             return;
 
         }
 
-
-        this.events[name] =
-
-        this.events[name]
-
-        .filter(
+        this.events[name] = this.events[name].filter(
 
             item => item !== callback
 
         );
 
+        if (this.events[name].length === 0) {
+
+            delete this.events[name];
+
+        }
+
     }
 
+    clear(name) {
+
+        if (name) {
+
+            delete this.events[name];
+
+            return;
+
+        }
+
+        this.events = {};
+
+    }
+
+    has(name) {
+
+        return !!this.events[name];
+
+    }
+
+    listeners(name) {
+
+        return this.events[name] || [];
+
+    }
 
 }
-
 
 export default new EventBus();
