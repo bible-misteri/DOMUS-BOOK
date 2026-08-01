@@ -6,6 +6,7 @@ DOMUS Home Page
 
 import Page from "../../core/Page.js";
 import BookService from "../../services/BookService.js";
+import Router from "../../core/Router.js";
 
 export default class HomePage extends Page {
 
@@ -107,7 +108,15 @@ ${book.description ?? ""}
 
                 );
 
-                BookService.setActive(book);
+                if (!book) {
+
+                    return;
+
+                 }
+
+                 BookService.setActive(book);
+
+                 Router.go("editor");
 
             };
 
