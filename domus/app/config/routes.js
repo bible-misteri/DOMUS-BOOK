@@ -20,3 +20,5 @@ export default [
     { path: "publish", page: PublishPage }
 
 ];
+
+export default routes;
