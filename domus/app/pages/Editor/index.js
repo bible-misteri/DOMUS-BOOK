@@ -5,7 +5,6 @@ DOMUS Editor Page
 */
 
 import Page from "../../core/Page.js";
-
 import Router from "../../core/Router.js";
 
 import BookService from "../../services/BookService.js";
@@ -24,45 +23,37 @@ export default class EditorPage extends Page {
 
     async load() {
 
-    this.book = BookService.getActive();
+        this.book = BookService.getActive();
 
-    if (!this.book) {
+        if (!this.book) {
 
-        return;
+            return;
+
+        }
+
+        const chapters = ChapterService.getAll();
+
+        if (chapters.length === 0) {
+
+            this.chapter = ChapterService.add("Bab 1");
+
+        } else {
+
+            this.chapter =
+                ChapterService.getActive()
+                || chapters[0];
+
+            ChapterService.setActive(this.chapter);
+
+        }
 
     }
-
-    const chapters = ChapterService.getAll();
-
-    if (chapters.length === 0) {
-
-        this.chapter = ChapterService.add("Bab 1");
-
-        return;
-
-    }
-
-    this.chapter =
-
-        ChapterService.getActive()
-
-        ||
-
-        chapters[0];
-
-    ChapterService.setActive(
-
-        this.chapter
-
-    );
-
-}
 
     renderChapterList() {
 
-    const chapters = ChapterService.getAll();
+        const chapters = ChapterService.getAll();
 
-    return chapters.map(chapter => `
+        return chapters.map(chapter => `
 
 <div
 class="domus-chapter-item ${this.chapter && this.chapter.id === chapter.id ? "active" : ""}"
@@ -74,9 +65,29 @@ ${chapter.title}
 
 `).join("");
 
-}
-    
-    <section class="domus-editor">
+    }
+
+    renderContent() {
+
+        if (!this.book) {
+
+            return `
+
+<section class="domus-editor">
+
+<h1>Editor</h1>
+
+<p>Belum ada buku aktif.</p>
+
+</section>
+
+`;
+
+        }
+
+        return `
+
+<section class="domus-editor">
 
 <h1>${this.book.title}</h1>
 
@@ -125,45 +136,87 @@ placeholder="Mulailah menulis..."
 
 `;
 
-}
+    }
 
-afterRender() {
+    afterRender() {
 
-    if (!this.chapter) {
+        if (!this.chapter) {
 
-        return;
+            return;
+
+        }
+
+        const editor = this.element.querySelector("#editor");
+        const status = this.element.querySelector("#save-status");
+        const counter = this.element.querySelector("#word-count");
+
+        editor.addEventListener("input", (event) => {
+
+            status.textContent = "Menyimpan...";
+
+            ChapterService.update(
+
+                this.chapter.id,
+
+                event.target.value
+
+            );
+
+            const words = event.target.value
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean).length;
+
+            counter.textContent = `${words} kata`;
+
+            status.textContent = "Tersimpan";
+
+        });
+
+        this.element
+            .querySelectorAll(".domus-chapter-item")
+            .forEach(item => {
+
+                item.onclick = () => {
+
+                    const chapter = ChapterService.getById(
+
+                        item.dataset.id
+
+                    );
+
+                    if (!chapter) {
+
+                        return;
+
+                    }
+
+                    ChapterService.setActive(chapter);
+
+                    Router.reload();
+
+                };
+
+            });
+
+        const addButton = this.element.querySelector("#addChapter");
+
+        if (addButton) {
+
+            addButton.onclick = () => {
+
+                ChapterService.add(
+
+                    `Bab ${ChapterService.getAll().length + 1}`
+
+                );
+
+                Router.reload();
+
+            };
+
+        }
 
     }
 
-    const editor = this.element.querySelector("#editor");
-
-    const status = this.element.querySelector("#save-status");
-
-    const counter = this.element.querySelector("#word-count");
-
-    editor.addEventListener("input", (event) => {
-
-        status.textContent = "Menyimpan...";
-
-        ChapterService.update(
-
-            this.chapter.id,
-
-            event.target.value
-
-        );
-
-        const words = event.target.value
-            .trim()
-            .split(/\s+/)
-            .filter(Boolean).length;
-
-        counter.textContent = `${words} kata`;
-
-        status.textContent = "Tersimpan";
-
-    });
-
 }
-
-}    
