@@ -17,7 +17,7 @@ export default class PreviewPage extends Page {
 
         this.book = null;
 
-        this.chapter = null;
+        this.chapters = [];
 
     }
 
@@ -25,7 +25,13 @@ export default class PreviewPage extends Page {
 
         this.book = BookService.getActive();
 
-        this.chapter = ChapterService.getActive();
+        if (!this.book) {
+
+            return;
+
+        }
+
+        this.chapters = ChapterService.getAll();
 
     }
 
@@ -47,21 +53,23 @@ export default class PreviewPage extends Page {
 
         }
 
-        if (!this.chapter) {
+        const content = this.chapters.map(chapter => `
 
-            return `
+<section class="domus-preview-chapter">
 
-<section class="domus-preview">
+<h2>${chapter.title}</h2>
 
-<h1>Preview</h1>
+<div class="domus-paper-content">
 
-<p>Tidak ada bab aktif.</p>
+${(chapter.content || "").replace(/\n/g,"<br>")}
+
+</div>
 
 </section>
 
-`;
+<hr>
 
-        }
+`).join("");
 
         return `
 
@@ -73,15 +81,9 @@ export default class PreviewPage extends Page {
 
 <h1>${this.book.title}</h1>
 
-<h2>${this.chapter.title}</h2>
-
 </header>
 
-<article class="domus-paper-content">
-
-${this.chapter.content.replace(/\n/g,"<br>")}
-
-</article>
+${content}
 
 </div>
 
