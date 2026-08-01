@@ -22,29 +22,39 @@ export default class EditorPage extends Page {
 
     async load() {
 
-        this.book = BookService.getActive();
+    this.book = BookService.getActive();
 
-        if (!this.book) {
+    if (!this.book) {
 
-            return;
-
-        }
-
-        let chapters = ChapterService.getAll();
-
-        if (chapters.length === 0) {
-
-            this.chapter = ChapterService.add("Bab 1");
-
-        } else {
-
-            this.chapter = chapters[0];
-
-            ChapterService.setActive(this.chapter);
-
-        }
+        return;
 
     }
+
+    const chapters = ChapterService.getAll();
+
+    if (chapters.length === 0) {
+
+        this.chapter = ChapterService.add("Bab 1");
+
+        return;
+
+    }
+
+    this.chapter =
+
+        ChapterService.getActive()
+
+        ||
+
+        chapters[0];
+
+    ChapterService.setActive(
+
+        this.chapter
+
+    );
+
+}
 
     renderContent() {
 
