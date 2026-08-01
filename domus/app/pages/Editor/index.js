@@ -72,7 +72,19 @@ export default class EditorPage extends Page {
 
 <h3>${this.chapter.title}</h3>
 
+<div id="save-status" class="domus-save-status">
+
+Tersimpan
+
+</div>
+
 <textarea
+
+<div id="word-count">
+
+0 kata
+
+</div>
 
 id="editor"
 
@@ -92,6 +104,10 @@ placeholder="Mulailah menulis..."
 
     afterRender() {
 
+        const counter = this.element.querySelector("#word-count");
+
+        const status = this.element.querySelector("#save-status");
+
         if (!this.chapter) {
 
             return;
@@ -108,7 +124,16 @@ placeholder="Mulailah menulis..."
 
                 event.target.value
 
+                const words = event.target.value
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+
+counter.textContent = `${words} kata`;
+
             );
+
+            status.textContent = "Tersimpan";
 
         });
 
