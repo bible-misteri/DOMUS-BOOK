@@ -1,39 +1,18 @@
 /*
 ====================================================
-DOMUS Menu Configuration
+DOMUS Framework v1.0
+Menus
 ====================================================
 */
 
-export default [
+import routes from "./routes.js";
 
-    {
-        title: "Home",
-        page: "home"
-    },
+const menus = routes.map(route => ({
 
-    {
-        title: "Books",
-        page: "books"
-    },
+    title: `${route.icon} ${route.title}`,
 
-    {
-        title: "Editor",
-        page: "editor"
-    },
+    page: route.path
 
-    {
-        title: "Review",
-        page: "review"
-    },
+}));
 
-    {
-        title: "Preview",
-        page: "preview"
-    },
-
-    {
-        title: "Publish",
-        page: "publish"
-    }
-
-];
+export default menus;
