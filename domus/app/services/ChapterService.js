@@ -19,17 +19,17 @@ class ChapterService extends Service {
 
     getAll() {
 
-    const book = BookService.getActive();
+        const book = BookService.getActive();
 
-    if (!book) {
+        if (!book) {
 
-        return [];
+            return [];
 
-     }
+        }
 
-    return book.chapters || [];
+        return book.chapters || [];
 
-}
+    }
 
     getById(id) {
 
@@ -39,9 +39,61 @@ class ChapterService extends Service {
 
         );
 
-}
+    }
 
     getActive() {
+
+        return Store.get("activeChapter");
+
+    }
+
+    setActive(chapter) {
+
+        Store.set("activeChapter", chapter);
+
+    }
+
+    add(title = "Bab Baru") {
+
+        const book = BookService.getActive();
+
+        if (!book) {
+
+            return null;
+
+        }
+
+        const chapter = {
+
+            id: crypto.randomUUID(),
+
+            title,
+
+            content: ""
+
+        };
+
+        if (!book.chapters) {
+
+            book.chapters = [];
+
+        }
+
+        book.chapters.push(chapter);
+
+        BookService.update(book.id, {
+
+            chapters: book.chapters
+
+        });
+
+        Store.set("activeChapter", chapter);
+
+        return chapter;
+
+    }
+
+    update(id, content) {
 
         const book = BookService.getActive();
 
@@ -75,7 +127,11 @@ class ChapterService extends Service {
 
         });
 
-        const active = book.chapters.find(c => c.id === id);
+        const active = book.chapters.find(
+
+            chapter => chapter.id === id
+
+        );
 
         if (active) {
 
@@ -87,51 +143,51 @@ class ChapterService extends Service {
 
     rename(id, title) {
 
-    const book = BookService.getActive();
+        const book = BookService.getActive();
 
-    if (!book || !book.chapters) {
+        if (!book || !book.chapters) {
 
-        return;
-
-    }
-
-    book.chapters = book.chapters.map(chapter => {
-
-        if (chapter.id === id) {
-
-            return {
-
-                ...chapter,
-
-                title
-
-            };
+            return;
 
         }
 
-        return chapter;
+        book.chapters = book.chapters.map(chapter => {
 
-    });
+            if (chapter.id === id) {
 
-    BookService.update(book.id, {
+                return {
 
-        chapters: book.chapters
+                    ...chapter,
 
-    });
+                    title
 
-    const active = book.chapters.find(
+                };
 
-        chapter => chapter.id === id
+            }
 
-    );
+            return chapter;
 
-    if (active) {
+        });
 
-        Store.set("activeChapter", active);
+        BookService.update(book.id, {
+
+            chapters: book.chapters
+
+        });
+
+        const active = book.chapters.find(
+
+            chapter => chapter.id === id
+
+        );
+
+        if (active) {
+
+            Store.set("activeChapter", active);
+
+        }
 
     }
-
-}
 
     remove(id) {
 
