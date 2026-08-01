@@ -11,6 +11,8 @@ class Renderer {
 
         this.root = null;
 
+        this.currentComponent = null;
+
     }
 
     initialize(selector = "#app") {
@@ -19,13 +21,29 @@ class Renderer {
 
         if (!this.root) {
 
-            throw new Error("DOMUS: Root element tidak ditemukan.");
+            throw new Error(
+
+                "DOMUS: Root element tidak ditemukan."
+
+            );
 
         }
 
     }
 
+    isInitialized() {
+
+        return this.root !== null;
+
+    }
+
     clear() {
+
+        if (!this.root) {
+
+            return;
+
+        }
 
         this.root.innerHTML = "";
 
@@ -33,9 +51,45 @@ class Renderer {
 
     render(component) {
 
+        if (!this.root) {
+
+            throw new Error(
+
+                "DOMUS: Renderer belum diinisialisasi."
+
+            );
+
+        }
+
+        this.currentComponent = component;
+
         this.clear();
 
         component.mount(this.root);
+
+        return true;
+
+    }
+
+    refresh() {
+
+        if (!this.currentComponent) {
+
+            return false;
+
+        }
+
+        return this.render(
+
+            this.currentComponent
+
+        );
+
+    }
+
+    getCurrentComponent() {
+
+        return this.currentComponent;
 
     }
 
