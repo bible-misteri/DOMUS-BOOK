@@ -6,6 +6,8 @@ DOMUS Editor Page
 
 import Page from "../../core/Page.js";
 
+import Router from "../../core/Router.js";
+
 import BookService from "../../services/BookService.js";
 import ChapterService from "../../services/ChapterService.js";
 
@@ -56,29 +58,43 @@ export default class EditorPage extends Page {
 
 }
 
-    renderContent() {
+    renderChapterList() {
 
-    if (!this.book) {
+    const chapters = ChapterService.getAll();
 
-        return `
+    return chapters.map(chapter => `
 
-<section class="domus-editor">
+<div
+class="domus-chapter-item ${this.chapter && this.chapter.id === chapter.id ? "active" : ""}"
+data-id="${chapter.id}">
 
-<h1>Editor</h1>
+${chapter.title}
 
-<p>Belum ada buku aktif.</p>
+</div>
 
-</section>
+`).join("");
 
-`;
-
-    }
-
-    return `
-
-<section class="domus-editor">
+}
+    
+    <section class="domus-editor">
 
 <h1>${this.book.title}</h1>
+
+<div class="domus-editor-layout">
+
+<aside class="domus-chapters">
+
+${this.renderChapterList()}
+
+<button id="addChapter">
+
++ Tambah Bab
+
+</button>
+
+</aside>
+
+<section class="domus-editor-panel">
 
 <h3>${this.chapter.title}</h3>
 
@@ -98,6 +114,10 @@ placeholder="Mulailah menulis..."
 <div id="word-count">
 
 0 kata
+
+</div>
+
+</section>
 
 </div>
 
