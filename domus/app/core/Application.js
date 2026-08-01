@@ -5,6 +5,8 @@ Application
 ====================================================
 */
 
+import Store from "./Store.js";
+
 class Application {
 
     constructor() {
@@ -21,27 +23,51 @@ class Application {
 
     }
 
+    isStarted() {
+
+        return this.started;
+
+    }
+
     async start() {
 
         if (this.started) {
 
-            return;
+            return false;
 
         }
-
-        this.started = true;
 
         if (!this.router) {
 
             throw new Error(
 
-                "Router belum didaftarkan."
+                "DOMUS: Router belum didaftarkan."
 
             );
 
         }
 
+        Store.initialize();
+
+        this.started = true;
+
         await this.router.start();
+
+        console.log(
+
+            "DOMUS Framework siap."
+
+        );
+
+        return true;
+
+    }
+
+    async restart() {
+
+        this.started = false;
+
+        return await this.start();
 
     }
 
