@@ -19,6 +19,15 @@ class ChapterService extends Service {
 
     getAll() {
 
+    getById(id) {
+
+        return this.getAll().find(
+
+            chapter => chapter.id === id
+
+        );
+
+    }    
         const book = BookService.getActive();
 
         if (!book) {
@@ -85,6 +94,41 @@ class ChapterService extends Service {
 
     update(id, content) {
 
+    rename(id, title) {
+
+        const book = BookService.getActive();
+
+        if (!book || !book.chapters) {
+
+        return;
+
+    }
+
+    book.chapters = book.chapters.map(chapter => {
+
+        if (chapter.id === id) {
+
+            return {
+
+                ...chapter,
+
+                title
+
+            };
+
+        }
+
+        return chapter;
+
+    });
+
+    BookService.update(book.id, {
+
+        chapters: book.chapters
+
+    });
+
+}
         const book = BookService.getActive();
 
         if (!book || !book.chapters) {
