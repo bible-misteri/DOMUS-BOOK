@@ -5,56 +5,48 @@ Reactive Store
 ====================================================
 */
 
-
 import Storage from "./Storage.js";
-
 import EventBus from "./EventBus.js";
-
-
 
 class Store {
 
+    constructor() {
 
-    constructor(){
+        this.defaultState = {
 
-        this.state={
+            user: null,
 
-            user:null,
+            books: [],
 
+            activeBook: null,
 
-            activeBook:null,
+            activeChapter: null,
 
+            settings: {
 
-            activeChapter:null,
-
-
-            settings:{
-
-                theme:"light"
+                theme: "light"
 
             }
 
         };
 
+        this.state = {
+
+            ...this.defaultState
+
+        };
 
     }
 
+    initialize() {
 
+        const saved = Storage.load("state");
 
-    initialize(){
-
-        const saved =
-
-            Storage.load(
-                "state"
-            );
-
-
-        if(saved){
+        if (saved) {
 
             this.state = {
 
-                ...this.state,
+                ...this.defaultState,
 
                 ...saved
 
@@ -62,31 +54,47 @@ class Store {
 
         }
 
+        return this.state;
+
     }
 
-
-
-    get(key){
+    get(key) {
 
         return this.state[key];
 
     }
 
+    getAll() {
 
+        return {
 
-    getAll(){
+            ...this.state
 
-        return this.state;
+        };
 
     }
 
+    has(key) {
 
+        return Object.prototype.hasOwnProperty.call(
 
-    set(key,value){
+            this.state,
 
+            key
 
-        this.state[key]=value;
+        );
 
+    }
+
+    set(key, value) {
+
+        if (this.state[key] === value) {
+
+            return;
+
+        }
+
+        this.state[key] = value;
 
         Storage.save(
 
@@ -95,7 +103,6 @@ class Store {
             this.state
 
         );
-
 
         EventBus.emit(
 
@@ -111,23 +118,17 @@ class Store {
 
         );
 
-
     }
 
+    update(object) {
 
+        Object.assign(
 
-    update(object){
+            this.state,
 
+            object
 
-        Object.keys(object)
-
-        .forEach(key => {
-
-            this.state[key]=object[key];
-
-        });
-
-
+        );
 
         Storage.save(
 
@@ -137,45 +138,53 @@ class Store {
 
         );
 
-
-
         EventBus.emit(
 
             "state.updated",
+
+            this.getAll()
+
+        );
+
+    }
+
+    remove(key) {
+
+        if (!this.has(key)) {
+
+            return;
+
+        }
+
+        delete this.state[key];
+
+        Storage.save(
+
+            "state",
 
             this.state
 
         );
 
+        EventBus.emit(
+
+            "state.removed",
+
+            key
+
+        );
 
     }
 
-
-
-    reset(){
-
+    reset() {
 
         this.state = {
 
-        user: null,
+            ...this.defaultState
 
-        books: [],
-
-        activeBook: null,
-
-        activeChapter: null,
-
-        settings: {
-
-            theme: "light"
-
-        }
-
-    };
-
+        };
 
         Storage.remove("state");
-
 
         EventBus.emit(
 
@@ -183,11 +192,8 @@ class Store {
 
         );
 
-
     }
 
-
 }
-
 
 export default new Store();
