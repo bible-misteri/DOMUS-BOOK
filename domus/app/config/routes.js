@@ -16,31 +16,43 @@ const routes = [
 
     {
         path: "home",
+        title: "Home",
+        icon: "🏠",
         page: HomePage
     },
 
     {
         path: "books",
+        title: "Books",
+        icon: "📚",
         page: BooksPage
     },
 
     {
         path: "editor",
+        title: "Editor",
+        icon: "✍️",
         page: EditorPage
     },
 
     {
         path: "review",
+        title: "Review",
+        icon: "📝",
         page: ReviewPage
     },
 
     {
         path: "preview",
+        title: "Preview",
+        icon: "👁️",
         page: PreviewPage
     },
 
     {
         path: "publish",
+        title: "Publish",
+        icon: "🚀",
         page: PublishPage
     }
 
