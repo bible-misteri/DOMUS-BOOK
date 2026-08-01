@@ -17,8 +17,7 @@ export default class PublishPage extends Page {
         super();
 
         this.book = null;
-
-        this.chapter = null;
+        this.chapters = [];
 
     }
 
@@ -26,7 +25,29 @@ export default class PublishPage extends Page {
 
         this.book = BookService.getActive();
 
-        this.chapter = ChapterService.getActive();
+        if (!this.book) {
+
+            return;
+
+        }
+
+        this.chapters = ChapterService.getAll();
+
+    }
+
+    countWords(text = "") {
+
+        if (!text.trim()) {
+
+            return 0;
+
+        }
+
+        return text
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .length;
 
     }
 
@@ -48,6 +69,16 @@ export default class PublishPage extends Page {
 
         }
 
+        const totalWords = this.chapters.reduce(
+
+            (total, chapter) =>
+
+                total + this.countWords(chapter.content || ""),
+
+            0
+
+        );
+
         return `
 
 <section class="domus-publish">
@@ -64,13 +95,17 @@ export default class PublishPage extends Page {
 
 <div class="domus-card">
 
-<p><strong>Bab Aktif</strong></p>
+<p><strong>Total Bab</strong></p>
 
-<p>
+<p>${this.chapters.length}</p>
 
-${this.chapter ? this.chapter.title : "-"}
+</div>
 
-</p>
+<div class="domus-card">
+
+<p><strong>Total Kata</strong></p>
+
+<p>${totalWords}</p>
 
 </div>
 
@@ -85,17 +120,15 @@ Naskah siap diproses untuk diterbitkan.
 </div>
 
 <button
-
 id="btnPublish"
-
 class="domus-btn domus-btn-primary">
 
 Publish
 
 </button>
 
-<div id="publishResult"
-
+<div
+id="publishResult"
 class="domus-publish-result">
 
 </div>
@@ -108,9 +141,7 @@ class="domus-publish-result">
 
     afterRender() {
 
-        const button =
-
-            this.element.querySelector("#btnPublish");
+        const button = this.element.querySelector("#btnPublish");
 
         if (!button) {
 
@@ -120,17 +151,13 @@ class="domus-publish-result">
 
         button.addEventListener("click", async () => {
 
-            const result =
+            button.disabled = true;
 
-                await PublishService.publish();
+            button.textContent = "Publishing...";
 
-            const output =
+            const result = await PublishService.publish();
 
-                this.element.querySelector(
-
-                    "#publishResult"
-
-                );
+            const output = this.element.querySelector("#publishResult");
 
             output.innerHTML = `
 
@@ -151,6 +178,10 @@ ${result.document.generatedAt}
 </p>
 
 `;
+
+            button.disabled = false;
+
+            button.textContent = "Publish";
 
         });
 
