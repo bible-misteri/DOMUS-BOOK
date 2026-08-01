@@ -15,13 +15,29 @@ class Router {
 
         this.currentPage = null;
 
+        this.currentRoute = null;
+
         this.defaultRoute = "home";
+
+        this.history = [];
 
     }
 
     register(path, PageClass) {
 
         this.routes.set(path, PageClass);
+
+    }
+
+    getCurrentRoute() {
+
+        return this.currentRoute;
+
+    }
+
+    getCurrentPage() {
+
+        return this.currentPage;
 
     }
 
@@ -33,57 +49,75 @@ class Router {
 
             console.error(
 
-                `Route "${path}" tidak ditemukan.`
+                `DOMUS: Route "${path}" tidak ditemukan.`
 
             );
 
-            return;
+            return false;
 
         }
+
+        this.currentRoute = path;
+
+        this.history.push(path);
 
         this.currentPage = new PageClass();
 
         await this.currentPage.initialize();
 
-        Renderer.render(
+        Renderer.render(this.currentPage);
 
-            this.currentPage
-
-        );
+        return true;
 
     }
 
     async start() {
 
-        await this.go(
-
-            this.defaultRoute
-
-        );
+        await this.go(this.defaultRoute);
 
     }
 
-    reload() {
+    async reload() {
 
-        if (!this.currentPage) {
+        if (!this.currentRoute) {
 
             return;
 
         }
 
-        this.go(
+        await this.go(this.currentRoute);
 
-            [...this.routes.entries()]
+    }
 
-            .find(
+    async back() {
 
-                ([, page]) =>
+        if (this.history.length <= 1) {
 
-                this.currentPage instanceof page
+            return;
 
-            )?.[0] || this.defaultRoute
+        }
 
-        );
+        this.history.pop();
+
+        const previous = this.history.pop();
+
+        if (previous) {
+
+            await this.go(previous);
+
+        }
+
+    }
+
+    has(path) {
+
+        return this.routes.has(path);
+
+    }
+
+    getRoutes() {
+
+        return [...this.routes.keys()];
 
     }
 
