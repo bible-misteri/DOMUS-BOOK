@@ -1,31 +1,21 @@
-/*
-====================================================
-DOMUS Entry Point (Debug)
-====================================================
-*/
-
 const app = document.querySelector("#app");
 
 function debug(msg) {
     console.log(msg);
-    app.innerHTML += `<div style="padding:6px;font-family:monospace">${msg}</div>`;
+    app.innerHTML += `<div>${msg}</div>`;
 }
 
 debug("main.js dimulai");
 
-import("./core/Bootstrap.js")
-    .then(async ({ default: Bootstrap }) => {
-        debug("Bootstrap berhasil di-load");
-        await Bootstrap();
-        debug("Bootstrap selesai");
+fetch("./core/Bootstrap.js")
+    .then(r => {
+        debug("Status: " + r.status);
+        return r.text();
     })
-    .catch(async (err) => {
-        debug("ERROR:");
-        debug(err.message);
-
-        if (err.stack) {
-            debug(err.stack.replace(/\n/g, "<br>"));
-        }
-
-        console.error(err);
+    .then(text => {
+        debug("Panjang file: " + text.length);
+        debug(text.substring(0, 200));
+    })
+    .catch(err => {
+        debug(err.toString());
     });
