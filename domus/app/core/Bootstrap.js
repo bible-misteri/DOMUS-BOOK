@@ -4,10 +4,10 @@ DOMUS Bootstrap
 ====================================================
 */
 
-import Renderer from "./Renderer.js";
-import Application from "./Application.js";
-import Router from "./Router.js";
-import routes from "../config/routes.js";
+export default async function Bootstrap() {
+    document.querySelector("#app").innerHTML =
+        "<h1>Bootstrap BERHASIL dimuat</h1>";
+}
 
 export default async function Bootstrap() {
 
