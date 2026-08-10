@@ -120,7 +120,7 @@ id="editor"
 class="domus-textarea"
 rows="20"
 placeholder="Mulailah menulis..."
->${this.chapter.content}</textarea>
+>${this.chapter.content || ""}</textarea>
 
 <div id="word-count">
 
@@ -146,32 +146,68 @@ placeholder="Mulailah menulis..."
 
         }
 
-        const editor = this.element.querySelector("#editor");
-        const status = this.element.querySelector("#save-status");
-        const counter = this.element.querySelector("#word-count");
+        const editor =
+            this.element.querySelector("#editor");
+
+        const status =
+            this.element.querySelector("#save-status");
+
+        const counter =
+            this.element.querySelector("#word-count");
+
+        /*
+        --------------------------------------------
+        FUNGSI HITUNG KATA
+        --------------------------------------------
+        */
+
+        const updateWordCount = (text) => {
+
+            const words = text
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean)
+                .length;
+
+            counter.textContent =
+                `${words} kata`;
+
+        };
+
+        /*
+        --------------------------------------------
+        HITUNG SAAT EDITOR PERTAMA DIBUKA
+        --------------------------------------------
+        */
+
+        updateWordCount(editor.value);
+
+        /*
+        --------------------------------------------
+        AUTOSAVE + WORD COUNTER
+        --------------------------------------------
+        */
 
         editor.addEventListener("input", (event) => {
 
             status.textContent = "Menyimpan...";
 
             ChapterService.update(
-
                 this.chapter.id,
-
                 event.target.value
-
             );
 
-            const words = event.target.value
-                .trim()
-                .split(/\s+/)
-                .filter(Boolean).length;
-
-            counter.textContent = `${words} kata`;
+            updateWordCount(event.target.value);
 
             status.textContent = "Tersimpan";
 
         });
+
+        /*
+        --------------------------------------------
+        PILIH BAB
+        --------------------------------------------
+        */
 
         this.element
             .querySelectorAll(".domus-chapter-item")
@@ -179,11 +215,10 @@ placeholder="Mulailah menulis..."
 
                 item.onclick = () => {
 
-                    const chapter = ChapterService.getById(
-
-                        item.dataset.id
-
-                    );
+                    const chapter =
+                        ChapterService.getById(
+                            item.dataset.id
+                        );
 
                     if (!chapter) {
 
@@ -199,16 +234,21 @@ placeholder="Mulailah menulis..."
 
             });
 
-        const addButton = this.element.querySelector("#addChapter");
+        /*
+        --------------------------------------------
+        TAMBAH BAB
+        --------------------------------------------
+        */
+
+        const addButton =
+            this.element.querySelector("#addChapter");
 
         if (addButton) {
 
             addButton.onclick = () => {
 
                 ChapterService.add(
-
                     `Bab ${ChapterService.getAll().length + 1}`
-
                 );
 
                 Router.reload();
