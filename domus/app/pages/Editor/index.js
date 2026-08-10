@@ -59,7 +59,18 @@ export default class EditorPage extends Page {
 class="domus-chapter-item ${this.chapter && this.chapter.id === chapter.id ? "active" : ""}"
 data-id="${chapter.id}">
 
+<span class="domus-chapter-title">
 ${chapter.title}
+</span>
+
+<button
+type="button"
+class="domus-rename-chapter"
+data-id="${chapter.id}">
+
+✏️ Rename
+
+</button>
 
 </div>
 
@@ -176,7 +187,7 @@ placeholder="Mulailah menulis..."
 
         /*
         --------------------------------------------
-        HITUNG SAAT EDITOR PERTAMA DIBUKA
+        HITUNG SAAT EDITOR DIBUKA
         --------------------------------------------
         */
 
@@ -227,6 +238,91 @@ placeholder="Mulailah menulis..."
                     }
 
                     ChapterService.setActive(chapter);
+
+                    Router.reload();
+
+                };
+
+            });
+
+        /*
+        --------------------------------------------
+        RENAME BAB
+        --------------------------------------------
+        */
+
+        this.element
+            .querySelectorAll(".domus-rename-chapter")
+            .forEach(button => {
+
+                button.onclick = (event) => {
+
+                    /*
+                    Mencegah klik tombol Rename
+                    dianggap sebagai klik memilih Bab.
+                    */
+
+                    event.stopPropagation();
+
+                    const id =
+                        button.dataset.id;
+
+                    const chapter =
+                        ChapterService.getById(id);
+
+                    if (!chapter) {
+
+                        return;
+
+                    }
+
+                    const newTitle =
+                        window.prompt(
+                            "Nama Bab",
+                            chapter.title
+                        );
+
+                    /*
+                    Jika Batal ditekan,
+                    tidak melakukan apa-apa.
+                    */
+
+                    if (newTitle === null) {
+
+                        return;
+
+                    }
+
+                    const title =
+                        newTitle.trim();
+
+                    /*
+                    Jangan simpan nama kosong.
+                    */
+
+                    if (!title) {
+
+                        window.alert(
+                            "Nama Bab tidak boleh kosong."
+                        );
+
+                        return;
+
+                    }
+
+                    /*
+                    Simpan nama baru.
+                    */
+
+                    ChapterService.rename(
+                        chapter.id,
+                        title
+                    );
+
+                    /*
+                    Muat ulang Editor agar
+                    nama baru langsung tampil.
+                    */
 
                     Router.reload();
 
