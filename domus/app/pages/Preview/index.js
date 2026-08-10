@@ -35,6 +35,17 @@ export default class PreviewPage extends Page {
 
     }
 
+    escapeHtml(text = "") {
+
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
     renderContent() {
 
         if (!this.book) {
@@ -53,23 +64,56 @@ export default class PreviewPage extends Page {
 
         }
 
-        const content = this.chapters.map(chapter => `
+        const bookTitle =
+            this.escapeHtml(
+                this.book.title || "Tanpa Judul"
+            );
+
+        const content = this.chapters.map(
+            (chapter, index) => {
+
+                const title =
+                    this.escapeHtml(
+                        chapter.title || `Bab ${index + 1}`
+                    );
+
+                const text =
+                    this.escapeHtml(
+                        chapter.content || ""
+                    );
+
+                const formattedText =
+                    text
+                        ? text.replace(
+                            /\n/g,
+                            "<br>"
+                        )
+                        : `<em>Bab ini belum memiliki tulisan.</em>`;
+
+                return `
 
 <section class="domus-preview-chapter">
 
-<h2>${chapter.title}</h2>
+<div class="domus-preview-chapter-number">
+
+Bab ${index + 1}
+
+</div>
+
+<h2>${title}</h2>
 
 <div class="domus-paper-content">
 
-${(chapter.content || "").replace(/\n/g,"<br>")}
+${formattedText}
 
 </div>
 
 </section>
 
-<hr>
+`;
 
-`).join("");
+            }
+        ).join("");
 
         return `
 
@@ -79,11 +123,21 @@ ${(chapter.content || "").replace(/\n/g,"<br>")}
 
 <header class="domus-paper-header">
 
-<h1>${this.book.title}</h1>
+<h1>${bookTitle}</h1>
+
+<p class="domus-preview-subtitle">
+
+Preview Naskah
+
+</p>
 
 </header>
 
+<div class="domus-paper-body">
+
 ${content}
+
+</div>
 
 </div>
 
