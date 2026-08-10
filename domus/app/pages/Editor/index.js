@@ -63,6 +63,8 @@ data-id="${chapter.id}">
 ${chapter.title}
 </span>
 
+<div class="domus-chapter-actions">
+
 <button
 type="button"
 class="domus-rename-chapter"
@@ -71,6 +73,17 @@ data-id="${chapter.id}">
 ✏️ Rename
 
 </button>
+
+<button
+type="button"
+class="domus-delete-chapter"
+data-id="${chapter.id}">
+
+🗑️ Hapus
+
+</button>
+
+</div>
 
 </div>
 
@@ -258,7 +271,7 @@ placeholder="Mulailah menulis..."
                 button.onclick = (event) => {
 
                     /*
-                    Mencegah klik tombol Rename
+                    Jangan biarkan klik tombol Rename
                     dianggap sebagai klik memilih Bab.
                     */
 
@@ -283,8 +296,7 @@ placeholder="Mulailah menulis..."
                         );
 
                     /*
-                    Jika Batal ditekan,
-                    tidak melakukan apa-apa.
+                    Batal
                     */
 
                     if (newTitle === null) {
@@ -297,7 +309,7 @@ placeholder="Mulailah menulis..."
                         newTitle.trim();
 
                     /*
-                    Jangan simpan nama kosong.
+                    Nama tidak boleh kosong
                     */
 
                     if (!title) {
@@ -310,18 +322,122 @@ placeholder="Mulailah menulis..."
 
                     }
 
-                    /*
-                    Simpan nama baru.
-                    */
-
                     ChapterService.rename(
                         chapter.id,
                         title
                     );
 
+                    Router.reload();
+
+                };
+
+            });
+
+        /*
+        --------------------------------------------
+        HAPUS BAB
+        --------------------------------------------
+        */
+
+        this.element
+            .querySelectorAll(".domus-delete-chapter")
+            .forEach(button => {
+
+                button.onclick = (event) => {
+
                     /*
-                    Muat ulang Editor agar
-                    nama baru langsung tampil.
+                    Jangan biarkan klik tombol Hapus
+                    dianggap sebagai klik memilih Bab.
+                    */
+
+                    event.stopPropagation();
+
+                    const chapters =
+                        ChapterService.getAll();
+
+                    /*
+                    --------------------------------
+                    PERLINDUNGAN BAB TERAKHIR
+                    --------------------------------
+                    */
+
+                    if (chapters.length <= 1) {
+
+                        window.alert(
+                            "Bab terakhir tidak dapat dihapus.\n\n" +
+                            "Sebuah buku harus memiliki minimal satu bab."
+                        );
+
+                        return;
+
+                    }
+
+                    const id =
+                        button.dataset.id;
+
+                    const chapter =
+                        ChapterService.getById(id);
+
+                    if (!chapter) {
+
+                        return;
+
+                    }
+
+                    /*
+                    --------------------------------
+                    KONFIRMASI
+                    --------------------------------
+                    */
+
+                    const confirmed =
+                        window.confirm(
+
+                            `Hapus Bab "${chapter.title}"?\n\n` +
+
+                            "Tulisan di dalam bab ini juga akan dihapus.\n\n" +
+
+                            "Tindakan ini tidak dapat dibatalkan."
+
+                        );
+
+                    if (!confirmed) {
+
+                        return;
+
+                    }
+
+                    /*
+                    --------------------------------
+                    HAPUS BAB
+                    --------------------------------
+                    */
+
+                    ChapterService.remove(
+                        chapter.id
+                    );
+
+                    /*
+                    --------------------------------
+                    PILIH BAB YANG MASIH ADA
+                    --------------------------------
+                    */
+
+                    const remaining =
+                        ChapterService.getAll();
+
+                    if (remaining.length > 0) {
+
+                        ChapterService.setActive(
+                            remaining[0]
+                        );
+
+                    }
+
+                    /*
+                    --------------------------------
+                    MUAT ULANG EDITOR
+                    --------------------------------
                     */
 
                     Router.reload();
