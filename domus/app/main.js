@@ -1,6 +1,6 @@
 /*
 ====================================================
-DOMUS Entry Point
+DOMUS MODULE DIAGNOSTIC
 ====================================================
 */
 
@@ -14,6 +14,7 @@ function debug(msg) {
             <div style="
                 padding:6px;
                 font-family:monospace;
+                white-space:pre-wrap;
             ">
                 ${msg}
             </div>
@@ -21,29 +22,36 @@ function debug(msg) {
     }
 }
 
-debug("main.js dimulai");
+debug("DOMUS MODULE TEST DIMULAI");
 
-import("./core/Bootstrap.js")
-    .then(async ({ default: Bootstrap }) => {
+const modules = [
+    ["Renderer", "./core/Renderer.js"],
+    ["Application", "./core/Application.js"],
+    ["Router", "./core/Router.js"],
+    ["Routes", "./config/routes.js"],
+    ["Bootstrap", "./core/Bootstrap.js"]
+];
 
-        debug("Bootstrap berhasil di-load");
+for (const [name, path] of modules) {
 
-        await Bootstrap();
+    try {
 
-        debug("Bootstrap selesai");
+        debug(`TEST: ${name}`);
 
-    })
-    .catch(err => {
+        await import(`${path}?v=${Date.now()}`);
 
-        debug("ERROR:");
-        debug(err.message);
+        debug(`✓ ${name} BERHASIL`);
 
-        if (err.stack) {
-            debug(
-                err.stack.replace(/\n/g, "<br>")
-            );
-        }
+    } catch (error) {
 
-        console.error(err);
+        debug(`❌ ${name} GAGAL`);
+        debug(error.message);
 
-    });
+        console.error(
+            `DOMUS MODULE ERROR: ${name}`,
+            error
+        );
+    }
+}
+
+debug("DOMUS MODULE TEST SELESAI");
