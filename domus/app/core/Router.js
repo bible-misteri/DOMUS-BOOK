@@ -48,9 +48,7 @@ class Router {
         if (!PageClass) {
 
             console.error(
-
                 `DOMUS: Route "${path}" tidak ditemukan.`
-
             );
 
             return false;
@@ -67,7 +65,35 @@ class Router {
 
         Renderer.render(this.currentPage);
 
+        this.bindNavigation();
+
         return true;
+
+    }
+
+    bindNavigation() {
+
+        const root = document.querySelector("#app");
+
+        if (!root) {
+
+            return;
+
+        }
+
+        root
+            .querySelectorAll("[data-page]")
+            .forEach(button => {
+
+                button.onclick = () => {
+
+                    this.go(
+                        button.dataset.page
+                    );
+
+                };
+
+            });
 
     }
 
