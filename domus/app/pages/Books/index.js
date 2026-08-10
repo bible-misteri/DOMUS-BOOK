@@ -6,6 +6,7 @@ DOMUS Books Page
 
 import Page from "../../core/Page.js";
 import BookService from "../../services/BookService.js";
+import Router from "../../core/Router.js";
 
 export default class BooksPage extends Page {
 
@@ -33,10 +34,12 @@ export default class BooksPage extends Page {
 
 <h1>Buku Saya</h1>
 
-<p>Kelola seluruh buku DOMUS.</p>
+<p>
+Kelola seluruh buku DOMUS.
+</p>
 
-<button id="btnNewBook"
-
+<button
+id="btnNewBook"
 class="domus-btn domus-btn-primary">
 
 + Buku Baru
@@ -63,7 +66,9 @@ ${this.renderBooks()}
 
             return `
 
-<p>Belum ada buku.</p>
+<p>
+Belum ada buku.
+</p>
 
 `;
 
@@ -71,13 +76,15 @@ ${this.renderBooks()}
 
         return this.books.map(book => `
 
-<div class="domus-card domus-book"
-
+<div
+class="domus-card domus-book"
 data-id="${book.id}">
 
 <h3>${book.title}</h3>
 
-<p>${book.description ?? ""}</p>
+<p>
+${book.description ?? ""}
+</p>
 
 </div>
 
@@ -88,34 +95,95 @@ data-id="${book.id}">
     afterRender() {
 
         const button =
-
             this.element.querySelector("#btnNewBook");
 
-        button.onclick = () => {
+        if (!button) {
+
+            return;
+
+        }
+
+        button.onclick = async () => {
 
             const title = prompt(
-
                 "Judul Buku"
-
             );
 
-            if (!title) return;
+            if (!title || !title.trim()) {
 
-            BookService.add({
+                return;
+
+            }
+
+            const book = {
 
                 id: crypto.randomUUID(),
 
-                title,
+                title: title.trim(),
 
                 description: "",
 
                 chapters: []
 
-            });
+            };
 
-            location.reload();
+            /*
+            ----------------------------------------
+            SIMPAN BUKU
+            ----------------------------------------
+            */
+
+            BookService.add(book);
+
+            /*
+            ----------------------------------------
+            JADIKAN BUKU SEBAGAI ACTIVE BOOK
+            ----------------------------------------
+            */
+
+            BookService.setActive(book);
+
+            /*
+            ----------------------------------------
+            LANGSUNG MASUK KE EDITOR
+            ----------------------------------------
+            */
+
+            await Router.go("editor");
 
         };
+
+        /*
+        --------------------------------------------
+        KLIK BUKU YANG SUDAH ADA
+        --------------------------------------------
+        */
+
+        this.element
+            .querySelectorAll(".domus-book")
+            .forEach(card => {
+
+                card.onclick = async () => {
+
+                    const id = card.dataset.id;
+
+                    const book = this.books.find(
+                        item => item.id === id
+                    );
+
+                    if (!book) {
+
+                        return;
+
+                    }
+
+                    BookService.setActive(book);
+
+                    await Router.go("editor");
+
+                };
+
+            });
 
     }
 
