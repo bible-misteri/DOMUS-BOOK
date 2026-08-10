@@ -64,20 +64,18 @@ export default class MainLayout extends Layout {
 
     afterRender() {
 
-        this.element
-            .querySelectorAll("[data-page]")
-            .forEach(button => {
+    this.element
+        .querySelectorAll("[data-page]")
+        .forEach(button => {
 
-                button.addEventListener("click", () => {
+            button.addEventListener("click", () => {
 
-                    Router.go(
-                        button.dataset.page
-                    );
-
-                });
+                Router.go(
+                    button.dataset.page
+                );
 
             });
 
-    }
+        });
 
-} 
+}
