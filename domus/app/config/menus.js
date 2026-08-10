@@ -5,14 +5,38 @@ Menus
 ====================================================
 */
 
-import routes from "./routes.js";
+const menus = [
 
-const menus = routes.map(route => ({
+    {
+        title: "🏠 Home",
+        page: "home"
+    },
 
-    title: `${route.icon} ${route.title}`,
+    {
+        title: "📚 Books",
+        page: "books"
+    },
 
-    page: route.path
+    {
+        title: "✍️ Editor",
+        page: "editor"
+    },
 
-}));
+    {
+        title: "📝 Review",
+        page: "review"
+    },
+
+    {
+        title: "👁️ Preview",
+        page: "preview"
+    },
+
+    {
+        title: "🚀 Publish",
+        page: "publish"
+    }
+
+];
 
 export default menus;
