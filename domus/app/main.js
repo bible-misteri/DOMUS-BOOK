@@ -1,57 +1,43 @@
 /*
 ====================================================
-DOMUS MODULE DIAGNOSTIC
+DOMUS Entry Point
 ====================================================
 */
 
-const app = document.querySelector("#app");
+import Bootstrap from "./core/Bootstrap.js";
 
-function debug(msg) {
-    console.log(msg);
+console.log("DOMUS main.js dimulai");
 
-    if (app) {
-        app.innerHTML += `
-            <div style="
-                padding:6px;
-                font-family:monospace;
-                white-space:pre-wrap;
-            ">
-                ${msg}
-            </div>
-        `;
-    }
-}
+Bootstrap()
+    .then(() => {
 
-debug("DOMUS MODULE TEST DIMULAI");
+        console.log("DOMUS berhasil dijalankan");
 
-const modules = [
-    ["Renderer", "./core/Renderer.js"],
-    ["Application", "./core/Application.js"],
-    ["Router", "./core/Router.js"],
-    ["Routes", "./config/routes.js"],
-    ["Bootstrap", "./core/Bootstrap.js"]
-];
-
-for (const [name, path] of modules) {
-
-    try {
-
-        debug(`TEST: ${name}`);
-
-        await import(`${path}?v=${Date.now()}`);
-
-        debug(`✓ ${name} BERHASIL`);
-
-    } catch (error) {
-
-        debug(`❌ ${name} GAGAL`);
-        debug(error.message);
+    })
+    .catch(error => {
 
         console.error(
-            `DOMUS MODULE ERROR: ${name}`,
+            "DOMUS gagal dijalankan:",
             error
         );
-    }
-}
 
-debug("DOMUS MODULE TEST SELESAI");
+        const app = document.querySelector("#app");
+
+        if (app) {
+
+            app.innerHTML = `
+                <section style="
+                    padding:40px;
+                    font-family:monospace;
+                ">
+
+                    <h1>DOMUS ERROR</h1>
+
+                    <pre>${error.stack || error}</pre>
+
+                </section>
+            `;
+
+        }
+
+    });
