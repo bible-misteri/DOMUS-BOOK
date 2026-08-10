@@ -50,6 +50,17 @@ export default class ReviewPage extends Page {
 
     }
 
+    escapeHtml(text = "") {
+
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
     renderContent() {
 
         if (!this.book) {
@@ -58,7 +69,7 @@ export default class ReviewPage extends Page {
 
 <section class="domus-review">
 
-<h1>Review</h1>
+<h1>Review Naskah</h1>
 
 <p>Tidak ada buku aktif.</p>
 
@@ -70,35 +81,65 @@ export default class ReviewPage extends Page {
 
         let totalWords = 0;
 
-        const chapters = this.chapters.map(chapter => {
+        const chapters = this.chapters.map(
+            (chapter, index) => {
 
-            const text = chapter.content || "";
+                const text =
+                    chapter.content || "";
 
-            const words = this.countWords(text);
+                const words =
+                    this.countWords(text);
 
-            totalWords += words;
+                totalWords += words;
 
-            return `
+                const safeTitle =
+                    this.escapeHtml(
+                        chapter.title || `Bab ${index + 1}`
+                    );
 
-<div class="domus-review-chapter">
+                const safeText =
+                    this.escapeHtml(text);
 
-<h3>${chapter.title}</h3>
+                const content =
+                    safeText
+                        ? safeText.replace(
+                            /\n/g,
+                            "<br>"
+                        )
+                        : `<em>Bab ini belum memiliki tulisan.</em>`;
 
-<p><strong>Jumlah Kata :</strong> ${words}</p>
+                return `
+
+<article class="domus-review-chapter">
+
+<h3>
+
+Bab ${index + 1} — ${safeTitle}
+
+</h3>
+
+<p>
+
+<strong>Jumlah Kata:</strong>
+
+${words}
+
+</p>
 
 <div class="domus-review-content">
 
-${text.replace(/\n/g,"<br>")}
+${content}
 
 </div>
+
+</article>
 
 <hr>
 
-</div>
-
 `;
 
-        }).join("");
+            }
+        ).join("");
 
         return `
 
@@ -106,15 +147,35 @@ ${text.replace(/\n/g,"<br>")}
 
 <h1>Review Naskah</h1>
 
-<h2>${this.book.title}</h2>
+<h2>${this.escapeHtml(this.book.title)}</h2>
 
-<p><strong>Total Bab :</strong> ${this.chapters.length}</p>
+<div class="domus-review-summary">
 
-<p><strong>Total Kata :</strong> ${totalWords}</p>
+<p>
+
+<strong>Total Bab:</strong>
+
+${this.chapters.length}
+
+</p>
+
+<p>
+
+<strong>Total Kata:</strong>
+
+${totalWords}
+
+</p>
+
+</div>
 
 <hr>
 
+<div class="domus-review-chapters">
+
 ${chapters}
+
+</div>
 
 </section>
 
