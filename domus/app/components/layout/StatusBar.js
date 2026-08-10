@@ -8,7 +8,7 @@ export default class StatusBar extends Component {
         const chapter = Store.get("activeChapter");
 
         return `
-<div class="domus-statusbar">
+<div class="domus-statusBar">
 
 <span>
 
