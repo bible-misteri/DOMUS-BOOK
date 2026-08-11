@@ -596,7 +596,7 @@ ${safeContent}
                     ========================================
                     */
 
-                    output.innerHTML = `
+output.innerHTML = `
 
 <div class="domus-card">
 
@@ -621,6 +621,19 @@ ${result.message}
 ${document.generatedAt}
 
 </p>
+
+</div>
+
+
+<div class="domus-card">
+
+<h3>
+
+📑 Daftar Isi
+
+</h3>
+
+${tocHTML}
 
 </div>
 
