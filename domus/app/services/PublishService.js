@@ -6,25 +6,13 @@ Publish Service
 */
 
 import Service from "../core/Service.js";
-import Store from "../core/Store.js";
-import ChapterService from "./ChapterService.js";
-
+import BookService from "./BookService.js";
 
 class PublishService extends Service {
-
 
     constructor() {
 
         super("PublishService");
-
-    }
-
-
-    async initialize() {
-
-        this.log(
-            "PublishService initialized."
-        );
 
     }
 
@@ -37,9 +25,7 @@ class PublishService extends Service {
 
     getBook() {
 
-        return Store.get(
-            "activeBook"
-        );
+        return BookService.getActive();
 
     }
 
@@ -52,16 +38,22 @@ class PublishService extends Service {
 
     getChapters() {
 
-        const chapters =
-            ChapterService.getAll();
+        const book =
+            this.getBook();
 
-        if (Array.isArray(chapters)) {
+        if (!book) {
 
-            return chapters;
+            return [];
 
         }
 
-        return [];
+        if (!Array.isArray(book.chapters)) {
+
+            return [];
+
+        }
+
+        return book.chapters;
 
     }
 
@@ -72,20 +64,16 @@ class PublishService extends Service {
     ====================================================
     */
 
-    countWords(
-        text = ""
-    ) {
+    countWords(text = "") {
 
         const cleanText =
             String(text).trim();
-
 
         if (!cleanText) {
 
             return 0;
 
         }
-
 
         return cleanText
             .split(/\s+/)
@@ -97,69 +85,15 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUAT DATA BAB NORMAL
-    ====================================================
-    */
-
-    normalizeChapter(
-        chapter,
-        index
-    ) {
-
-        const number =
-            index + 1;
-
-
-        const title =
-            chapter?.title ||
-            `Bab ${number}`;
-
-
-        const content =
-            String(
-                chapter?.content || ""
-            );
-
-
-        const wordCount =
-            this.countWords(
-                content
-            );
-
-
-        return {
-
-            ...chapter,
-
-            number,
-
-            title,
-
-            content,
-
-            wordCount
-
-        };
-
-    }
-
-
-    /*
-    ====================================================
     TOTAL KATA
     ====================================================
     */
 
-    getTotalWords(
-        chapters
-    ) {
+    getTotalWords(chapters = []) {
 
         return chapters.reduce(
 
-            (
-                total,
-                chapter
-            ) => {
+            (total, chapter) => {
 
                 return total +
                     this.countWords(
@@ -177,30 +111,40 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUAT TOC OTOMATIS
+    NORMALISASI BAB
     ====================================================
     */
 
-    buildTOC(
-        chapters
-    ) {
+    normalizeChapters(chapters = []) {
 
         return chapters.map(
 
-            (
-                chapter,
-                index
-            ) => {
+            (chapter, index) => {
+
+                const content =
+                    String(
+                        chapter?.content || ""
+                    );
+
+                const wordCount =
+                    this.countWords(
+                        content
+                    );
 
                 return {
 
+                    ...chapter,
+
                     number:
-                        chapter.number ||
                         index + 1,
 
                     title:
-                        chapter.title ||
-                        `Bab ${index + 1}`
+                        chapter?.title ||
+                        `Bab ${index + 1}`,
+
+                    content,
+
+                    wordCount
 
                 };
 
@@ -219,16 +163,8 @@ class PublishService extends Service {
 
     async build() {
 
-
-        /*
-        --------------------------------------------
-        BUKU
-        --------------------------------------------
-        */
-
         const book =
             this.getBook();
-
 
         if (!book) {
 
@@ -241,7 +177,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        BAB
+        AMBIL BAB LANGSUNG DARI BUKU AKTIF
         --------------------------------------------
         */
 
@@ -251,52 +187,27 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        NORMALISASI BAB
+        NORMALISASI
         --------------------------------------------
         */
 
         const chapters =
-            rawChapters.map(
-
-                (
-                    chapter,
-                    index
-                ) => {
-
-                    return this.normalizeChapter(
-                        chapter,
-                        index
-                    );
-
-                }
-
+            this.normalizeChapters(
+                rawChapters
             );
 
 
         /*
         --------------------------------------------
-        TOTAL
+        HITUNG TOTAL
         --------------------------------------------
         */
 
         const totalChapters =
             chapters.length;
 
-
         const totalWords =
             this.getTotalWords(
-                chapters
-            );
-
-
-        /*
-        --------------------------------------------
-        TOC
-        --------------------------------------------
-        */
-
-        const toc =
-            this.buildTOC(
                 chapters
             );
 
@@ -309,77 +220,28 @@ class PublishService extends Service {
 
         const manuscript = {
 
-            /*
-            ==============================
-            INFORMASI BUKU
-            ==============================
-            */
-
             book: {
 
-                ...book
+                ...book,
+
+                chapters: chapters
 
             },
 
+            chapters,
 
-            /*
-            ==============================
-            TABLE OF CONTENTS
-            ==============================
-            */
+            totalChapters,
 
-            toc:
-
-
-                toc,
-
-
-            /*
-            ==============================
-            BAB
-            ==============================
-            */
-
-            chapters:
-
-
-                chapters,
-
-
-            /*
-            ==============================
-            STATISTIK
-            ==============================
-            */
-
-            totalChapters:
-
-
-                totalChapters,
-
-
-            totalWords:
-
-
-                totalWords,
-
-
-            /*
-            ==============================
-            WAKTU
-            ==============================
-            */
+            totalWords,
 
             generatedAt:
-
-
                 new Date().toISOString()
 
         };
 
 
         this.log(
-            "Manuscript built with automatic TOC."
+            `Manuscript built: ${totalChapters} chapters, ${totalWords} words.`
         );
 
 
@@ -399,11 +261,9 @@ class PublishService extends Service {
         const manuscript =
             await this.build();
 
-
         this.log(
             "Preview generated."
         );
-
 
         return manuscript;
 
@@ -423,7 +283,7 @@ class PublishService extends Service {
 
 
         this.log(
-            "Publishing entire manuscript..."
+            `Publishing manuscript: ${manuscript.totalChapters} chapters.`
         );
 
 
