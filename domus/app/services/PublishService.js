@@ -572,6 +572,20 @@ class PublishService extends Service {
             version:
                 "1.0",
 
+    /*
+    ====================================================
+    KOMPATIBILITAS DENGAN PUBLISH PAGE LAMA
+    ====================================================
+    */
+
+            book:
+                book,
+
+            chapter:
+                chapters.length > 0
+                    ? chapters[0]
+                    : null,
+
 
             generatedAt:
                 generatedAt,
