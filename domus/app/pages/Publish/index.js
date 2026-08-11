@@ -444,6 +444,16 @@ class="domus-publish-result">
                     const result =
                         await PublishService.publish();
 
+                    console.log(
+                       "DOMUS PUBLISH DOCUMENT:",
+                        result.document
+                    );
+
+                    console.log(
+                       "DOMUS PUBLISH CHAPTERS:",
+                        result.document.chapters
+                    );
+
 
                     /*
                     ========================================
