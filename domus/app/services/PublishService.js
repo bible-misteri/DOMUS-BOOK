@@ -2,6 +2,7 @@
 ====================================================
 DOMUS Framework v1.0
 Publish Service
+Manuscript Engine v1.0
 ====================================================
 */
 
@@ -92,26 +93,110 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    HITUNG TOTAL KATA
+    ESCAPE HTML
     ====================================================
     */
 
-    getTotalWords(chapters = []) {
+    escapeHtml(text = "") {
 
-        return chapters.reduce(
+        return String(text || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
-            (total, chapter) => {
+    }
 
-                return total +
-                    this.countWords(
-                        chapter.content || ""
-                    );
 
-            },
+    /*
+    ====================================================
+    NORMALISASI TEKS
+    ====================================================
+    */
 
-            0
+    normalizeText(text = "") {
 
-        );
+        return String(text || "")
+            .replace(/\r\n/g, "\n")
+            .replace(/\r/g, "\n")
+            .trim();
+
+    }
+
+
+    /*
+    ====================================================
+    PECAH MENJADI PARAGRAF
+    ====================================================
+    */
+
+    getParagraphs(text = "") {
+
+        const normalized =
+            this.normalizeText(text);
+
+        if (!normalized) {
+
+            return [];
+
+        }
+
+        return normalized
+            .split(/\n\s*\n/)
+            .map(
+                paragraph =>
+                    paragraph.trim()
+            )
+            .filter(Boolean);
+
+    }
+
+
+    /*
+    ====================================================
+    PARAGRAF → HTML
+    ====================================================
+    */
+
+    paragraphToHtml(paragraph = "") {
+
+        const escaped =
+            this.escapeHtml(paragraph);
+
+        return `<p>${escaped.replace(
+            /\n/g,
+            "<br>"
+        )}</p>`;
+
+    }
+
+
+    /*
+    ====================================================
+    TEXT → HTML
+    ====================================================
+    */
+
+    textToHtml(text = "") {
+
+        const paragraphs =
+            this.getParagraphs(text);
+
+        if (!paragraphs.length) {
+
+            return "";
+
+        }
+
+        return paragraphs
+            .map(
+                paragraph =>
+                    this.paragraphToHtml(
+                        paragraph
+                    )
+            )
+            .join("\n");
 
     }
 
@@ -122,23 +207,106 @@ class PublishService extends Service {
     ====================================================
     */
 
-    buildChapter(chapter, index) {
+    buildChapter(
+        chapter,
+        index
+    ) {
+
+        const title =
+            chapter.title ||
+            `Bab ${index + 1}`;
+
+        const content =
+            this.normalizeText(
+                chapter.content || ""
+            );
+
+        const paragraphs =
+            this.getParagraphs(
+                content
+            );
+
+        const html =
+            this.textToHtml(
+                content
+            );
 
         return {
 
-            number: index + 1,
+            /*
+            --------------------------------------------
+            IDENTITAS
+            --------------------------------------------
+            */
 
-            id: chapter.id,
+            id:
+                chapter.id,
+
+            number:
+                index + 1,
 
             title:
-                chapter.title || `Bab ${index + 1}`,
+                title,
+
+
+            /*
+            --------------------------------------------
+            ISI ASLI
+            --------------------------------------------
+            */
 
             content:
-                chapter.content || "",
+                content,
+
+
+            /*
+            --------------------------------------------
+            STRUKTUR PARAGRAF
+            --------------------------------------------
+            */
+
+            paragraphs:
+                paragraphs.map(
+                    (paragraph, paragraphIndex) => {
+
+                        return {
+
+                            number:
+                                paragraphIndex + 1,
+
+                            text:
+                                paragraph,
+
+                            html:
+                                this.paragraphToHtml(
+                                    paragraph
+                                )
+
+                        };
+
+                    }
+                ),
+
+
+            /*
+            --------------------------------------------
+            HTML CHAPTER
+            --------------------------------------------
+            */
+
+            html:
+                html,
+
+
+            /*
+            --------------------------------------------
+            STATISTIK
+            --------------------------------------------
+            */
 
             wordCount:
                 this.countWords(
-                    chapter.content || ""
+                    content
                 )
 
         };
@@ -148,7 +316,96 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUILD DOCUMENT
+    BUILD FRONT MATTER
+    ====================================================
+    */
+
+    buildFrontMatter(book) {
+
+        return {
+
+            titlePage: {
+
+                enabled: true,
+
+                title:
+                    book.title ||
+                    "Tanpa Judul"
+
+            },
+
+            tableOfContents: {
+
+                enabled: true
+
+            }
+
+        };
+
+    }
+
+
+    /*
+    ====================================================
+    BUILD BACK MATTER
+    ====================================================
+    */
+
+    buildBackMatter() {
+
+        return {
+
+            enabled: false,
+
+            sections: []
+
+        };
+
+    }
+
+
+    /*
+    ====================================================
+    BUILD METADATA
+    ====================================================
+    */
+
+    buildMetadata(book) {
+
+        return {
+
+            title:
+                book.title ||
+                "Tanpa Judul",
+
+            author:
+                book.author ||
+                "",
+
+            language:
+                book.language ||
+                "id-ID",
+
+            publisher:
+                book.publisher ||
+                "DOMUS Publisher",
+
+            createdAt:
+                book.createdAt ||
+                null,
+
+            updatedAt:
+                book.updatedAt ||
+                null
+
+        };
+
+    }
+
+
+    /*
+    ====================================================
+    BUILD MANUSCRIPT
     ====================================================
     */
 
@@ -156,6 +413,7 @@ class PublishService extends Service {
 
         const book =
             this.getBook();
+
 
         if (!book) {
 
@@ -176,8 +434,10 @@ class PublishService extends Service {
             this.getChapters();
 
 
-        if (!sourceChapters ||
-            sourceChapters.length === 0) {
+        if (
+            !sourceChapters ||
+            sourceChapters.length === 0
+        ) {
 
             throw new Error(
                 "Buku belum memiliki bab."
@@ -188,7 +448,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        BANGUN SEMUA BAB
+        BUILD CHAPTERS
         --------------------------------------------
         */
 
@@ -207,73 +467,181 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        HITUNG TOTAL
+        TOTAL KATA
         --------------------------------------------
         */
 
         const totalWords =
-            this.getTotalWords(
-                chapters
+            chapters.reduce(
+
+                (total, chapter) => {
+
+                    return total +
+                        chapter.wordCount;
+
+                },
+
+                0
+
             );
 
 
         /*
         --------------------------------------------
-        DOCUMENT
+        GENERATED AT
         --------------------------------------------
         */
 
-        const document = {
+        const generatedAt =
+            new Date().toISOString();
+
+
+        /*
+        ====================================================
+        MANUSCRIPT OBJECT
+        ====================================================
+        */
+
+        const manuscript = {
+
+            /*
+            --------------------------------------------
+            IDENTITAS FORMAT
+            --------------------------------------------
+            */
 
             type:
                 "domus-manuscript",
 
+            schema:
+                "DOMUS-MS-1.0",
+
             version:
                 "1.0",
 
+
+            /*
+            --------------------------------------------
+            WAKTU
+            --------------------------------------------
+            */
+
             generatedAt:
-                new Date().toISOString(),
+                generatedAt,
 
-            book: {
 
-                id:
-                    book.id,
+            /*
+            --------------------------------------------
+            METADATA
+            --------------------------------------------
+            */
 
-                title:
-                    book.title || "Tanpa Judul"
+            metadata:
+                this.buildMetadata(
+                    book
+                ),
+
+
+            /*
+            --------------------------------------------
+            FRONT MATTER
+            --------------------------------------------
+            */
+
+            frontMatter:
+                this.buildFrontMatter(
+                    book
+                ),
+
+
+            /*
+            --------------------------------------------
+            CHAPTERS
+            --------------------------------------------
+            */
+
+            chapters:
+                chapters,
+
+
+            /*
+            --------------------------------------------
+            BACK MATTER
+            --------------------------------------------
+            */
+
+            backMatter:
+                this.buildBackMatter(),
+
+
+            /*
+            --------------------------------------------
+            STATISTIK
+            --------------------------------------------
+            */
+
+            statistics: {
+
+                totalChapters:
+                    chapters.length,
+
+                totalWords:
+                    totalWords
 
             },
 
-            totalChapters:
-                chapters.length,
 
-            totalWords:
-                totalWords,
+            /*
+            --------------------------------------------
+            EXPORT TARGET
+            --------------------------------------------
+            */
 
-            chapters:
-                chapters
+            export: {
+
+                pdf: {
+
+                    ready:
+                        true
+
+                },
+
+                epub: {
+
+                    ready:
+                        true
+
+                }
+
+            }
 
         };
 
 
         /*
-        --------------------------------------------
-        SIMPAN HASIL TERAKHIR
-        --------------------------------------------
+        ====================================================
+        SIMPAN DOCUMENT TERAKHIR
+        ====================================================
         */
 
         Store.set(
             "publishedDocument",
-            document
+            manuscript
         );
 
+
+        /*
+        ====================================================
+        LOG
+        ====================================================
+        */
 
         this.log(
-            "Document built successfully."
+            "DOMUS Manuscript built successfully."
         );
 
 
-        return document;
+        return manuscript;
 
     }
 
@@ -286,16 +654,16 @@ class PublishService extends Service {
 
     async preview() {
 
-        const document =
+        const manuscript =
             await this.build();
 
 
         this.log(
-            "Preview generated."
+            "Manuscript preview generated."
         );
 
 
-        return document;
+        return manuscript;
 
     }
 
@@ -308,7 +676,7 @@ class PublishService extends Service {
 
     async publish() {
 
-        const document =
+        const manuscript =
             await this.build();
 
 
@@ -316,12 +684,6 @@ class PublishService extends Service {
             "Publishing entire manuscript..."
         );
 
-
-        /*
-        --------------------------------------------
-        HASIL PUBLISH
-        --------------------------------------------
-        */
 
         return {
 
@@ -332,7 +694,7 @@ class PublishService extends Service {
                 "Publish seluruh naskah berhasil.",
 
             document:
-                document
+                manuscript
 
         };
 
