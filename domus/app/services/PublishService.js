@@ -39,16 +39,17 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    GET BOOK
+    GET ACTIVE BOOK
     ====================================================
     */
 
     getBook() {
 
-        return (
+        const book =
             BookService.getActive()
-            || Store.get("activeBook")
-        );
+            || Store.get("activeBook");
+
+        return book || null;
 
     }
 
@@ -61,7 +62,23 @@ class PublishService extends Service {
 
     getChapters() {
 
-        return ChapterService.getAll();
+        const chapters =
+            ChapterService.getAll();
+
+        if (!Array.isArray(chapters)) {
+
+            return [];
+
+        }
+
+        /*
+        Jangan biarkan item undefined
+        masuk ke manuscript.
+        */
+
+        return chapters.filter(
+            chapter => !!chapter
+        );
 
     }
 
@@ -127,7 +144,7 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    PECAH MENJADI PARAGRAF
+    PECAH PARAGRAF
     ====================================================
     */
 
@@ -212,24 +229,38 @@ class PublishService extends Service {
         index
     ) {
 
+        /*
+        --------------------------------------------
+        PROTEKSI DATA
+        --------------------------------------------
+        */
+
+        const safeChapter =
+            chapter || {};
+
+
         const title =
-            chapter.title ||
-            `Bab ${index + 1}`;
+            safeChapter.title
+            || `Bab ${index + 1}`;
+
 
         const content =
             this.normalizeText(
-                chapter.content || ""
+                safeChapter.content || ""
             );
+
 
         const paragraphs =
             this.getParagraphs(
                 content
             );
 
+
         const html =
             this.textToHtml(
                 content
             );
+
 
         return {
 
@@ -240,7 +271,8 @@ class PublishService extends Service {
             */
 
             id:
-                chapter.id,
+                safeChapter.id
+                || `chapter-${index + 1}`,
 
             number:
                 index + 1,
@@ -261,13 +293,16 @@ class PublishService extends Service {
 
             /*
             --------------------------------------------
-            STRUKTUR PARAGRAF
+            PARAGRAF
             --------------------------------------------
             */
 
             paragraphs:
                 paragraphs.map(
-                    (paragraph, paragraphIndex) => {
+                    (
+                        paragraph,
+                        paragraphIndex
+                    ) => {
 
                         return {
 
@@ -290,7 +325,7 @@ class PublishService extends Service {
 
             /*
             --------------------------------------------
-            HTML CHAPTER
+            HTML
             --------------------------------------------
             */
 
@@ -316,27 +351,32 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUILD FRONT MATTER
+    FRONT MATTER
     ====================================================
     */
 
     buildFrontMatter(book) {
 
+        const safeBook =
+            book || {};
+
         return {
 
             titlePage: {
 
-                enabled: true,
+                enabled:
+                    true,
 
                 title:
-                    book.title ||
-                    "Tanpa Judul"
+                    safeBook.title
+                    || "Tanpa Judul"
 
             },
 
             tableOfContents: {
 
-                enabled: true
+                enabled:
+                    true
 
             }
 
@@ -347,7 +387,7 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUILD BACK MATTER
+    BACK MATTER
     ====================================================
     */
 
@@ -355,9 +395,11 @@ class PublishService extends Service {
 
         return {
 
-            enabled: false,
+            enabled:
+                false,
 
-            sections: []
+            sections:
+                []
 
         };
 
@@ -366,37 +408,40 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUILD METADATA
+    METADATA
     ====================================================
     */
 
     buildMetadata(book) {
 
+        const safeBook =
+            book || {};
+
         return {
 
             title:
-                book.title ||
-                "Tanpa Judul",
+                safeBook.title
+                || "Tanpa Judul",
 
             author:
-                book.author ||
-                "",
+                safeBook.author
+                || "",
 
             language:
-                book.language ||
-                "id-ID",
+                safeBook.language
+                || "id-ID",
 
             publisher:
-                book.publisher ||
-                "DOMUS Publisher",
+                safeBook.publisher
+                || "DOMUS Publisher",
 
             createdAt:
-                book.createdAt ||
-                null,
+                safeBook.createdAt
+                || null,
 
             updatedAt:
-                book.updatedAt ||
-                null
+                safeBook.updatedAt
+                || null
 
         };
 
@@ -410,6 +455,12 @@ class PublishService extends Service {
     */
 
     async build() {
+
+        /*
+        --------------------------------------------
+        BUKU
+        --------------------------------------------
+        */
 
         const book =
             this.getBook();
@@ -426,7 +477,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        AMBIL SEMUA BAB
+        BAB
         --------------------------------------------
         */
 
@@ -448,20 +499,20 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        BUILD CHAPTERS
+        BUILD SEMUA BAB
         --------------------------------------------
         */
 
         const chapters =
             sourceChapters.map(
+                (chapter, index) => {
 
-                (chapter, index) =>
-
-                    this.buildChapter(
+                    return this.buildChapter(
                         chapter,
                         index
-                    )
+                    );
 
+                }
             );
 
 
@@ -474,10 +525,18 @@ class PublishService extends Service {
         const totalWords =
             chapters.reduce(
 
-                (total, chapter) => {
+                (
+                    total,
+                    chapter
+                ) => {
 
                     return total +
-                        chapter.wordCount;
+                        (
+                            Number(
+                                chapter.wordCount
+                            )
+                            || 0
+                        );
 
                 },
 
@@ -488,7 +547,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        GENERATED AT
+        WAKTU
         --------------------------------------------
         */
 
@@ -498,17 +557,11 @@ class PublishService extends Service {
 
         /*
         ====================================================
-        MANUSCRIPT OBJECT
+        MANUSCRIPT
         ====================================================
         */
 
         const manuscript = {
-
-            /*
-            --------------------------------------------
-            IDENTITAS FORMAT
-            --------------------------------------------
-            */
 
             type:
                 "domus-manuscript",
@@ -520,21 +573,9 @@ class PublishService extends Service {
                 "1.0",
 
 
-            /*
-            --------------------------------------------
-            WAKTU
-            --------------------------------------------
-            */
-
             generatedAt:
                 generatedAt,
 
-
-            /*
-            --------------------------------------------
-            METADATA
-            --------------------------------------------
-            */
 
             metadata:
                 this.buildMetadata(
@@ -542,43 +583,19 @@ class PublishService extends Service {
                 ),
 
 
-            /*
-            --------------------------------------------
-            FRONT MATTER
-            --------------------------------------------
-            */
-
             frontMatter:
                 this.buildFrontMatter(
                     book
                 ),
 
 
-            /*
-            --------------------------------------------
-            CHAPTERS
-            --------------------------------------------
-            */
-
             chapters:
                 chapters,
 
 
-            /*
-            --------------------------------------------
-            BACK MATTER
-            --------------------------------------------
-            */
-
             backMatter:
                 this.buildBackMatter(),
 
-
-            /*
-            --------------------------------------------
-            STATISTIK
-            --------------------------------------------
-            */
 
             statistics: {
 
@@ -590,12 +607,6 @@ class PublishService extends Service {
 
             },
 
-
-            /*
-            --------------------------------------------
-            EXPORT TARGET
-            --------------------------------------------
-            */
 
             export: {
 
@@ -619,9 +630,9 @@ class PublishService extends Service {
 
 
         /*
-        ====================================================
-        SIMPAN DOCUMENT TERAKHIR
-        ====================================================
+        --------------------------------------------
+        SIMPAN HASIL TERAKHIR
+        --------------------------------------------
         */
 
         Store.set(
@@ -629,12 +640,6 @@ class PublishService extends Service {
             manuscript
         );
 
-
-        /*
-        ====================================================
-        LOG
-        ====================================================
-        */
 
         this.log(
             "DOMUS Manuscript built successfully."
@@ -705,7 +710,7 @@ class PublishService extends Service {
 
 /*
 ====================================================
-EXPORT SINGLETON
+EXPORT
 ====================================================
 */
 
