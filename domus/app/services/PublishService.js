@@ -572,11 +572,11 @@ class PublishService extends Service {
             version:
                 "1.0",
 
-    /*
-    ====================================================
-    KOMPATIBILITAS DENGAN PUBLISH PAGE LAMA
-    ====================================================
-    */
+       /*
+       ====================================================
+       KOMPATIBILITAS DENGAN PUBLISH PAGE LAMA
+       ====================================================
+       */
 
             book:
                 book,
