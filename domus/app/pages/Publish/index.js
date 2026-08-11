@@ -21,9 +21,16 @@ export default class PublishPage extends Page {
 
     }
 
+    /*
+    ====================================================
+    LOAD
+    ====================================================
+    */
+
     async load() {
 
-        this.book = BookService.getActive();
+        this.book =
+            BookService.getActive();
 
         if (!this.book) {
 
@@ -31,25 +38,102 @@ export default class PublishPage extends Page {
 
         }
 
-        this.chapters = ChapterService.getAll();
+        this.chapters =
+            ChapterService.getAll();
 
     }
 
+    /*
+    ====================================================
+    HITUNG KATA
+    ====================================================
+    */
+
     countWords(text = "") {
 
-        if (!text.trim()) {
+        const cleanText =
+            text.trim();
+
+        if (!cleanText) {
 
             return 0;
 
         }
 
-        return text
-            .trim()
+        return cleanText
             .split(/\s+/)
             .filter(Boolean)
             .length;
 
     }
+
+    /*
+    ====================================================
+    HITUNG TOTAL KATA
+    ====================================================
+    */
+
+    getTotalWords() {
+
+        return this.chapters.reduce(
+
+            (total, chapter) => {
+
+                return total +
+                    this.countWords(
+                        chapter.content || ""
+                    );
+
+            },
+
+            0
+
+        );
+
+    }
+
+    /*
+    ====================================================
+    PEMERIKSAAN NASKAH
+    ====================================================
+    */
+
+    getValidation() {
+
+        const hasBook =
+            !!this.book;
+
+        const hasChapters =
+            this.chapters.length > 0;
+
+        const totalWords =
+            this.getTotalWords();
+
+        const hasContent =
+            totalWords > 0;
+
+        return {
+
+            hasBook,
+
+            hasChapters,
+
+            hasContent,
+
+            ready:
+                hasBook &&
+                hasChapters &&
+                hasContent
+
+        };
+
+    }
+
+    /*
+    ====================================================
+    RENDER
+    ====================================================
+    */
 
     renderContent() {
 
@@ -69,15 +153,66 @@ export default class PublishPage extends Page {
 
         }
 
-        const totalWords = this.chapters.reduce(
+        const totalWords =
+            this.getTotalWords();
 
-            (total, chapter) =>
+        const validation =
+            this.getValidation();
 
-                total + this.countWords(chapter.content || ""),
+        /*
+        ====================================================
+        STATUS PEMERIKSAAN
+        ====================================================
+        */
 
-            0
+        const bookStatus =
+            validation.hasBook
+                ? "✓ Buku aktif"
+                : "✗ Tidak ada buku";
 
-        );
+        const chapterStatus =
+            validation.hasChapters
+                ? "✓ Ada bab"
+                : "✗ Belum ada bab";
+
+        const contentStatus =
+            validation.hasContent
+                ? "✓ Naskah memiliki isi"
+                : "✗ Naskah masih kosong";
+
+        /*
+        ====================================================
+        TOMBOL PUBLISH
+        ====================================================
+        */
+
+        const publishButton =
+            validation.ready
+                ? `
+
+<button
+id="btnPublish"
+class="domus-btn domus-btn-primary"
+type="button">
+
+🚀 Publish
+
+</button>
+
+`
+                : `
+
+<button
+id="btnPublish"
+class="domus-btn domus-btn-primary"
+type="button"
+disabled>
+
+🚀 Publish
+
+</button>
+
+`;
 
         return `
 
@@ -85,47 +220,126 @@ export default class PublishPage extends Page {
 
 <h1>Publish Buku</h1>
 
-<div class="domus-card">
+<p>
 
-<p><strong>Judul Buku</strong></p>
+Periksa naskah sebelum diterbitkan.
 
-<p>${this.book.title}</p>
+</p>
 
-</div>
 
-<div class="domus-card">
-
-<p><strong>Total Bab</strong></p>
-
-<p>${this.chapters.length}</p>
-
-</div>
-
-<div class="domus-card">
-
-<p><strong>Total Kata</strong></p>
-
-<p>${totalWords}</p>
-
-</div>
+<!-- ================================================
+     INFORMASI BUKU
+================================================ -->
 
 <div class="domus-card">
 
 <p>
+<strong>Judul Buku</strong>
+</p>
 
-Naskah siap diproses untuk diterbitkan.
+<p>
+${this.book.title}
+</p>
+
+</div>
+
+
+<!-- ================================================
+     JUMLAH BAB
+================================================ -->
+
+<div class="domus-card">
+
+<p>
+<strong>Total Bab</strong>
+</p>
+
+<p>
+${this.chapters.length}
+</p>
+
+</div>
+
+
+<!-- ================================================
+     JUMLAH KATA
+================================================ -->
+
+<div class="domus-card">
+
+<p>
+<strong>Total Kata</strong>
+</p>
+
+<p>
+${totalWords}
+</p>
+
+</div>
+
+
+<!-- ================================================
+     PEMERIKSAAN
+================================================ -->
+
+<div class="domus-card">
+
+<h3>
+Pemeriksaan Naskah
+</h3>
+
+<p>
+${bookStatus}
+</p>
+
+<p>
+${chapterStatus}
+</p>
+
+<p>
+${contentStatus}
+</p>
+
+</div>
+
+
+<!-- ================================================
+     STATUS
+================================================ -->
+
+<div
+id="publish-status"
+class="domus-card">
+
+<p>
+
+<strong>Status Naskah</strong>
+
+</p>
+
+<p>
+
+${
+    validation.ready
+        ? "✓ Naskah siap diproses."
+        : "⚠ Naskah belum siap diterbitkan."
+}
 
 </p>
 
 </div>
 
-<button
-id="btnPublish"
-class="domus-btn domus-btn-primary">
 
-Publish
+<!-- ================================================
+     BUTTON
+================================================ -->
 
-</button>
+${publishButton}
+
+
+<!-- ================================================
+     HASIL PUBLISH
+================================================ -->
 
 <div
 id="publishResult"
@@ -133,15 +347,25 @@ class="domus-publish-result">
 
 </div>
 
+
 </section>
 
 `;
 
     }
 
+    /*
+    ====================================================
+    AFTER RENDER
+    ====================================================
+    */
+
     afterRender() {
 
-        const button = this.element.querySelector("#btnPublish");
+        const button =
+            this.element.querySelector(
+                "#btnPublish"
+            );
 
         if (!button) {
 
@@ -149,17 +373,87 @@ class="domus-publish-result">
 
         }
 
-        button.addEventListener("click", async () => {
+        /*
+        ====================================================
+        KLIK PUBLISH
+        ====================================================
+        */
 
-            button.disabled = true;
+        button.addEventListener(
+            "click",
+            async () => {
 
-            button.textContent = "Publishing...";
+                /*
+                --------------------------------------------
+                CEGAH KLIK GANDA
+                --------------------------------------------
+                */
 
-            const result = await PublishService.publish();
+                if (button.disabled) {
 
-            const output = this.element.querySelector("#publishResult");
+                    return;
 
-            output.innerHTML = `
+                }
+
+                button.disabled = true;
+
+                button.textContent =
+                    "Publishing...";
+
+
+                const output =
+                    this.element.querySelector(
+                        "#publishResult"
+                    );
+
+                const status =
+                    this.element.querySelector(
+                        "#publish-status"
+                    );
+
+
+                if (status) {
+
+                    status.innerHTML = `
+
+<p>
+
+<strong>Status Naskah</strong>
+
+</p>
+
+<p>
+
+⏳ Sedang diproses...
+
+</p>
+
+`;
+
+                }
+
+
+                try {
+
+                    /*
+                    ========================================
+                    PANGGIL PUBLISH SERVICE
+                    ========================================
+                    */
+
+                    const result =
+                        await PublishService.publish();
+
+
+                    /*
+                    ========================================
+                    TAMPILKAN HASIL
+                    ========================================
+                    */
+
+                    output.innerHTML = `
+
+<div class="domus-card">
 
 <p>
 
@@ -177,13 +471,107 @@ ${result.document.generatedAt}
 
 </p>
 
+</div>
+
 `;
 
-            button.disabled = false;
 
-            button.textContent = "Publish";
+                    if (status) {
 
-        });
+                        status.innerHTML = `
+
+<p>
+
+<strong>Status Naskah</strong>
+
+</p>
+
+<p>
+
+✓ Publish berhasil diproses.
+
+</p>
+
+`;
+
+                    }
+
+                }
+
+                catch (error) {
+
+                    /*
+                    ========================================
+                    JIKA PUBLISH GAGAL
+                    ========================================
+                    */
+
+                    console.error(
+                        "DOMUS Publish Error:",
+                        error
+                    );
+
+
+                    output.innerHTML = `
+
+<div class="domus-card">
+
+<p>
+
+<strong>Status :</strong>
+
+❌ Publish gagal.
+
+</p>
+
+<p>
+
+${error.message || error}
+
+</p>
+
+</div>
+
+`;
+
+
+                    if (status) {
+
+                        status.innerHTML = `
+
+<p>
+
+<strong>Status Naskah</strong>
+
+</p>
+
+<p>
+
+❌ Terjadi kesalahan saat publish.
+
+</p>
+
+`;
+
+                    }
+
+                }
+
+
+                /*
+                --------------------------------------------
+                KEMBALIKAN TOMBOL
+                --------------------------------------------
+                */
+
+                button.disabled = false;
+
+                button.textContent =
+                    "🚀 Publish";
+
+            }
+
+        );
 
     }
 
