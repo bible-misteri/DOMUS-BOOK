@@ -10,6 +10,7 @@ import BookService from "../../services/BookService.js";
 import ChapterService from "../../services/ChapterService.js";
 import PublishService from "../../services/PublishService.js";
 
+
 export default class PublishPage extends Page {
 
     constructor() {
@@ -20,6 +21,7 @@ export default class PublishPage extends Page {
         this.chapters = [];
 
     }
+
 
     /*
     ====================================================
@@ -42,6 +44,7 @@ export default class PublishPage extends Page {
             ChapterService.getAll();
 
     }
+
 
     /*
     ====================================================
@@ -67,9 +70,10 @@ export default class PublishPage extends Page {
 
     }
 
+
     /*
     ====================================================
-    HITUNG TOTAL KATA
+    TOTAL KATA
     ====================================================
     */
 
@@ -92,9 +96,10 @@ export default class PublishPage extends Page {
 
     }
 
+
     /*
     ====================================================
-    PEMERIKSAAN NASKAH
+    VALIDASI
     ====================================================
     */
 
@@ -129,6 +134,7 @@ export default class PublishPage extends Page {
 
     }
 
+
     /*
     ====================================================
     RENDER
@@ -153,41 +159,36 @@ export default class PublishPage extends Page {
 
         }
 
+
         const totalWords =
             this.getTotalWords();
+
 
         const validation =
             this.getValidation();
 
-        /*
-        ====================================================
-        STATUS PEMERIKSAAN
-        ====================================================
-        */
 
         const bookStatus =
             validation.hasBook
                 ? "✓ Buku aktif"
                 : "✗ Tidak ada buku";
 
+
         const chapterStatus =
             validation.hasChapters
                 ? "✓ Ada bab"
                 : "✗ Belum ada bab";
+
 
         const contentStatus =
             validation.hasContent
                 ? "✓ Naskah memiliki isi"
                 : "✗ Naskah masih kosong";
 
-        /*
-        ====================================================
-        TOMBOL PUBLISH
-        ====================================================
-        */
 
         const publishButton =
             validation.ready
+
                 ? `
 
 <button
@@ -200,6 +201,7 @@ type="button">
 </button>
 
 `
+
                 : `
 
 <button
@@ -213,6 +215,7 @@ disabled>
 </button>
 
 `;
+
 
         return `
 
@@ -245,7 +248,7 @@ ${this.book.title}
 
 
 <!-- ================================================
-     JUMLAH BAB
+     TOTAL BAB
 ================================================ -->
 
 <div class="domus-card">
@@ -262,7 +265,7 @@ ${this.chapters.length}
 
 
 <!-- ================================================
-     JUMLAH KATA
+     TOTAL KATA
 ================================================ -->
 
 <div class="domus-card">
@@ -354,6 +357,7 @@ class="domus-publish-result">
 
     }
 
+
     /*
     ====================================================
     AFTER RENDER
@@ -367,33 +371,24 @@ class="domus-publish-result">
                 "#btnPublish"
             );
 
+
         if (!button) {
 
             return;
 
         }
 
-        /*
-        ====================================================
-        KLIK PUBLISH
-        ====================================================
-        */
 
         button.addEventListener(
             "click",
             async () => {
-
-                /*
-                --------------------------------------------
-                CEGAH KLIK GANDA
-                --------------------------------------------
-                */
 
                 if (button.disabled) {
 
                     return;
 
                 }
+
 
                 button.disabled = true;
 
@@ -405,6 +400,7 @@ class="domus-publish-result">
                     this.element.querySelector(
                         "#publishResult"
                     );
+
 
                 const status =
                     this.element.querySelector(
@@ -437,27 +433,116 @@ class="domus-publish-result">
 
                     /*
                     ========================================
-                    PANGGIL PUBLISH SERVICE
+                    PUBLISH
                     ========================================
                     */
 
                     const result =
                         await PublishService.publish();
 
-                    console.log(
-                       "DOMUS PUBLISH DOCUMENT:",
-                        result.document
-                    );
 
-                    console.log(
-                       "DOMUS PUBLISH CHAPTERS:",
-                        result.document.chapters
-                    );
+                    const document =
+                        result.document;
 
 
                     /*
                     ========================================
-                    TAMPILKAN HASIL
+                    TAMPILKAN STATUS
+                    ========================================
+                    */
+
+                    let chaptersHTML = "";
+
+
+                    if (
+                        document &&
+                        Array.isArray(
+                            document.chapters
+                        )
+                    ) {
+
+                        chaptersHTML =
+                            document.chapters.map(
+                                (chapter) => {
+
+                                    const content =
+                                        chapter.content || "";
+
+
+                                    const safeContent =
+                                        content
+                                            .replace(
+                                                /&/g,
+                                                "&amp;"
+                                            )
+                                            .replace(
+                                                /</g,
+                                                "&lt;"
+                                            )
+                                            .replace(
+                                                />/g,
+                                                "&gt;"
+                                            )
+                                            .replace(
+                                                /\n/g,
+                                                "<br>"
+                                            );
+
+
+                                    return `
+
+<div
+class="domus-card"
+style="margin-top:12px;">
+
+<h3>
+
+Bab ${chapter.number || ""}
+
+</h3>
+
+<p>
+
+<strong>Judul:</strong>
+
+${chapter.title}
+
+</p>
+
+<p>
+
+<strong>Jumlah Kata:</strong>
+
+${chapter.wordCount}
+
+</p>
+
+<div
+style="
+padding:12px;
+margin-top:8px;
+border:1px solid #ddd;
+border-radius:6px;
+">
+
+${safeContent}
+
+</div>
+
+</div>
+
+`;
+
+                                }
+
+                            ).join("");
+
+                    }
+
+
+                    /*
+                    ========================================
+                    HASIL DEBUG
                     ========================================
                     */
 
@@ -465,9 +550,15 @@ class="domus-publish-result">
 
 <div class="domus-card">
 
+<h3>
+
+✓ Publish Berhasil
+
+</h3>
+
 <p>
 
-<strong>Status :</strong>
+<strong>Status:</strong>
 
 ${result.message}
 
@@ -475,16 +566,57 @@ ${result.message}
 
 <p>
 
-<strong>Waktu :</strong>
+<strong>Waktu:</strong>
 
-${result.document.generatedAt}
+${document.generatedAt}
 
 </p>
 
 </div>
 
-`;
 
+<div class="domus-card">
+
+<h3>
+
+🔎 Struktur Dokumen Publish
+
+</h3>
+
+<p>
+
+<strong>Judul:</strong>
+
+${document.book.title}
+
+</p>
+
+<p>
+
+<strong>Total Bab:</strong>
+
+${document.totalChapters}
+
+</p>
+
+<p>
+
+<strong>Total Kata:</strong>
+
+${document.totalWords}
+
+</p>
+
+</div>
+
+
+<div>
+
+${chaptersHTML}
+
+</div>
+
+`;
 
                     if (status) {
 
@@ -498,7 +630,7 @@ ${result.document.generatedAt}
 
 <p>
 
-✓ Publish berhasil diproses.
+✓ Seluruh naskah berhasil dibangun.
 
 </p>
 
@@ -508,13 +640,8 @@ ${result.document.generatedAt}
 
                 }
 
-                catch (error) {
 
-                    /*
-                    ========================================
-                    JIKA PUBLISH GAGAL
-                    ========================================
-                    */
+                catch (error) {
 
                     console.error(
                         "DOMUS Publish Error:",
@@ -528,7 +655,7 @@ ${result.document.generatedAt}
 
 <p>
 
-<strong>Status :</strong>
+<strong>Status:</strong>
 
 ❌ Publish gagal.
 
@@ -567,12 +694,6 @@ ${error.message || error}
 
                 }
 
-
-                /*
-                --------------------------------------------
-                KEMBALIKAN TOMBOL
-                --------------------------------------------
-                */
 
                 button.disabled = false;
 
