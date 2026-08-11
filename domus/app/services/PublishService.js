@@ -8,6 +8,10 @@ Publish Service
 import Service from "../core/Service.js";
 import Store from "../core/Store.js";
 
+import BookService from "./BookService.js";
+import ChapterService from "./ChapterService.js";
+
+
 class PublishService extends Service {
 
     constructor() {
@@ -16,23 +20,50 @@ class PublishService extends Service {
 
     }
 
-    async initialize() {
-
-        this.log("PublishService initialized.");
-
-    }
 
     /*
     ====================================================
-    AMBIL BUKU AKTIF
+    INITIALIZE
+    ====================================================
+    */
+
+    async initialize() {
+
+        this.log(
+            "PublishService initialized."
+        );
+
+    }
+
+
+    /*
+    ====================================================
+    GET BOOK
     ====================================================
     */
 
     getBook() {
 
-        return Store.get("activeBook");
+        return (
+            BookService.getActive()
+            || Store.get("activeBook")
+        );
 
     }
+
+
+    /*
+    ====================================================
+    GET ALL CHAPTERS
+    ====================================================
+    */
+
+    getChapters() {
+
+        return ChapterService.getAll();
+
+    }
+
 
     /*
     ====================================================
@@ -43,7 +74,7 @@ class PublishService extends Service {
     countWords(text = "") {
 
         const cleanText =
-            String(text).trim();
+            String(text || "").trim();
 
         if (!cleanText) {
 
@@ -58,9 +89,66 @@ class PublishService extends Service {
 
     }
 
+
     /*
     ====================================================
-    BUILD SELURUH NASKAH
+    HITUNG TOTAL KATA
+    ====================================================
+    */
+
+    getTotalWords(chapters = []) {
+
+        return chapters.reduce(
+
+            (total, chapter) => {
+
+                return total +
+                    this.countWords(
+                        chapter.content || ""
+                    );
+
+            },
+
+            0
+
+        );
+
+    }
+
+
+    /*
+    ====================================================
+    BUILD CHAPTER
+    ====================================================
+    */
+
+    buildChapter(chapter, index) {
+
+        return {
+
+            number: index + 1,
+
+            id: chapter.id,
+
+            title:
+                chapter.title || `Bab ${index + 1}`,
+
+            content:
+                chapter.content || "",
+
+            wordCount:
+                this.countWords(
+                    chapter.content || ""
+                )
+
+        };
+
+    }
+
+
+    /*
+    ====================================================
+    BUILD DOCUMENT
     ====================================================
     */
 
@@ -77,100 +165,118 @@ class PublishService extends Service {
 
         }
 
+
         /*
         --------------------------------------------
         AMBIL SEMUA BAB
         --------------------------------------------
         */
 
-        const chapters =
-            Array.isArray(book.chapters)
-                ? book.chapters
-                : [];
+        const sourceChapters =
+            this.getChapters();
+
+
+        if (!sourceChapters ||
+            sourceChapters.length === 0) {
+
+            throw new Error(
+                "Buku belum memiliki bab."
+            );
+
+        }
+
 
         /*
         --------------------------------------------
-        HITUNG SETIAP BAB
+        BANGUN SEMUA BAB
         --------------------------------------------
         */
 
-        const publishedChapters =
-            chapters.map((chapter, index) => {
+        const chapters =
+            sourceChapters.map(
 
-                const content =
-                    chapter.content || "";
+                (chapter, index) =>
 
-                const wordCount =
-                    this.countWords(content);
+                    this.buildChapter(
+                        chapter,
+                        index
+                    )
 
-                return {
+            );
 
-                    number: index + 1,
-
-                    id: chapter.id,
-
-                    title:
-                        chapter.title ||
-                        `Bab ${index + 1}`,
-
-                    content,
-
-                    wordCount
-
-                };
-
-            });
 
         /*
         --------------------------------------------
-        TOTAL KATA
+        HITUNG TOTAL
         --------------------------------------------
         */
 
         const totalWords =
-            publishedChapters.reduce(
-
-                (total, chapter) => {
-
-                    return total +
-                        chapter.wordCount;
-
-                },
-
-                0
-
+            this.getTotalWords(
+                chapters
             );
+
 
         /*
         --------------------------------------------
-        DOKUMEN PUBLISH
+        DOCUMENT
         --------------------------------------------
         */
 
-        return {
+        const document = {
+
+            type:
+                "domus-manuscript",
+
+            version:
+                "1.0",
+
+            generatedAt:
+                new Date().toISOString(),
 
             book: {
 
-                id: book.id,
+                id:
+                    book.id,
 
-                title: book.title
+                title:
+                    book.title || "Tanpa Judul"
 
             },
 
-            chapters:
-                publishedChapters,
-
             totalChapters:
-                publishedChapters.length,
+                chapters.length,
 
-            totalWords,
+            totalWords:
+                totalWords,
 
-            generatedAt:
-                new Date().toISOString()
+            chapters:
+                chapters
 
         };
 
+
+        /*
+        --------------------------------------------
+        SIMPAN HASIL TERAKHIR
+        --------------------------------------------
+        */
+
+        Store.set(
+            "publishedDocument",
+            document
+        );
+
+
+        this.log(
+            "Document built successfully."
+        );
+
+
+        return document;
+
     }
+
 
     /*
     ====================================================
@@ -183,13 +289,16 @@ class PublishService extends Service {
         const document =
             await this.build();
 
+
         this.log(
-            "Preview seluruh naskah berhasil."
+            "Preview generated."
         );
+
 
         return document;
 
     }
+
 
     /*
     ====================================================
@@ -202,23 +311,40 @@ class PublishService extends Service {
         const document =
             await this.build();
 
+
         this.log(
-            "Publishing seluruh naskah..."
+            "Publishing entire manuscript..."
         );
+
+
+        /*
+        --------------------------------------------
+        HASIL PUBLISH
+        --------------------------------------------
+        */
 
         return {
 
-            success: true,
+            success:
+                true,
 
             message:
                 "Publish seluruh naskah berhasil.",
 
-            document
+            document:
+                document
 
         };
 
     }
 
 }
+
+
+/*
+====================================================
+EXPORT SINGLETON
+====================================================
+*/
 
 export default new PublishService();
