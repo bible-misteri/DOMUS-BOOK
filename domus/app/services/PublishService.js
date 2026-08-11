@@ -6,10 +6,8 @@ Publish Service
 */
 
 import Service from "../core/Service.js";
-
-import BookService from "./BookService.js";
+import Store from "../core/Store.js";
 import ChapterService from "./ChapterService.js";
-
 
 class PublishService extends Service {
 
@@ -19,38 +17,27 @@ class PublishService extends Service {
 
     }
 
-
-    /*
-    ====================================================
-    INITIALIZE
-    ====================================================
-    */
-
     async initialize() {
 
-        this.log(
-            "PublishService initialized."
-        );
+        this.log("PublishService initialized.");
 
     }
 
-
     /*
     ====================================================
-    GET ACTIVE BOOK
+    BUKU AKTIF
     ====================================================
     */
 
     getBook() {
 
-        return BookService.getActive();
+        return Store.get("activeBook");
 
     }
 
-
     /*
     ====================================================
-    GET ALL CHAPTERS
+    SEMUA BAB
     ====================================================
     */
 
@@ -60,75 +47,16 @@ class PublishService extends Service {
 
     }
 
-
     /*
     ====================================================
-    HITUNG KATA
-    ====================================================
-    */
-
-    countWords(text = "") {
-
-        const cleanText =
-            String(text).trim();
-
-        if (!cleanText) {
-
-            return 0;
-
-        }
-
-        return cleanText
-            .split(/\s+/)
-            .filter(Boolean)
-            .length;
-
-    }
-
-
-    /*
-    ====================================================
-    TOTAL KATA SELURUH BUKU
-    ====================================================
-    */
-
-    getTotalWords(chapters = []) {
-
-        return chapters.reduce(
-
-            (total, chapter) => {
-
-                return total +
-                    this.countWords(
-                        chapter.content || ""
-                    );
-
-            },
-
-            0
-
-        );
-
-    }
-
-
-    /*
-    ====================================================
-    BUILD FULL MANUSCRIPT
+    BUILD DOKUMEN
     ====================================================
     */
 
     async build() {
 
-        /*
-        --------------------------------------------
-        AMBIL BUKU AKTIF
-        --------------------------------------------
-        */
-
         const book =
             this.getBook();
-
 
         if (!book) {
 
@@ -138,19 +66,10 @@ class PublishService extends Service {
 
         }
 
-
-        /*
-        --------------------------------------------
-        AMBIL SELURUH BAB
-        --------------------------------------------
-        */
-
         const chapters =
             this.getChapters();
 
-
-        if (!chapters ||
-            chapters.length === 0) {
+        if (!chapters || chapters.length === 0) {
 
             throw new Error(
                 "Buku belum memiliki bab."
@@ -158,136 +77,60 @@ class PublishService extends Service {
 
         }
 
-
         /*
         --------------------------------------------
-        HITUNG TOTAL KATA
+        BENTUK DOKUMEN LENGKAP
         --------------------------------------------
-        */
-
-        const totalWords =
-            this.getTotalWords(
-                chapters
-            );
-
-
-        if (totalWords === 0) {
-
-            throw new Error(
-                "Naskah masih kosong."
-            );
-
-        }
-
-
-        /*
-        ============================================
-        SUSUN SELURUH BAB
-        ============================================
-        */
-
-        const manuscriptChapters =
-            chapters.map(
-                (chapter, index) => {
-
-                    return {
-
-                        id:
-                            chapter.id,
-
-                        number:
-                            index + 1,
-
-                        title:
-                            chapter.title,
-
-                        content:
-                            chapter.content || "",
-
-                        wordCount:
-                            this.countWords(
-                                chapter.content || ""
-                            )
-
-                    };
-
-                }
-            );
-
-
-        /*
-        ============================================
-        BANGUN DOCUMENT
-        ============================================
         */
 
         const document = {
 
-            /*
-            ----------------------------------------
-            INFORMASI BUKU
-            ----------------------------------------
-            */
-
             book: {
 
-                id:
-                    book.id,
+                id: book.id,
 
-                title:
-                    book.title
+                title: book.title
 
             },
 
+            chapters: chapters.map(
+                (chapter, index) => {
 
-            /*
-            ----------------------------------------
-            SELURUH BAB
-            ----------------------------------------
-            */
+                    return {
 
-            chapters:
-                manuscriptChapters,
+                        number: index + 1,
 
+                        id: chapter.id,
 
-            /*
-            ----------------------------------------
-            STATISTIK
-            ----------------------------------------
-            */
+                        title: chapter.title,
+
+                        content:
+                            chapter.content || ""
+
+                    };
+
+                }
+            ),
 
             totalChapters:
-                manuscriptChapters.length,
-
-            totalWords:
-                totalWords,
-
-
-            /*
-            ----------------------------------------
-            WAKTU GENERATE
-            ----------------------------------------
-            */
+                chapters.length,
 
             generatedAt:
                 new Date().toISOString()
 
         };
 
-
         this.log(
-            "DOMUS full manuscript built."
+            "Full manuscript built."
         );
-
 
         return document;
 
     }
 
-
     /*
     ====================================================
-    PREVIEW DOCUMENT
+    PREVIEW
     ====================================================
     */
 
@@ -296,20 +139,17 @@ class PublishService extends Service {
         const document =
             await this.build();
 
-
         this.log(
-            "DOMUS manuscript preview generated."
+            "Full manuscript preview generated."
         );
-
 
         return document;
 
     }
 
-
     /*
     ====================================================
-    PUBLISH DOCUMENT
+    PUBLISH
     ====================================================
     */
 
@@ -318,52 +158,23 @@ class PublishService extends Service {
         const document =
             await this.build();
 
-
         this.log(
-            "DOMUS full manuscript publishing..."
+            "Publishing full manuscript..."
         );
-
-
-        /*
-        --------------------------------------------
-        UNTUK SAAT INI PUBLISH MASIH LOCAL
-        --------------------------------------------
-
-        Tahap berikutnya dapat mengubah document
-        ini menjadi:
-
-        - HTML
-        - Markdown
-        - DOCX
-        - PDF
-        - EPUB
-
-        --------------------------------------------
-        */
-
 
         return {
 
-            success:
-                true,
+            success: true,
 
             message:
                 "Publish seluruh naskah berhasil.",
 
-            document:
-                document
+            document
 
         };
 
     }
 
 }
-
-
-/*
-====================================================
-EXPORT
-====================================================
-*/
 
 export default new PublishService();
