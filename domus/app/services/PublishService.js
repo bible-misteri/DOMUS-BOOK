@@ -6,7 +6,10 @@ Publish Service
 */
 
 import Service from "../core/Service.js";
-import Store from "../core/Store.js";
+
+import BookService from "./BookService.js";
+import ChapterService from "./ChapterService.js";
+
 
 class PublishService extends Service {
 
@@ -16,6 +19,7 @@ class PublishService extends Service {
 
     }
 
+
     /*
     ====================================================
     INITIALIZE
@@ -24,21 +28,25 @@ class PublishService extends Service {
 
     async initialize() {
 
-        this.log("PublishService initialized.");
+        this.log(
+            "PublishService initialized."
+        );
 
     }
 
+
     /*
     ====================================================
-    GET ACTIVE BOOK
+    GET BOOK
     ====================================================
     */
 
     getBook() {
 
-        return Store.get("activeBook");
+        return BookService.getActive();
 
     }
+
 
     /*
     ====================================================
@@ -48,30 +56,10 @@ class PublishService extends Service {
 
     getChapters() {
 
-        const chapters =
-            Store.get("chapters");
-
-        if (!Array.isArray(chapters)) {
-
-            return [];
-
-        }
-
-        return chapters;
+        return ChapterService.getAll();
 
     }
 
-    /*
-    ====================================================
-    GET ACTIVE CHAPTER
-    ====================================================
-    */
-
-    getChapter() {
-
-        return Store.get("activeChapter");
-
-    }
 
     /*
     ====================================================
@@ -82,7 +70,7 @@ class PublishService extends Service {
     countWords(text = "") {
 
         const cleanText =
-            String(text).trim();
+            text.trim();
 
         if (!cleanText) {
 
@@ -97,9 +85,10 @@ class PublishService extends Service {
 
     }
 
+
     /*
     ====================================================
-    HITUNG TOTAL KATA SELURUH BUKU
+    TOTAL KATA
     ====================================================
     */
 
@@ -122,9 +111,10 @@ class PublishService extends Service {
 
     }
 
+
     /*
     ====================================================
-    BUILD DOKUMEN LENGKAP
+    BUILD DOCUMENT
     ====================================================
     */
 
@@ -141,16 +131,13 @@ class PublishService extends Service {
 
         }
 
-        /*
-        --------------------------------------------
-        Ambil SELURUH BAB
-        --------------------------------------------
-        */
 
         const chapters =
             this.getChapters();
 
-        if (chapters.length === 0) {
+
+        if (!chapters ||
+            chapters.length === 0) {
 
             throw new Error(
                 "Buku belum memiliki bab."
@@ -158,21 +145,26 @@ class PublishService extends Service {
 
         }
 
-        /*
-        --------------------------------------------
-        Hitung total kata
-        --------------------------------------------
-        */
 
         const totalWords =
             this.getTotalWords(
                 chapters
             );
 
+
+        if (totalWords === 0) {
+
+            throw new Error(
+                "Naskah masih kosong."
+            );
+
+        }
+
+
         /*
-        --------------------------------------------
-        Susun dokumen
-        --------------------------------------------
+        ================================================
+        DOCUMENT
+        ================================================
         */
 
         const document = {
@@ -185,44 +177,49 @@ class PublishService extends Service {
 
             },
 
+
             chapters: chapters.map(
-                (chapter, index) => {
+                chapter => ({
 
-                    return {
+                    id: chapter.id,
 
-                        id: chapter.id,
+                    title: chapter.title,
 
-                        number: index + 1,
+                    content:
+                        chapter.content || "",
 
-                        title: chapter.title,
+                    wordCount:
+                        this.countWords(
+                            chapter.content || ""
+                        )
 
-                        content:
-                            chapter.content || "",
-
-                        wordCount:
-                            this.countWords(
-                                chapter.content || ""
-                            )
-
-                    };
-
-                }
+                })
             ),
+
 
             totalChapters:
                 chapters.length,
 
+
             totalWords:
                 totalWords,
+
 
             generatedAt:
                 new Date().toISOString()
 
         };
 
+
+        this.log(
+            "DOMUS document built."
+        );
+
+
         return document;
 
     }
+
 
     /*
     ====================================================
@@ -235,13 +232,16 @@ class PublishService extends Service {
         const document =
             await this.build();
 
+
         this.log(
-            "Full manuscript preview generated."
+            "Preview generated."
         );
+
 
         return document;
 
     }
+
 
     /*
     ====================================================
@@ -254,16 +254,38 @@ class PublishService extends Service {
         const document =
             await this.build();
 
+
         this.log(
-            "Full manuscript publishing..."
+            "Publishing DOMUS document..."
         );
+
+
+        /*
+        ================================================
+        UNTUK SEKARANG:
+        PUBLISH MASIH LOCAL
+        ================================================
+
+        Nanti bagian ini dapat kita sambungkan ke:
+
+        - PDF generator
+        - DOCX generator
+        - EPUB
+        - Markdown
+        - GitHub
+        - Cloud storage
+        - DOMUS Publisher Engine
+
+        ================================================
+        */
+
 
         return {
 
             success: true,
 
             message:
-                "Publish seluruh naskah berhasil.",
+                "Publish berhasil.",
 
             document
 
@@ -273,11 +295,5 @@ class PublishService extends Service {
 
 }
 
-
-/*
-====================================================
-EXPORT SINGLETON
-====================================================
-*/
 
 export default new PublishService();
