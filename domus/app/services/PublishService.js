@@ -37,7 +37,7 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    GET BOOK
+    GET ACTIVE BOOK
     ====================================================
     */
 
@@ -70,7 +70,7 @@ class PublishService extends Service {
     countWords(text = "") {
 
         const cleanText =
-            text.trim();
+            String(text).trim();
 
         if (!cleanText) {
 
@@ -88,7 +88,7 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    TOTAL KATA
+    TOTAL KATA SELURUH BUKU
     ====================================================
     */
 
@@ -114,14 +114,21 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUILD DOCUMENT
+    BUILD FULL MANUSCRIPT
     ====================================================
     */
 
     async build() {
 
+        /*
+        --------------------------------------------
+        AMBIL BUKU AKTIF
+        --------------------------------------------
+        */
+
         const book =
             this.getBook();
+
 
         if (!book) {
 
@@ -131,6 +138,12 @@ class PublishService extends Service {
 
         }
 
+
+        /*
+        --------------------------------------------
+        AMBIL SELURUH BAB
+        --------------------------------------------
+        */
 
         const chapters =
             this.getChapters();
@@ -145,6 +158,12 @@ class PublishService extends Service {
 
         }
 
+
+        /*
+        --------------------------------------------
+        HITUNG TOTAL KATA
+        --------------------------------------------
+        */
 
         const totalWords =
             this.getTotalWords(
@@ -162,48 +181,93 @@ class PublishService extends Service {
 
 
         /*
-        ================================================
-        DOCUMENT
-        ================================================
+        ============================================
+        SUSUN SELURUH BAB
+        ============================================
+        */
+
+        const manuscriptChapters =
+            chapters.map(
+                (chapter, index) => {
+
+                    return {
+
+                        id:
+                            chapter.id,
+
+                        number:
+                            index + 1,
+
+                        title:
+                            chapter.title,
+
+                        content:
+                            chapter.content || "",
+
+                        wordCount:
+                            this.countWords(
+                                chapter.content || ""
+                            )
+
+                    };
+
+                }
+            );
+
+
+        /*
+        ============================================
+        BANGUN DOCUMENT
+        ============================================
         */
 
         const document = {
 
+            /*
+            ----------------------------------------
+            INFORMASI BUKU
+            ----------------------------------------
+            */
+
             book: {
 
-                id: book.id,
+                id:
+                    book.id,
 
-                title: book.title
+                title:
+                    book.title
 
             },
 
 
-            chapters: chapters.map(
-                chapter => ({
+            /*
+            ----------------------------------------
+            SELURUH BAB
+            ----------------------------------------
+            */
 
-                    id: chapter.id,
+            chapters:
+                manuscriptChapters,
 
-                    title: chapter.title,
 
-                    content:
-                        chapter.content || "",
-
-                    wordCount:
-                        this.countWords(
-                            chapter.content || ""
-                        )
-
-                })
-            ),
-
+            /*
+            ----------------------------------------
+            STATISTIK
+            ----------------------------------------
+            */
 
             totalChapters:
-                chapters.length,
-
+                manuscriptChapters.length,
 
             totalWords:
                 totalWords,
 
+
+            /*
+            ----------------------------------------
+            WAKTU GENERATE
+            ----------------------------------------
+            */
 
             generatedAt:
                 new Date().toISOString()
@@ -212,7 +276,7 @@ class PublishService extends Service {
 
 
         this.log(
-            "DOMUS document built."
+            "DOMUS full manuscript built."
         );
 
 
@@ -223,7 +287,7 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    PREVIEW
+    PREVIEW DOCUMENT
     ====================================================
     */
 
@@ -234,7 +298,7 @@ class PublishService extends Service {
 
 
         this.log(
-            "Preview generated."
+            "DOMUS manuscript preview generated."
         );
 
 
@@ -245,7 +309,7 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    PUBLISH
+    PUBLISH DOCUMENT
     ====================================================
     */
 
@@ -256,38 +320,38 @@ class PublishService extends Service {
 
 
         this.log(
-            "Publishing DOMUS document..."
+            "DOMUS full manuscript publishing..."
         );
 
 
         /*
-        ================================================
-        UNTUK SEKARANG:
-        PUBLISH MASIH LOCAL
-        ================================================
+        --------------------------------------------
+        UNTUK SAAT INI PUBLISH MASIH LOCAL
+        --------------------------------------------
 
-        Nanti bagian ini dapat kita sambungkan ke:
+        Tahap berikutnya dapat mengubah document
+        ini menjadi:
 
-        - PDF generator
-        - DOCX generator
-        - EPUB
+        - HTML
         - Markdown
-        - GitHub
-        - Cloud storage
-        - DOMUS Publisher Engine
+        - DOCX
+        - PDF
+        - EPUB
 
-        ================================================
+        --------------------------------------------
         */
 
 
         return {
 
-            success: true,
+            success:
+                true,
 
             message:
-                "Publish berhasil.",
+                "Publish seluruh naskah berhasil.",
 
-            document
+            document:
+                document
 
         };
 
@@ -295,5 +359,11 @@ class PublishService extends Service {
 
 }
 
+
+/*
+====================================================
+EXPORT
+====================================================
+*/
 
 export default new PublishService();
