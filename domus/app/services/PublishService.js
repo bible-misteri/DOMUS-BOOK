@@ -110,6 +110,42 @@ class PublishService extends Service {
 
 
     /*
+    
+    /*
+====================================================
+BUILD TOC
+====================================================
+*/
+
+buildTOC(chapters = []) {
+
+    return chapters.map(
+
+        (chapter, index) => {
+
+            return {
+
+                number:
+                    index + 1,
+
+                id:
+                    chapter.id,
+
+                title:
+                    chapter.title ||
+                    `Bab ${index + 1}`,
+
+                wordCount:
+                    chapter.wordCount || 0
+
+            };
+
+        }
+
+    );
+
+}
+    
     ====================================================
     NORMALISASI BAB
     ====================================================
@@ -211,6 +247,11 @@ class PublishService extends Service {
                 chapters
             );
 
+        const toc =
+            this.buildTOC(
+                chapters
+            );
+
 
         /*
         --------------------------------------------
@@ -229,6 +270,8 @@ class PublishService extends Service {
             },
 
             chapters,
+
+            toc,
 
             totalChapters,
 
