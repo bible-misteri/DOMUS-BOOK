@@ -7,6 +7,7 @@ Publish Service
 
 import Service from "../core/Service.js";
 import Store from "../core/Store.js";
+import ChapterService from "./ChapterService.js";
 
 
 class PublishService extends Service {
@@ -52,17 +53,13 @@ class PublishService extends Service {
     getChapters() {
 
         const chapters =
-            Store.get(
-                "chapters"
-            );
-
+            ChapterService.getAll();
 
         if (Array.isArray(chapters)) {
 
             return chapters;
 
         }
-
 
         return [];
 
