@@ -8,7 +8,9 @@ Publish Service
 import Service from "../core/Service.js";
 import Store from "../core/Store.js";
 
+
 class PublishService extends Service {
+
 
     constructor() {
 
@@ -16,11 +18,15 @@ class PublishService extends Service {
 
     }
 
+
     async initialize() {
 
-        this.log("PublishService initialized.");
+        this.log(
+            "PublishService initialized."
+        );
 
     }
+
 
     /*
     ====================================================
@@ -30,9 +36,12 @@ class PublishService extends Service {
 
     getBook() {
 
-        return Store.get("activeBook");
+        return Store.get(
+            "activeBook"
+        );
 
     }
+
 
     /*
     ====================================================
@@ -54,6 +63,7 @@ class PublishService extends Service {
         return [];
 
     }
+
 
     /*
     ====================================================
@@ -79,6 +89,92 @@ class PublishService extends Service {
 
     }
 
+
+    /*
+    ====================================================
+    NORMALISASI BAB
+    ====================================================
+    
+    Setiap bab yang masuk manuscript akan memiliki:
+
+    number
+    id
+    title
+    content
+    wordCount
+    */
+
+    normalizeChapter(
+        chapter,
+        index
+    ) {
+
+        const content =
+            String(
+                chapter?.content || ""
+            );
+
+        const title =
+            String(
+                chapter?.title ||
+                `Bab ${index + 1}`
+            );
+
+        return {
+
+            number:
+                index + 1,
+
+            id:
+                chapter?.id ||
+                `chapter-${index + 1}`,
+
+            title:
+                title,
+
+            content:
+                content,
+
+            wordCount:
+                this.countWords(
+                    content
+                )
+
+        };
+
+    }
+
+
+    /*
+    ====================================================
+    BANGUN DAFTAR ISI / TOC
+    ====================================================
+    */
+
+    buildTOC(chapters) {
+
+        return chapters.map(
+            (chapter) => {
+
+                return {
+
+                    number:
+                        chapter.number,
+
+                    title:
+                        chapter.title,
+
+                    id:
+                        chapter.id
+
+                };
+
+            }
+        );
+
+    }
+
+
     /*
     ====================================================
     TOTAL KATA
@@ -89,11 +185,15 @@ class PublishService extends Service {
 
         return chapters.reduce(
 
-            (total, chapter) => {
+            (
+                total,
+                chapter
+            ) => {
 
                 return total +
-                    this.countWords(
-                        chapter?.content || ""
+                    (
+                        chapter.wordCount ||
+                        0
                     );
 
             },
@@ -104,6 +204,7 @@ class PublishService extends Service {
 
     }
 
+
     /*
     ====================================================
     BUILD MANUSCRIPT
@@ -112,8 +213,15 @@ class PublishService extends Service {
 
     async build() {
 
+        /*
+        --------------------------------------------
+        BUKU
+        --------------------------------------------
+        */
+
         const book =
             this.getBook();
+
 
         if (!book) {
 
@@ -123,28 +231,153 @@ class PublishService extends Service {
 
         }
 
-        const chapters =
+
+        /*
+        --------------------------------------------
+        BAB MENTAH
+        --------------------------------------------
+        */
+
+        const rawChapters =
             this.getChapters();
+
+
+        /*
+        --------------------------------------------
+        NORMALISASI BAB
+        --------------------------------------------
+        */
+
+        const chapters =
+            rawChapters.map(
+                (
+                    chapter,
+                    index
+                ) => {
+
+                    return this.normalizeChapter(
+                        chapter,
+                        index
+                    );
+
+                }
+            );
+
+
+        /*
+        --------------------------------------------
+        TOTAL
+        --------------------------------------------
+        */
 
         const totalChapters =
             chapters.length;
+
 
         const totalWords =
             this.getTotalWords(
                 chapters
             );
 
+
         /*
         --------------------------------------------
-        STRUKTUR MANUSCRIPT
+        TOC
+        --------------------------------------------
+        */
+
+        const toc =
+            this.buildTOC(
+                chapters
+            );
+
+
+        /*
+        --------------------------------------------
+        MANUSCRIPT
         --------------------------------------------
         */
 
         const manuscript = {
 
-            book: book,
+            /*
+            ========================================
+            INFORMASI DOKUMEN
+            ========================================
+            */
 
-            chapters: chapters,
+            type:
+                "manuscript",
+
+            version:
+                "1.0",
+
+
+            /*
+            ========================================
+            METADATA BUKU
+            ========================================
+            */
+
+            book: {
+
+                id:
+                    book?.id || null,
+
+                title:
+                    book?.title || "",
+
+                author:
+                    book?.author || "",
+
+                subtitle:
+                    book?.subtitle || ""
+
+            },
+
+
+            /*
+            ========================================
+            FRONT MATTER
+            ========================================
+            */
+
+            frontMatter: {
+
+                title:
+                    book?.title || "",
+
+                author:
+                    book?.author || ""
+
+            },
+
+
+            /*
+            ========================================
+            DAFTAR ISI
+            ========================================
+            */
+
+            toc:
+                toc,
+
+
+            /*
+            ========================================
+            ISI UTAMA
+            ========================================
+            */
+
+            chapters:
+                chapters,
+
+
+            /*
+            ========================================
+            STATISTIK
+            ========================================
+            */
 
             totalChapters:
                 totalChapters,
@@ -152,18 +385,34 @@ class PublishService extends Service {
             totalWords:
                 totalWords,
 
+
+            /*
+            ========================================
+            WAKTU PEMBENTUKAN
+            ========================================
+            */
+
             generatedAt:
                 new Date().toISOString()
 
         };
 
+
+        /*
+        --------------------------------------------
+        LOG
+        --------------------------------------------
+        */
+
         this.log(
-            "Manuscript built."
+            "Manuscript built with TOC."
         );
+
 
         return manuscript;
 
     }
+
 
     /*
     ====================================================
@@ -176,13 +425,16 @@ class PublishService extends Service {
         const manuscript =
             await this.build();
 
+
         this.log(
             "Preview generated."
         );
 
+
         return manuscript;
 
     }
+
 
     /*
     ====================================================
@@ -195,13 +447,16 @@ class PublishService extends Service {
         const manuscript =
             await this.build();
 
+
         this.log(
             "Publishing entire manuscript..."
         );
 
+
         return {
 
-            success: true,
+            success:
+                true,
 
             message:
                 "Publish seluruh naskah berhasil.",
@@ -214,5 +469,6 @@ class PublishService extends Service {
     }
 
 }
+
 
 export default new PublishService();
