@@ -7,7 +7,6 @@ Publish Service
 
 import Service from "../core/Service.js";
 import Store from "../core/Store.js";
-import ChapterService from "./ChapterService.js";
 
 class PublishService extends Service {
 
@@ -25,7 +24,7 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUKU AKTIF
+    AMBIL BUKU AKTIF
     ====================================================
     */
 
@@ -37,19 +36,31 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    SEMUA BAB
+    HITUNG KATA
     ====================================================
     */
 
-    getChapters() {
+    countWords(text = "") {
 
-        return ChapterService.getAll();
+        const cleanText =
+            String(text).trim();
+
+        if (!cleanText) {
+
+            return 0;
+
+        }
+
+        return cleanText
+            .split(/\s+/)
+            .filter(Boolean)
+            .length;
 
     }
 
     /*
     ====================================================
-    BUILD DOKUMEN
+    BUILD SELURUH NASKAH
     ====================================================
     */
 
@@ -66,24 +77,77 @@ class PublishService extends Service {
 
         }
 
-        const chapters =
-            this.getChapters();
-
-        if (!chapters || chapters.length === 0) {
-
-            throw new Error(
-                "Buku belum memiliki bab."
-            );
-
-        }
-
         /*
         --------------------------------------------
-        BENTUK DOKUMEN LENGKAP
+        AMBIL SEMUA BAB
         --------------------------------------------
         */
 
-        const document = {
+        const chapters =
+            Array.isArray(book.chapters)
+                ? book.chapters
+                : [];
+
+        /*
+        --------------------------------------------
+        HITUNG SETIAP BAB
+        --------------------------------------------
+        */
+
+        const publishedChapters =
+            chapters.map((chapter, index) => {
+
+                const content =
+                    chapter.content || "";
+
+                const wordCount =
+                    this.countWords(content);
+
+                return {
+
+                    number: index + 1,
+
+                    id: chapter.id,
+
+                    title:
+                        chapter.title ||
+                        `Bab ${index + 1}`,
+
+                    content,
+
+                    wordCount
+
+                };
+
+            });
+
+        /*
+        --------------------------------------------
+        TOTAL KATA
+        --------------------------------------------
+        */
+
+        const totalWords =
+            publishedChapters.reduce(
+
+                (total, chapter) => {
+
+                    return total +
+                        chapter.wordCount;
+
+                },
+
+                0
+
+            );
+
+        /*
+        --------------------------------------------
+        DOKUMEN PUBLISH
+        --------------------------------------------
+        */
+
+        return {
 
             book: {
 
@@ -93,38 +157,18 @@ class PublishService extends Service {
 
             },
 
-            chapters: chapters.map(
-                (chapter, index) => {
-
-                    return {
-
-                        number: index + 1,
-
-                        id: chapter.id,
-
-                        title: chapter.title,
-
-                        content:
-                            chapter.content || ""
-
-                    };
-
-                }
-            ),
+            chapters:
+                publishedChapters,
 
             totalChapters:
-                chapters.length,
+                publishedChapters.length,
+
+            totalWords,
 
             generatedAt:
                 new Date().toISOString()
 
         };
-
-        this.log(
-            "Full manuscript built."
-        );
-
-        return document;
 
     }
 
@@ -140,7 +184,7 @@ class PublishService extends Service {
             await this.build();
 
         this.log(
-            "Full manuscript preview generated."
+            "Preview seluruh naskah berhasil."
         );
 
         return document;
@@ -159,7 +203,7 @@ class PublishService extends Service {
             await this.build();
 
         this.log(
-            "Publishing full manuscript..."
+            "Publishing seluruh naskah..."
         );
 
         return {
