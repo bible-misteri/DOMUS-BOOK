@@ -7,7 +7,6 @@ Publish Service
 
 import Service from "../core/Service.js";
 import Store from "../core/Store.js";
-import ChapterService from "./ChapterService.js";
 
 
 class PublishService extends Service {
@@ -45,25 +44,29 @@ class PublishService extends Service {
 
 
     /*
-====================================================
-SELURUH BAB
-====================================================
-*/
+    ====================================================
+    SELURUH BAB
+    ====================================================
+    */
 
-getChapters() {
+    getChapters() {
 
-    const chapters =
-        ChapterService.getAll();
+        const chapters =
+            Store.get(
+                "chapters"
+            );
 
-    if (Array.isArray(chapters)) {
 
-        return chapters;
+        if (Array.isArray(chapters)) {
+
+            return chapters;
+
+        }
+
+
+        return [];
 
     }
-
-    return [];
-
-}
 
 
     /*
@@ -72,16 +75,20 @@ getChapters() {
     ====================================================
     */
 
-    countWords(text = "") {
+    countWords(
+        text = ""
+    ) {
 
         const cleanText =
             String(text).trim();
+
 
         if (!cleanText) {
 
             return 0;
 
         }
+
 
         return cleanText
             .split(/\s+/)
@@ -93,16 +100,8 @@ getChapters() {
 
     /*
     ====================================================
-    NORMALISASI BAB
+    BUAT DATA BAB NORMAL
     ====================================================
-    
-    Setiap bab yang masuk manuscript akan memiliki:
-
-    number
-    id
-    title
-    content
-    wordCount
     */
 
     normalizeChapter(
@@ -110,68 +109,40 @@ getChapters() {
         index
     ) {
 
+        const number =
+            index + 1;
+
+
+        const title =
+            chapter?.title ||
+            `Bab ${number}`;
+
+
         const content =
             String(
                 chapter?.content || ""
             );
 
-        const title =
-            String(
-                chapter?.title ||
-                `Bab ${index + 1}`
+
+        const wordCount =
+            this.countWords(
+                content
             );
+
 
         return {
 
-            number:
-                index + 1,
+            ...chapter,
 
-            id:
-                chapter?.id ||
-                `chapter-${index + 1}`,
+            number,
 
-            title:
-                title,
+            title,
 
-            content:
-                content,
+            content,
 
-            wordCount:
-                this.countWords(
-                    content
-                )
+            wordCount
 
         };
-
-    }
-
-
-    /*
-    ====================================================
-    BANGUN DAFTAR ISI / TOC
-    ====================================================
-    */
-
-    buildTOC(chapters) {
-
-        return chapters.map(
-            (chapter) => {
-
-                return {
-
-                    number:
-                        chapter.number,
-
-                    title:
-                        chapter.title,
-
-                    id:
-                        chapter.id
-
-                };
-
-            }
-        );
 
     }
 
@@ -182,7 +153,9 @@ getChapters() {
     ====================================================
     */
 
-    getTotalWords(chapters) {
+    getTotalWords(
+        chapters
+    ) {
 
         return chapters.reduce(
 
@@ -192,9 +165,8 @@ getChapters() {
             ) => {
 
                 return total +
-                    (
-                        chapter.wordCount ||
-                        0
+                    this.countWords(
+                        chapter?.content || ""
                     );
 
             },
@@ -208,11 +180,48 @@ getChapters() {
 
     /*
     ====================================================
+    BUAT TOC OTOMATIS
+    ====================================================
+    */
+
+    buildTOC(
+        chapters
+    ) {
+
+        return chapters.map(
+
+            (
+                chapter,
+                index
+            ) => {
+
+                return {
+
+                    number:
+                        chapter.number ||
+                        index + 1,
+
+                    title:
+                        chapter.title ||
+                        `Bab ${index + 1}`
+
+                };
+
+            }
+
+        );
+
+    }
+
+
+    /*
+    ====================================================
     BUILD MANUSCRIPT
     ====================================================
     */
 
     async build() {
+
 
         /*
         --------------------------------------------
@@ -235,7 +244,7 @@ getChapters() {
 
         /*
         --------------------------------------------
-        BAB MENTAH
+        BAB
         --------------------------------------------
         */
 
@@ -251,6 +260,7 @@ getChapters() {
 
         const chapters =
             rawChapters.map(
+
                 (
                     chapter,
                     index
@@ -262,6 +272,7 @@ getChapters() {
                     );
 
                 }
+
             );
 
 
@@ -302,111 +313,76 @@ getChapters() {
         const manuscript = {
 
             /*
-            ========================================
-            INFORMASI DOKUMEN
-            ========================================
-            */
-
-            type:
-                "manuscript",
-
-            version:
-                "1.0",
-
-
-            /*
-            ========================================
-            METADATA BUKU
-            ========================================
+            ==============================
+            INFORMASI BUKU
+            ==============================
             */
 
             book: {
 
-                id:
-                    book?.id || null,
-
-                title:
-                    book?.title || "",
-
-                author:
-                    book?.author || "",
-
-                subtitle:
-                    book?.subtitle || ""
+                ...book
 
             },
 
 
             /*
-            ========================================
-            FRONT MATTER
-            ========================================
-            */
-
-            frontMatter: {
-
-                title:
-                    book?.title || "",
-
-                author:
-                    book?.author || ""
-
-            },
-
-
-            /*
-            ========================================
-            DAFTAR ISI
-            ========================================
+            ==============================
+            TABLE OF CONTENTS
+            ==============================
             */
 
             toc:
+
+
                 toc,
 
 
             /*
-            ========================================
-            ISI UTAMA
-            ========================================
+            ==============================
+            BAB
+            ==============================
             */
 
             chapters:
+
+
                 chapters,
 
 
             /*
-            ========================================
+            ==============================
             STATISTIK
-            ========================================
+            ==============================
             */
 
             totalChapters:
+
+
                 totalChapters,
 
+
             totalWords:
+
+
                 totalWords,
 
 
             /*
-            ========================================
-            WAKTU PEMBENTUKAN
-            ========================================
+            ==============================
+            WAKTU
+            ==============================
             */
 
             generatedAt:
+
+
                 new Date().toISOString()
 
         };
 
 
-        /*
-        --------------------------------------------
-        LOG
-        --------------------------------------------
-        */
-
         this.log(
-            "Manuscript built with TOC."
+            "Manuscript built with automatic TOC."
         );
 
 
@@ -456,8 +432,7 @@ getChapters() {
 
         return {
 
-            success:
-                true,
+            success: true,
 
             message:
                 "Publish seluruh naskah berhasil.",
