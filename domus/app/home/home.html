@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>DOMUS</title>
 
     <link rel="stylesheet" href="home.css">
@@ -13,62 +14,157 @@
 
 <div class="container">
 
+    <!-- ============================================
+         HEADER
+    ============================================= -->
+
     <header class="header">
+
         <h1>DOMUS</h1>
-        <p>Digital Manuscript Operating System</p>
+
+        <p>
+            Digital Manuscript Operating System
+        </p>
+
     </header>
 
+
+    <!-- ============================================
+         WELCOME
+    ============================================= -->
+
     <section class="welcome">
-        <h2 id="userName">Selamat Datang</h2>
+
+        <h2 id="userName">
+            Selamat Datang
+        </h2>
+
     </section>
+
+
+    <!-- ============================================
+         BUKU AKTIF
+    ============================================= -->
 
     <section class="book-card">
 
-        <img id="bookCover"
-             src="../../assets/covers/default-cover.jpg"
-             alt="Cover Buku">
+        <img
+            id="bookCover"
+            src="../../assets/covers/default-cover.jpg"
+            alt="Cover Buku"
+        >
 
         <h2 id="bookTitle"></h2>
 
         <p id="bookSubtitle"></p>
 
-        <p>Status :
+        <p>
+            Status :
             <span id="bookStatus"></span>
         </p>
 
-        <p>Progress :
+        <p>
+            Progress :
             <span id="bookProgress"></span>
         </p>
 
-        <p>Bab Aktif :
+        <p>
+            Bab Aktif :
             <span id="bookChapter"></span>
         </p>
 
-        <button id="continueBtn">
+
+        <button
+            id="continueBtn"
+            data-page="editor"
+            type="button">
+
             Lanjut Menulis
+
         </button>
 
     </section>
 
+
+    <!-- ============================================
+         MENU UTAMA
+    ============================================= -->
+
     <nav class="menu">
 
-        <button>Buku Saya</button>
+        <button
+            data-page="books"
+            type="button">
 
-        <button>Editor</button>
+            📚 Buku Saya
 
-        <button>Review</button>
+        </button>
 
-        <button>Preview</button>
 
-        <button>Publish</button>
+        <button
+            data-page="editor"
+            type="button">
 
-        <button>Pengaturan</button>
+            ✍️ Editor
+
+        </button>
+
+
+        <button
+            data-page="review"
+            type="button">
+
+            🔍 Review
+
+        </button>
+
+
+        <button
+            data-page="preview"
+            type="button">
+
+            👁️ Preview
+
+        </button>
+
+
+        <button
+            data-page="publish"
+            type="button">
+
+            📤 Publish
+
+        </button>
+
+
+        <button
+            data-page="export"
+            type="button">
+
+            📕 Export
+
+        </button>
+
+
+        <button
+            data-page="settings"
+            type="button">
+
+            ⚙️ Pengaturan
+
+        </button>
 
     </nav>
 
 </div>
 
+
+<!-- ============================================
+     HOME SCRIPT
+============================================= -->
+
 <script src="home.js"></script>
 
 </body>
+
 </html>
