@@ -4,18 +4,15 @@ DOMUS Framework v1.0
 Export Page
 ====================================================
 
-Membangun dokumen export berdasarkan
-manuscript dari PublishService.
+Fungsi:
 
-Alur:
+1. Mengambil manuscript dari PublishService
+2. Menampilkan informasi buku
+3. Menampilkan Daftar Isi
+4. Menampilkan isi seluruh bab
+5. Menyiapkan dokumen untuk export
 
-BookService
-    ↓
-ChapterService
-    ↓
-PublishService
-    ↓
-ExportPage
+Export tidak mengubah naskah.
 ====================================================
 */
 
@@ -27,12 +24,6 @@ import PublishService
 
 export default class ExportPage extends Page {
 
-
-    /*
-    ====================================================
-    CONSTRUCTOR
-    ====================================================
-    */
 
     constructor() {
 
@@ -114,197 +105,56 @@ export default class ExportPage extends Page {
 
     /*
     ====================================================
-    RENDER TOC
+    RENDER CONTENT
     ====================================================
     */
 
-    renderTOC() {
-
-        if (
-            !this.document ||
-            !Array.isArray(
-                this.document.toc
-            )
-        ) {
-
-            return "";
-
-        }
-
-
-        return this.document.toc
-            .map(
-                (item) => {
-
-                    const number =
-                        item.number || "";
-
-                    const title =
-                        this.escapeHTML(
-                            item.title ||
-                            `Bab ${number}`
-                        );
-
-
-                    return `
-
-<li>
-
-<strong>
-${number}.
-</strong>
-
-${title}
-
-</li>
-
-`;
-
-                }
-
-            )
-            .join("");
-
-    }
-
-
-    /*
-    ====================================================
-    RENDER CHAPTERS
-    ====================================================
-    */
-
-    renderChapters() {
-
-        if (
-            !this.document ||
-            !Array.isArray(
-                this.document.chapters
-            )
-        ) {
-
-            return "";
-
-        }
-
-
-        return this.document.chapters
-            .map(
-                (chapter, index) => {
-
-                    const number =
-                        chapter.number ||
-                        index + 1;
-
-
-                    const title =
-                        this.escapeHTML(
-
-                            chapter.title ||
-                            `Bab ${number}`
-
-                        );
-
-
-                    const content =
-                        String(
-                            chapter.content || ""
-                        );
-
-
-                    const safeContent =
-                        this.escapeHTML(
-                            content
-                        );
-
-
-                    const paragraphs =
-                        safeContent
-                            .split(/\n\s*\n/)
-                            .map(
-                                paragraph => {
-
-                                    const clean =
-                                        paragraph.trim();
-
-                                    if (!clean) {
-
-                                        return "";
-
-                                    }
-
-                                    return `
-
-<p>
-
-${clean.replace(
-    /\n/g,
-    "<br>"
-)}
-
-</p>
-
-`;
-
-                                }
-                            )
-                            .join("");
-
-
-                    return `
-
-<article
-style="
-margin-top:50px;
-padding-top:30px;
-border-top:2px solid #222;
-">
-
-<h2>
-
-BAB ${number}
-
-</h2>
-
-<h3>
-
-${title}
-
-</h3>
-
-<div>
-
-${
-    paragraphs ||
-
-    "<p><em>Bab ini belum memiliki isi.</em></p>"
-}
-
-</div>
-
-</article>
-
-`;
-
-                }
-
-            )
-            .join("");
-
-    }
-
-
-    /*
-    ====================================================
-    BUILD EXPORT HTML
-    ====================================================
-    */
-
-    buildExportHTML() {
+    renderContent() {
+
+        /*
+        ================================================
+        TIDAK ADA DOKUMEN
+        ================================================
+        */
 
         if (!this.document) {
 
-            return "";
+            return `
+
+<section
+class="domus-export"
+style="
+max-width:900px;
+margin:0 auto;
+padding:30px 20px 80px;
+">
+
+<h1>
+📕 Export Buku
+</h1>
+
+<div
+class="domus-card"
+style="
+padding:20px;
+border:1px solid #ddd;
+border-radius:8px;
+">
+
+<p>
+❌ Manuscript belum tersedia.
+</p>
+
+<p>
+Pastikan buku aktif dan naskah
+dapat dibuka melalui Preview.
+</p>
+
+</div>
+
+</section>
+
+`;
 
         }
 
@@ -321,326 +171,217 @@ ${
 
 
         const totalChapters =
-            this.document.totalChapters ||
-            0;
+            this.document.totalChapters || 0;
 
 
         const totalWords =
-            this.document.totalWords ||
-            0;
+            this.document.totalWords || 0;
 
 
-        const toc =
-            this.renderTOC();
+        /*
+        ================================================
+        TOC
+        ================================================
+        */
 
+        let tocHTML = "";
 
-        const chapters =
-            this.renderChapters();
 
+        if (
+            Array.isArray(
+                this.document.toc
+            )
+        ) {
 
-        return `
+            tocHTML =
+                this.document.toc
+                    .map(
+                        item => {
 
-<!DOCTYPE html>
-
-<html lang="id">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>${title}</title>
-
-<style>
-
-body {
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    max-width:
-        800px;
-
-    margin:
-        0 auto;
-
-    padding:
-        60px 30px;
-
-    color:
-        #222;
-
-    line-height:
-        1.75;
-
-}
-
-.cover {
-
-    min-height:
-        500px;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
-
-    text-align:
-        center;
-
-    page-break-after:
-        always;
-
-}
-
-.cover h1 {
-
-    font-size:
-        38px;
-
-    line-height:
-        1.3;
-
-}
-
-.meta {
-
-    color:
-        #666;
-
-    font-family:
-        Arial,
-        sans-serif;
-
-}
-
-.toc {
-
-    page-break-after:
-        always;
-
-}
-
-.toc li {
-
-    margin-bottom:
-        10px;
-
-}
-
-article {
-
-    page-break-before:
-        always;
-
-}
-
-h2 {
-
-    font-size:
-        28px;
-
-}
-
-h3 {
-
-    font-size:
-        24px;
-
-}
-
-p {
-
-    text-align:
-        justify;
-
-    margin-bottom:
-        1.2em;
-
-}
-
-.footer {
-
-    margin-top:
-        80px;
-
-    padding-top:
-        20px;
-
-    border-top:
-        1px solid #ddd;
-
-    text-align:
-        center;
-
-    color:
-        #777;
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<section class="cover">
+                            return `
 
 <div
-class="meta">
+style="
+padding:8px 0;
+border-bottom:1px solid #eee;
+">
 
-DOMUS ISAACI
+<strong>
+${item.number}.
+</strong>
 
-</div>
+${this.escapeHTML(
+    item.title ||
+    `Bab ${item.number}`
+)}
 
+<span
+style="
+color:#777;
+">
 
-<h1>
+ — ${item.wordCount || 0} kata
 
-${title}
-
-</h1>
-
-
-<p>
-
-DOMUS Publisher v1.0
-
-</p>
-
-
-<p
-class="meta">
-
-${totalChapters} Bab
-·
-${totalWords} Kata
-
-</p>
-
-</section>
-
-
-<section class="toc">
-
-<h2>
-
-Daftar Isi
-
-</h2>
-
-
-<ol>
-
-${toc}
-
-</ol>
-
-</section>
-
-
-<section>
-
-${chapters}
-
-</section>
-
-
-<div class="footer">
-
-DOMUS Framework v1.0
+</span>
 
 </div>
-
-
-</body>
-
-</html>
 
 `;
 
-    }
+                        }
 
-
-    /*
-    ====================================================
-    RENDER CONTENT
-    ====================================================
-    */
-
-    renderContent() {
-
-        if (!this.document) {
-
-            return `
-
-<section
-class="domus-export"
-style="
-max-width:900px;
-margin:0 auto;
-padding:30px 20px;
-">
-
-<h1>
-
-Export Buku
-
-</h1>
-
-
-<div
-class="domus-card"
-style="
-padding:20px;
-border:1px solid #ddd;
-border-radius:8px;
-">
-
-<p>
-
-❌ Dokumen export belum tersedia.
-
-</p>
-
-<p>
-
-Pastikan buku aktif dan naskah
-dapat dibangun.
-
-</p>
-
-</div>
-
-</section>
-
-`;
+                    )
+                    .join("");
 
         }
 
 
-        const book =
-            this.document.book || {};
+        /*
+        ================================================
+        BAB
+        ================================================
+        */
+
+        let chaptersHTML = "";
 
 
-        const title =
-            this.escapeHTML(
-                book.title ||
-                "Tanpa Judul"
-            );
+        if (
+            Array.isArray(
+                this.document.chapters
+            )
+        ) {
 
+            chaptersHTML =
+                this.document.chapters
+                    .map(
+                        (chapter, index) => {
+
+                            const number =
+                                chapter.number ||
+                                index + 1;
+
+
+                            const chapterTitle =
+                                this.escapeHTML(
+                                    chapter.title ||
+                                    `Bab ${number}`
+                                );
+
+
+                            const content =
+                                this.escapeHTML(
+                                    chapter.content || ""
+                                );
+
+
+                            const paragraphs =
+                                content
+                                    .split(
+                                        /\n\s*\n/
+                                    )
+                                    .map(
+                                        paragraph => {
+
+                                            const clean =
+                                                paragraph.trim();
+
+                                            if (!clean) {
+
+                                                return "";
+
+                                            }
+
+                                            return `
+
+<p
+style="
+line-height:1.75;
+text-align:justify;
+margin-bottom:1.2em;
+">
+
+${clean.replace(
+    /\n/g,
+    "<br>"
+)}
+
+</p>
+
+`;
+
+                                        }
+
+                                    )
+                                    .join("");
+
+
+                            return `
+
+<article
+class="domus-export-chapter"
+style="
+margin-top:60px;
+padding-top:40px;
+border-top:2px solid #222;
+">
+
+<h2>
+
+BAB ${number}
+
+</h2>
+
+<h3>
+
+${chapterTitle}
+
+</h3>
+
+<div>
+
+${
+    paragraphs ||
+
+    `<p
+    style="
+    color:#777;
+    font-style:italic;
+    ">
+    
+    Bab ini belum memiliki isi.
+    
+    </p>`
+}
+
+</div>
+
+<p
+style="
+color:#777;
+font-size:14px;
+">
+
+${chapter.wordCount || 0} kata
+
+</p>
+
+</article>
+
+`;
+
+                        }
+
+                    )
+                    .join("");
+
+        }
+
+
+        /*
+        ================================================
+        RENDER HALAMAN
+        ================================================
+        */
 
         return `
 
@@ -649,11 +390,16 @@ class="domus-export"
 style="
 max-width:900px;
 margin:0 auto;
-padding:30px 20px 80px 20px;
+padding:30px 20px 80px;
+font-family:Georgia, 'Times New Roman', serif;
+color:#222;
 ">
 
 
-<h1>
+<h1
+style="
+font-family:Arial,sans-serif;
+">
 
 📕 Export Buku
 
@@ -662,15 +408,18 @@ padding:30px 20px 80px 20px;
 
 <p
 style="
+font-family:Arial,sans-serif;
 color:#666;
 ">
 
-DOMUS Publisher v1.0 —
-menyiapkan naskah untuk
-format digital.
+DOMUS Publisher v1.0
 
 </p>
 
+
+<!-- ================================================
+     INFORMASI
+================================================ -->
 
 <div
 class="domus-card"
@@ -679,15 +428,12 @@ padding:20px;
 border:1px solid #ddd;
 border-radius:8px;
 margin-top:25px;
+font-family:Arial,sans-serif;
 ">
 
-
 <h2>
-
 Informasi Buku
-
 </h2>
-
 
 <p>
 
@@ -699,17 +445,15 @@ ${title}
 
 </p>
 
-
 <p>
 
 <strong>
 Total Bab:
 </strong>
 
-${this.document.totalChapters}
+${totalChapters}
 
 </p>
-
 
 <p>
 
@@ -717,13 +461,16 @@ ${this.document.totalChapters}
 Total Kata:
 </strong>
 
-${this.document.totalWords}
+${totalWords}
 
 </p>
 
-
 </div>
 
+
+<!-- ================================================
+     TOC
+================================================ -->
 
 <div
 class="domus-card"
@@ -732,92 +479,83 @@ padding:20px;
 border:1px solid #ddd;
 border-radius:8px;
 margin-top:25px;
+font-family:Arial,sans-serif;
 ">
 
-
 <h2>
-
 📑 Daftar Isi
-
 </h2>
 
-
-<ol>
-
-${this.renderTOC()}
-
-</ol>
-
+${tocHTML}
 
 </div>
 
 
+<!-- ================================================
+     EXPORT ACTION
+================================================ -->
+
 <div
-class="domus-card"
 style="
-padding:20px;
-border:1px solid #ddd;
-border-radius:8px;
 margin-top:25px;
+font-family:Arial,sans-serif;
 ">
-
-
-<h2>
-
-📦 Format Export
-
-</h2>
-
-
-<p>
-
-Naskah sudah berhasil dibangun
-sebagai manuscript terstruktur.
-
-</p>
-
 
 <button
-id="btnExportHTML"
+id="btnExportPrint"
 class="domus-btn domus-btn-primary"
 type="button">
 
-📄 Export HTML
+🖨️ Cetak / Simpan PDF
 
 </button>
-
-
-<p
-style="
-margin-top:15px;
-color:#666;
-">
-
-PDF dan EPUB akan dibuat pada
-tahap berikutnya setelah
-Export HTML berhasil.
-
-</p>
-
 
 </div>
 
 
-<div
-id="export-status"
-class="domus-card"
+<!-- ================================================
+     MANUSCRIPT
+================================================ -->
+
+<section
+id="exportDocument"
 style="
-padding:20px;
-border:1px solid #ddd;
-border-radius:8px;
-margin-top:25px;
+margin-top:50px;
 ">
 
-<strong>
-Status:
-</strong>
+<h2
+style="
+font-size:30px;
+border-bottom:2px solid #222;
+padding-bottom:12px;
+">
 
-✓ Naskah siap diekspor.
+Naskah Buku
+
+</h2>
+
+
+${chaptersHTML}
+
+
+</section>
+
+
+<!-- ================================================
+     FOOTER
+================================================ -->
+
+<div
+style="
+margin-top:80px;
+padding-top:30px;
+border-top:1px solid #ddd;
+text-align:center;
+color:#777;
+font-family:Arial,sans-serif;
+">
+
+DOMUS Framework v1.0
 
 </div>
 
@@ -839,7 +577,7 @@ Status:
 
         const button =
             this.element.querySelector(
-                "#btnExportHTML"
+                "#btnExportPrint"
             );
 
 
@@ -852,132 +590,9 @@ Status:
 
         button.onclick = () => {
 
-            try {
-
-                const html =
-                    this.buildExportHTML();
-
-
-                if (!html) {
-
-                    throw new Error(
-                        "Dokumen export belum tersedia."
-                    );
-
-                }
-
-
-                const blob =
-                    new Blob(
-                        [html],
-                        {
-                            type:
-                                "text/html;charset=utf-8"
-                        }
-                    );
-
-
-                const url =
-                    URL.createObjectURL(
-                        blob
-                    );
-
-
-                const link =
-                    document.createElement(
-                        "a"
-                    );
-
-
-                link.href =
-                    url;
-
-
-                link.download =
-                    "domus-book.html";
-
-
-                document.body.appendChild(
-                    link
-                );
-
-
-                link.click();
-
-
-                link.remove();
-
-
-                URL.revokeObjectURL(
-                    url
-                );
-
-
-                const status =
-                    this.element.querySelector(
-                        "#export-status"
-                    );
-
-
-                if (status) {
-
-                    status.innerHTML = `
-
-<strong>
-Status:
-</strong>
-
-✓ Export HTML berhasil.
-
-`;
-
-                }
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "DOMUS HTML Export Error:",
-                    error
-                );
-
-
-                const status =
-                    this.element.querySelector(
-                        "#export-status"
-                    );
-
-
-                if (status) {
-
-                    status.innerHTML = `
-
-<strong>
-Status:
-</strong>
-
-❌ Export gagal.
-
-<br><br>
-
-${this.escapeHTML(
-    error.message || String(error)
-)}
-
-`;
-
-                }
-
-            }
+            window.print();
 
         };
-
-
-        console.log(
-            "DOMUS Export rendered.",
-            this.document
-        );
 
     }
 
