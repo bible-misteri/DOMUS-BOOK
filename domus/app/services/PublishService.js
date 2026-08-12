@@ -8,6 +8,7 @@ Publish Service
 import Service from "../core/Service.js";
 import BookService from "./BookService.js";
 
+
 class PublishService extends Service {
 
     constructor() {
@@ -110,42 +111,45 @@ class PublishService extends Service {
 
 
     /*
-    
+    ====================================================
+    BUILD TOC
+    ====================================================
+    */
+
+    buildTOC(chapters = []) {
+
+        return chapters.map(
+
+            (chapter, index) => {
+
+                return {
+
+                    number:
+                        index + 1,
+
+                    id:
+                        chapter.id,
+
+                    title:
+                        chapter.title ||
+                        `Bab ${index + 1}`,
+
+                    wordCount:
+                        chapter.wordCount ||
+                        this.countWords(
+                            chapter.content || ""
+                        )
+
+                };
+
+            }
+
+        );
+
+    }
+
+
     /*
-====================================================
-BUILD TOC
-====================================================
-*/
-
-buildTOC(chapters = []) {
-
-    return chapters.map(
-
-        (chapter, index) => {
-
-            return {
-
-                number:
-                    index + 1,
-
-                id:
-                    chapter.id,
-
-                title:
-                    chapter.title ||
-                    `Bab ${index + 1}`,
-
-                wordCount:
-                    chapter.wordCount || 0
-
-            };
-
-        }
-
-    );
-
-}
-    
     ====================================================
     NORMALISASI BAB
     ====================================================
@@ -223,7 +227,7 @@ buildTOC(chapters = []) {
 
         /*
         --------------------------------------------
-        NORMALISASI
+        NORMALISASI BAB
         --------------------------------------------
         */
 
@@ -247,6 +251,13 @@ buildTOC(chapters = []) {
                 chapters
             );
 
+
+        /*
+        --------------------------------------------
+        BUILD TOC OTOMATIS
+        --------------------------------------------
+        */
+
         const toc =
             this.buildTOC(
                 chapters
@@ -265,17 +276,22 @@ buildTOC(chapters = []) {
 
                 ...book,
 
-                chapters: chapters
+                chapters:
+                    chapters
 
             },
 
-            chapters,
+            chapters:
+                chapters,
 
-            toc,
+            toc:
+                toc,
 
-            totalChapters,
+            totalChapters:
+                totalChapters,
 
-            totalWords,
+            totalWords:
+                totalWords,
 
             generatedAt:
                 new Date().toISOString()
@@ -332,7 +348,8 @@ buildTOC(chapters = []) {
 
         return {
 
-            success: true,
+            success:
+                true,
 
             message:
                 "Publish seluruh naskah berhasil.",
