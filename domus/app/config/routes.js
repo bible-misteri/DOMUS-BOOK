@@ -13,6 +13,7 @@ import PreviewPage from "../pages/Preview/index.js";
 import PublishPage from "../pages/Publish/index.js";
 import ExportPage from "../pages/Export/index.js";
 
+
 const routes = [
 
     {
@@ -65,5 +66,6 @@ const routes = [
     }
 
 ];
+
 
 export default routes;
