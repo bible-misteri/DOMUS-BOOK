@@ -444,6 +444,56 @@ class="domus-publish-result">
                     const document =
                         result.document;
 
+                    /*
+                    ========================================
+                    TOC OTOMATIS
+                    ========================================
+                    */
+
+                    let tocHTML = "";
+
+                    if (
+                        document &&
+                        Array.isArray(document.toc)
+                    ) {
+
+                        tocHTML =
+                            document.toc.map(
+                                (item) => {
+
+                                    return `
+
+                    <div
+                    style="
+                    display:flex;
+                    justify-content:space-between;
+                    padding:8px 0;
+                    border-bottom:1px solid #eee;
+                    ">
+
+                    <span>
+
+                    ${item.number}.
+                    ${item.title}
+
+                    </span>
+
+                    <span>
+
+                    ${item.wordCount} kata
+
+                      </span>
+
+                      </div>
+
+                    `;
+
+                                }
+
+                            ).join("");
+
+                    }
+
 
                     /*
                     ========================================
