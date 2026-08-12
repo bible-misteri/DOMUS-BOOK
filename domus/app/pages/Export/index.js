@@ -492,6 +492,18 @@ COVER
 
 }
 
+.print-author {
+
+    font-size: 13pt;
+
+    letter-spacing: 1px;
+
+    color: #444;
+
+    margin-top: 5mm;
+
+}
+
 
 /*
 ====================================================
@@ -901,6 +913,52 @@ PRINT MODE
 
     }
 
+    .title-page-spacer {
+        height: 20mm;
+    }
+
+    .title-page-line {
+
+        width: 45mm;
+
+        border-top:
+            1px solid #222;
+
+        margin:
+            12mm 0;
+
+    }
+
+    .title-page-brand {
+
+        font-family:
+            Arial,
+            sans-serif;
+
+        font-size: 11pt;
+
+        letter-spacing: 3px;
+
+        color: #444;
+
+    }
+
+    .title-page-publisher {
+
+        margin-top: 25mm;
+
+        font-family:
+            Arial,
+            sans-serif;
+
+        font-size: 9pt;
+
+        letter-spacing: 1px;
+
+        color: #888;
+
+    }
+
 
     /*
     ====================================================
@@ -1185,49 +1243,39 @@ DOMUS ISAACI
 
 </div>
 
-
 <h1>
 
 ${title}
 
 </h1>
 
-
 <div class="print-cover-line"></div>
 
-
-<p class="print-cover-subtitle">
-
-Naskah Buku
-
+<p class="print-author">
+    Norman Sandhi
 </p>
 
 </section>
-
 
 <!-- TITLE PAGE -->
 
 <section class="print-title-page">
 
-<h1>
+    <div class="title-page-spacer"></div>
 
-${title}
+    <h1>
+        ${title}
+    </h1>
 
-</h1>
+    <div class="title-page-line"></div>
 
+    <p class="title-page-brand">
+        DOMUS ISAACI
+    </p>
 
-<p>
-
-DOMUS ISAACI
-
-</p>
-
-
-<p>
-
-DOMUS Framework v1.1
-
-</p>
+    <p class="title-page-publisher">
+        DOMUS Framework v1.1
+    </p>
 
 </section>
 
