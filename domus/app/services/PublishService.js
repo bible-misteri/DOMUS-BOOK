@@ -2,6 +2,7 @@
 ====================================================
 DOMUS Framework v1.0
 Publish Service
+Manuscript Structure v1.1
 ====================================================
 */
 
@@ -140,12 +141,15 @@ class PublishService extends Service {
                         index + 1,
 
                     title:
-                        chapter?.title?.trim()
-                        || `Bab ${index + 1}`,
+                        chapter?.title ||
+                        `Bab ${index + 1}`,
 
                     content,
 
-                    wordCount
+                    wordCount,
+
+                    type:
+                        "chapter"
 
                 };
 
@@ -181,30 +185,123 @@ class PublishService extends Service {
                         `Bab ${index + 1}`,
 
                     wordCount:
-                        chapter.wordCount || 0,
-
-                    /*
-                    ------------------------------------
-                    NOMOR HALAMAN
-                    ------------------------------------
-
-                    Untuk sementara null.
-
-                    Jangan menghitung halaman
-                    berdasarkan jumlah kata.
-
-                    Nomor halaman akan ditentukan
-                    oleh sistem Preview / PDF.
-                    */
-
-                    page:
-                        null
+                        chapter.wordCount || 0
 
                 };
 
             }
 
         );
+
+    }
+
+
+    /*
+    ====================================================
+    FRONT MATTER
+    ====================================================
+    */
+
+    buildFrontMatter(book) {
+
+        return {
+
+            type:
+                "front-matter",
+
+            items: [
+
+                {
+                    type: "cover",
+                    title: "Cover"
+                },
+
+                {
+                    type: "title-page",
+                    title: "Halaman Judul"
+                },
+
+                {
+                    type: "copyright",
+                    title: "Copyright"
+                },
+
+                {
+                    type: "dedication",
+                    title: "Dedikasi"
+                },
+
+                {
+                    type: "introduction",
+                    title: "Pendahuluan"
+                },
+
+                {
+                    type: "toc",
+                    title: "Daftar Isi"
+                }
+
+            ]
+
+        };
+
+    }
+
+
+    /*
+    ====================================================
+    MAIN MATTER
+    ====================================================
+    */
+
+    buildMainMatter(chapters = []) {
+
+        return {
+
+            type:
+                "main-matter",
+
+            chapters:
+                chapters
+
+        };
+
+    }
+
+
+    /*
+    ====================================================
+    BACK MATTER
+    ====================================================
+    */
+
+    buildBackMatter() {
+
+        return {
+
+            type:
+                "back-matter",
+
+            items: [
+
+                {
+                    type: "notes",
+                    title: "Catatan"
+                },
+
+                {
+                    type: "bibliography",
+                    title: "Daftar Pustaka"
+                },
+
+                {
+                    type: "author",
+                    title: "Tentang Penulis"
+                }
+
+            ]
+
+        };
 
     }
 
@@ -253,6 +350,52 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
+        TOC
+        --------------------------------------------
+        */
+
+        const toc =
+            this.buildTOC(
+                chapters
+            );
+
+
+        /*
+        --------------------------------------------
+        FRONT MATTER
+        --------------------------------------------
+        */
+
+        const frontMatter =
+            this.buildFrontMatter(
+                book
+            );
+
+
+        /*
+        --------------------------------------------
+        MAIN MATTER
+        --------------------------------------------
+        */
+
+        const mainMatter =
+            this.buildMainMatter(
+                chapters
+            );
+
+
+        /*
+        --------------------------------------------
+        BACK MATTER
+        --------------------------------------------
+        */
+
+        const backMatter =
+            this.buildBackMatter();
+
+
+        /*
+        --------------------------------------------
         TOTAL
         --------------------------------------------
         */
@@ -267,24 +410,18 @@ class PublishService extends Service {
 
 
         /*
-        --------------------------------------------
-        TOC OTOMATIS
-        --------------------------------------------
-        */
-
-        const toc =
-            this.buildTOC(
-                chapters
-            );
-
-
-        /*
-        --------------------------------------------
-        MANUSCRIPT
-        --------------------------------------------
+        ====================================================
+        MANUSCRIPT FINAL
+        ====================================================
         */
 
         const manuscript = {
+
+            version:
+                "1.1",
+
+            type:
+                "book-manuscript",
 
             book: {
 
@@ -295,13 +432,36 @@ class PublishService extends Service {
 
             },
 
-            chapters,
 
-            toc,
+            structure: {
 
-            totalChapters,
+                frontMatter:
+                    frontMatter,
 
-            totalWords,
+                mainMatter:
+                    mainMatter,
+
+                backMatter:
+                    backMatter
+
+            },
+
+
+            toc:
+                toc,
+
+
+            chapters:
+                chapters,
+
+
+            totalChapters:
+                totalChapters,
+
+
+            totalWords:
+                totalWords,
+
 
             generatedAt:
                 new Date().toISOString()
@@ -311,8 +471,10 @@ class PublishService extends Service {
 
         this.log(
 
-            `Manuscript built: ` +
+            `Manuscript v${manuscript.version} built: ` +
+
             `${totalChapters} chapters, ` +
+
             `${totalWords} words.`
 
         );
@@ -357,7 +519,8 @@ class PublishService extends Service {
 
         this.log(
 
-            `Publishing manuscript: ` +
+            `Publishing manuscript v${manuscript.version}: ` +
+
             `${manuscript.totalChapters} chapters.`
 
         );
