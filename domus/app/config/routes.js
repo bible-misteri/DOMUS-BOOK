@@ -57,7 +57,7 @@ const routes = [
         page: PublishPage
     }
 
-        {
+    {
         path: "export",
         title: "Export",
         icon: "📕",
