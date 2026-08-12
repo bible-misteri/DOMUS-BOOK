@@ -499,6 +499,12 @@ TITLE PAGE
 ====================================================
 */
 
+/*
+====================================================
+TITLE PAGE — A5 PROFESSIONAL
+====================================================
+*/
+
 .print-title-page {
 
     min-height: 900px;
@@ -517,21 +523,46 @@ TITLE PAGE
 
     box-sizing: border-box;
 
+    page-break-after: always;
+
 }
 
 
 .print-title-page h1 {
 
-    font-size: 30px;
+    max-width: 520px;
 
-    line-height: 1.4;
+    font-size: 28px;
+
+    line-height: 1.45;
+
+    font-weight: 600;
+
+    margin: 0 0 35px 0;
 
 }
 
 
 .print-title-page p {
 
+    margin: 8px 0;
+
+    font-size: 14px;
+
     color: #666;
+
+}
+
+
+.print-title-page .publisher {
+
+    margin-top: 70px;
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+
+    color: #888;
 
 }
 
@@ -539,6 +570,12 @@ TITLE PAGE
 /*
 ====================================================
 TABLE OF CONTENTS
+====================================================
+*/
+
+/*
+====================================================
+TABLE OF CONTENTS — A5
 ====================================================
 */
 
@@ -557,9 +594,15 @@ TABLE OF CONTENTS
 
 .print-toc h2 {
 
-    font-size: 26px;
+    font-size: 25px;
 
-    margin-bottom: 35px;
+    font-weight: 600;
+
+    text-align: center;
+
+    margin:
+
+        0 0 45px 0;
 
 }
 
@@ -570,11 +613,22 @@ TABLE OF CONTENTS
 
     justify-content: space-between;
 
-    padding: 10px 0;
+    align-items: baseline;
 
-    border-bottom: 1px dotted #bbb;
+    padding: 11px 0;
 
-    font-size: 15px;
+    border-bottom:
+
+        1px dotted #aaa;
+
+    font-size: 14px;
+
+}
+
+
+.print-toc-item span {
+
+    display: block;
 
 }
 
@@ -585,9 +639,21 @@ CHAPTER
 ====================================================
 */
 
+/*
+====================================================
+CHAPTER — A5 BOOK
+====================================================
+*/
+
 .print-chapter {
 
-    padding: 80px 55px;
+    padding:
+
+        35mm
+
+        18mm
+
+        20mm;
 
     box-sizing: border-box;
 
@@ -598,29 +664,37 @@ CHAPTER
 
 .print-chapter-heading {
 
-    margin-bottom: 45px;
+    margin-bottom: 28mm;
 
 }
 
 
 .print-chapter-number {
 
-    font-family: Arial, sans-serif;
+    font-family:
 
-    font-size: 13px;
+        Arial,
 
-    letter-spacing: 2px;
+        sans-serif;
 
-    margin-bottom: 12px;
+    font-size: 10pt;
+
+    letter-spacing: 2.5px;
+
+    margin-bottom: 10px;
+
+    color: #555;
 
 }
 
 
 .print-chapter h2 {
 
-    font-size: 27px;
+    font-size: 22pt;
 
     line-height: 1.35;
+
+    font-weight: 600;
 
     margin: 0;
 
@@ -629,9 +703,9 @@ CHAPTER
 
 .print-chapter-content {
 
-    font-size: 16px;
+    font-size: 11.5pt;
 
-    line-height: 1.8;
+    line-height: 1.75;
 
     text-align: justify;
 
@@ -643,6 +717,13 @@ CHAPTER
     margin:
 
         0 0 1.25em 0;
+
+}
+
+
+.print-chapter-content p:first-child {
+
+    text-indent: 0;
 
 }
 
@@ -680,15 +761,19 @@ PRINT MODE
 
     @page {
 
-        size: A5;
+    size: A5 portrait;
 
-        margin:
-            20mm
-            18mm
-            20mm
-            18mm;
+    margin:
 
-    }
+        18mm
+
+        18mm
+
+        20mm
+
+        18mm;
+
+}
 
 
     /*
@@ -850,17 +935,17 @@ PRINT MODE
 
     .print-chapter {
 
-        padding:
-            10mm
-            5mm;
+    page-break-before: always;
 
-        box-sizing: border-box;
+    padding:
 
-        page-break-before: always;
+        15mm
 
-        break-before: page;
+        0
 
-    }
+        10mm;
+
+}
 
 
     /*
