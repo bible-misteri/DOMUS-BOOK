@@ -55,7 +55,7 @@ const routes = [
         title: "Publish",
         icon: "🚀",
         page: PublishPage
-    }
+    },
 
     {
         path: "export",
