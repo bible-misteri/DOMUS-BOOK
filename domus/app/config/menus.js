@@ -35,6 +35,11 @@ const menus = [
     {
         title: "🚀 Publish",
         page: "publish"
+    },
+
+    {
+        title: "📕 Export",
+        page: "export"
     }
 
 ];
