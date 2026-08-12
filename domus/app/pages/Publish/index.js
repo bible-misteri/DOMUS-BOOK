@@ -36,12 +36,52 @@ export default class PublishPage extends Page {
 
         if (!this.book) {
 
+            this.chapters = [];
+
             return;
 
         }
 
         this.chapters =
-            ChapterService.getAll();
+            ChapterService.getAll() || [];
+
+    }
+
+
+    /*
+    ====================================================
+    ESCAPE HTML
+    ====================================================
+    */
+
+    escapeHTML(value = "") {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
 
     }
 
@@ -55,7 +95,7 @@ export default class PublishPage extends Page {
     countWords(text = "") {
 
         const cleanText =
-            text.trim();
+            String(text).trim();
 
         if (!cleanText) {
 
@@ -64,8 +104,11 @@ export default class PublishPage extends Page {
         }
 
         return cleanText
+
             .split(/\s+/)
+
             .filter(Boolean)
+
             .length;
 
     }
@@ -84,8 +127,9 @@ export default class PublishPage extends Page {
             (total, chapter) => {
 
                 return total +
+
                     this.countWords(
-                        chapter.content || ""
+                        chapter?.content || ""
                     );
 
             },
@@ -149,9 +193,11 @@ export default class PublishPage extends Page {
 
 <section class="domus-publish">
 
-<h1>Publish</h1>
+    <h1>Publish</h1>
 
-<p>Tidak ada buku aktif.</p>
+    <p>
+        Tidak ada buku aktif.
+    </p>
 
 </section>
 
@@ -170,19 +216,25 @@ export default class PublishPage extends Page {
 
         const bookStatus =
             validation.hasBook
+
                 ? "✓ Buku aktif"
+
                 : "✗ Tidak ada buku";
 
 
         const chapterStatus =
             validation.hasChapters
+
                 ? "✓ Ada bab"
+
                 : "✗ Belum ada bab";
 
 
         const contentStatus =
             validation.hasContent
+
                 ? "✓ Naskah memiliki isi"
+
                 : "✗ Naskah masih kosong";
 
 
@@ -192,11 +244,11 @@ export default class PublishPage extends Page {
                 ? `
 
 <button
-id="btnPublish"
-class="domus-btn domus-btn-primary"
-type="button">
+    id="btnPublish"
+    class="domus-btn domus-btn-primary"
+    type="button">
 
-🚀 Publish
+    🚀 Publish
 
 </button>
 
@@ -205,12 +257,12 @@ type="button">
                 : `
 
 <button
-id="btnPublish"
-class="domus-btn domus-btn-primary"
-type="button"
-disabled>
+    id="btnPublish"
+    class="domus-btn domus-btn-primary"
+    type="button"
+    disabled>
 
-🚀 Publish
+    🚀 Publish
 
 </button>
 
@@ -221,134 +273,133 @@ disabled>
 
 <section class="domus-publish">
 
-<h1>Publish Buku</h1>
+    <h1>Publish Buku</h1>
 
-<p>
-
-Periksa naskah sebelum diterbitkan.
-
-</p>
+    <p>
+        Periksa naskah sebelum diterbitkan.
+    </p>
 
 
-<!-- ================================================
-     INFORMASI BUKU
-================================================ -->
+    <!-- =========================================
+         INFORMASI BUKU
+    ========================================== -->
 
-<div class="domus-card">
+    <div class="domus-card">
 
-<p>
-<strong>Judul Buku</strong>
-</p>
+        <p>
+            <strong>Judul Buku</strong>
+        </p>
 
-<p>
-${this.book.title}
-</p>
+        <p>
+            ${this.escapeHTML(this.book.title || "Tanpa Judul")}
+        </p>
 
-</div>
-
-
-<!-- ================================================
-     TOTAL BAB
-================================================ -->
-
-<div class="domus-card">
-
-<p>
-<strong>Total Bab</strong>
-</p>
-
-<p>
-${this.chapters.length}
-</p>
-
-</div>
+    </div>
 
 
-<!-- ================================================
-     TOTAL KATA
-================================================ -->
+    <!-- =========================================
+         TOTAL BAB
+    ========================================== -->
 
-<div class="domus-card">
+    <div class="domus-card">
 
-<p>
-<strong>Total Kata</strong>
-</p>
+        <p>
+            <strong>Total Bab</strong>
+        </p>
 
-<p>
-${totalWords}
-</p>
+        <p>
+            ${this.chapters.length}
+        </p>
 
-</div>
-
-
-<!-- ================================================
-     PEMERIKSAAN
-================================================ -->
-
-<div class="domus-card">
-
-<h3>
-Pemeriksaan Naskah
-</h3>
-
-<p>
-${bookStatus}
-</p>
-
-<p>
-${chapterStatus}
-</p>
-
-<p>
-${contentStatus}
-</p>
-
-</div>
+    </div>
 
 
-<!-- ================================================
-     STATUS
-================================================ -->
+    <!-- =========================================
+         TOTAL KATA
+    ========================================== -->
 
-<div
-id="publish-status"
-class="domus-card">
+    <div class="domus-card">
 
-<p>
+        <p>
+            <strong>Total Kata</strong>
+        </p>
 
-<strong>Status Naskah</strong>
+        <p>
+            ${totalWords}
+        </p>
 
-</p>
-
-<p>
-
-${
-    validation.ready
-        ? "✓ Naskah siap diproses."
-        : "⚠ Naskah belum siap diterbitkan."
-}
-
-</p>
-
-</div>
+    </div>
 
 
-<!-- ================================================
-     BUTTON
-================================================ -->
+    <!-- =========================================
+         PEMERIKSAAN NASKAH
+    ========================================== -->
 
-${publishButton}
+    <div class="domus-card">
+
+        <h3>
+            Pemeriksaan Naskah
+        </h3>
+
+        <p>
+            ${bookStatus}
+        </p>
+
+        <p>
+            ${chapterStatus}
+        </p>
+
+        <p>
+            ${contentStatus}
+        </p>
+
+    </div>
 
 
-<!-- ================================================
-     HASIL PUBLISH
-================================================ -->
+    <!-- =========================================
+         STATUS
+    ========================================== -->
 
-<div
-id="publishResult"
-class="domus-publish-result">
+    <div
+        id="publish-status"
+        class="domus-card">
 
-</div>
+        <p>
+            <strong>Status Naskah</strong>
+        </p>
+
+        <p>
+
+            ${
+                validation.ready
+
+                    ? "✓ Naskah siap diproses."
+
+                    : "⚠ Naskah belum siap diterbitkan."
+
+            }
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         BUTTON PUBLISH
+    ========================================== -->
+
+    ${publishButton}
+
+
+    <!-- =========================================
+         HASIL PUBLISH
+    ========================================== -->
+
+    <div
+        id="publishResult"
+        class="domus-publish-result">
+
+    </div>
 
 
 </section>
@@ -390,6 +441,12 @@ class="domus-publish-result">
                 }
 
 
+                /*
+                ========================================
+                LOCK BUTTON
+                ========================================
+                */
+
                 button.disabled = true;
 
                 button.textContent =
@@ -414,13 +471,13 @@ class="domus-publish-result">
 
 <p>
 
-<strong>Status Naskah</strong>
+    <strong>Status Naskah</strong>
 
 </p>
 
 <p>
 
-⏳ Sedang diproses...
+    ⏳ Sedang diproses...
 
 </p>
 
@@ -441,52 +498,246 @@ class="domus-publish-result">
                         await PublishService.publish();
 
 
+                    /*
+                    ========================================
+                    VALIDASI HASIL
+                    ========================================
+                    */
+
+                    if (
+                        !result ||
+                        !result.document
+                    ) {
+
+                        throw new Error(
+                            "Publish berhasil tetapi dokumen manuscript tidak ditemukan."
+                        );
+
+                    }
+
+
                     const document =
                         result.document;
 
+
                     /*
                     ========================================
-                    TOC OTOMATIS
+                    DATA AMAN
+                    ========================================
+                    */
+
+                    const documentBook =
+                        document.book || this.book || {};
+
+                    const documentChapters =
+                        Array.isArray(
+                            document.chapters
+                        )
+
+                            ? document.chapters
+
+                            : [];
+
+
+                    /*
+                    ========================================
+                    TOTAL BAB
+                    ========================================
+                    */
+
+                    const totalChapters =
+                        Number.isFinite(
+                            document.totalChapters
+                        )
+
+                            ? document.totalChapters
+
+                            : documentChapters.length;
+
+
+                    /*
+                    ========================================
+                    TOTAL KATA
+                    ========================================
+                    */
+
+                    const totalWords =
+                        Number.isFinite(
+                            document.totalWords
+                        )
+
+                            ? document.totalWords
+
+                            : documentChapters.reduce(
+
+                                (total, chapter) => {
+
+                                    return total +
+
+                                        this.countWords(
+                                            chapter?.content || ""
+                                        );
+
+                                },
+
+                                0
+
+                            );
+
+
+                    /*
+                    ========================================
+                    TOC
+                    ========================================
+                    */
+
+                    let tocItems = [];
+
+
+                    /*
+                    Prioritas:
+                    1. document.toc
+                    2. document.chapters
+                    */
+
+                    if (
+                        Array.isArray(
+                            document.toc
+                        ) &&
+                        document.toc.length > 0
+                    ) {
+
+                        tocItems =
+                            document.toc.map(
+
+                                (item, index) => {
+
+                                    const title =
+                                        item?.title ||
+                                        `Bab ${index + 1}`;
+
+
+                                    const wordCount =
+                                        Number.isFinite(
+                                            item?.wordCount
+                                        )
+
+                                            ? item.wordCount
+
+                                            : 0;
+
+
+                                    return {
+
+                                        number:
+                                            index + 1,
+
+                                        id:
+                                            item?.id || "",
+
+                                        title,
+
+                                        wordCount
+
+                                    };
+
+                                }
+
+                            );
+
+                    }
+
+                    else {
+
+                        tocItems =
+                            documentChapters.map(
+
+                                (chapter, index) => {
+
+                                    const content =
+                                        chapter?.content || "";
+
+
+                                    return {
+
+                                        number:
+                                            index + 1,
+
+                                        id:
+                                            chapter?.id || "",
+
+                                        title:
+                                            chapter?.title ||
+                                            `Bab ${index + 1}`,
+
+                                        wordCount:
+                                            this.countWords(
+                                                content
+                                            )
+
+                                    };
+
+                                }
+
+                            );
+
+                    }
+
+
+                    /*
+                    ========================================
+                    RENDER TOC
                     ========================================
                     */
 
                     let tocHTML = "";
 
-                    if (
-                        document &&
-                        Array.isArray(document.toc)
-                    ) {
+
+                    if (tocItems.length > 0) {
 
                         tocHTML =
-                            document.toc.map(
+                            tocItems.map(
+
                                 (item) => {
 
                                     return `
 
-                    <div
-                    style="
-                    display:flex;
-                    justify-content:space-between;
-                    padding:8px 0;
-                    border-bottom:1px solid #eee;
-                    ">
+<div
+    style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:16px;
+        padding:10px 0;
+        border-bottom:1px solid #eee;
+    ">
 
-                    <span>
+    <span>
 
-                    ${item.number}.
-                    ${item.title}
+        <strong>
+            ${item.number}.
+        </strong>
 
-                    </span>
+        ${this.escapeHTML(
+            item.title
+        )}
 
-                    <span>
+    </span>
 
-                    ${item.wordCount} kata
+    <span
+        style="
+            white-space:nowrap;
+            font-size:0.9em;
+            opacity:0.75;
+        ">
 
-                      </span>
+        ${item.wordCount} kata
 
-                      </div>
+    </span>
 
-                    `;
+</div>
+
+`;
 
                                 }
 
@@ -494,10 +745,24 @@ class="domus-publish-result">
 
                     }
 
+                    else {
+
+                        tocHTML = `
+
+<p>
+
+    Belum ada bab dalam Daftar Isi.
+
+</p>
+
+`;
+
+                    }
+
 
                     /*
                     ========================================
-                    TAMPILKAN STATUS
+                    RENDER CHAPTER
                     ========================================
                     */
 
@@ -505,79 +770,90 @@ class="domus-publish-result">
 
 
                     if (
-                        document &&
-                        Array.isArray(
-                            document.chapters
-                        )
+                        documentChapters.length > 0
                     ) {
 
                         chaptersHTML =
-                            document.chapters.map(
-                                (chapter) => {
+                            documentChapters.map(
+
+                                (chapter, index) => {
+
+                                    const number =
+                                        index + 1;
+
+
+                                    const title =
+                                        chapter?.title ||
+                                        `Bab ${number}`;
+
 
                                     const content =
-                                        chapter.content || "";
+                                        String(
+                                            chapter?.content || ""
+                                        );
+
+
+                                    const wordCount =
+                                        this.countWords(
+                                            content
+                                        );
 
 
                                     const safeContent =
-                                        content
-                                            .replace(
-                                                /&/g,
-                                                "&amp;"
-                                            )
-                                            .replace(
-                                                /</g,
-                                                "&lt;"
-                                            )
-                                            .replace(
-                                                />/g,
-                                                "&gt;"
-                                            )
-                                            .replace(
-                                                /\n/g,
-                                                "<br>"
-                                            );
+                                        this.escapeHTML(
+                                            content
+                                        )
+                                        .replace(
+                                            /\n/g,
+                                            "<br>"
+                                        );
 
 
                                     return `
 
 <div
-class="domus-card"
-style="margin-top:12px;">
+    class="domus-card"
+    style="margin-top:12px;">
 
-<h3>
+    <h3>
 
-Bab ${chapter.number || ""}
+        Bab ${number}
 
-</h3>
+    </h3>
 
-<p>
 
-<strong>Judul:</strong>
+    <p>
 
-${chapter.title}
+        <strong>Judul:</strong>
 
-</p>
+        ${this.escapeHTML(
+            title
+        )}
 
-<p>
+    </p>
 
-<strong>Jumlah Kata:</strong>
 
-${chapter.wordCount}
+    <p>
 
-</p>
+        <strong>Jumlah Kata:</strong>
 
-<div
-style="
-padding:12px;
-margin-top:8px;
-border:1px solid #ddd;
-border-radius:6px;
-">
+        ${wordCount}
 
-${safeContent}
+    </p>
 
-</div>
+
+    <div
+        style="
+            padding:12px;
+            margin-top:8px;
+            border:1px solid #ddd;
+            border-radius:6px;
+            line-height:1.6;
+        ">
+
+        ${safeContent}
+
+    </div>
 
 </div>
 
@@ -592,7 +868,7 @@ ${safeContent}
 
                     /*
                     ========================================
-                    HASIL DEBUG
+                    HASIL PUBLISH
                     ========================================
                     */
 
@@ -600,73 +876,119 @@ ${safeContent}
 
 <div class="domus-card">
 
-<h3>
+    <h3>
 
-✓ Publish Berhasil
+        ✓ Publish Berhasil
 
-</h3>
+    </h3>
 
-<p>
 
-<strong>Status:</strong>
+    <p>
 
-${result.message}
+        <strong>Status:</strong>
 
-</p>
+        ${this.escapeHTML(
+            result.message ||
+            "Publish seluruh naskah berhasil."
+        )}
 
-<p>
+    </p>
 
-<strong>Waktu:</strong>
 
-${document.generatedAt}
+    <p>
 
-</p>
+        <strong>Waktu:</strong>
+
+        ${this.escapeHTML(
+            document.generatedAt ||
+            new Date().toISOString()
+        )}
+
+    </p>
 
 </div>
 
+
+<!-- =========================================
+     DAFTAR ISI OTOMATIS
+========================================== -->
 
 <div class="domus-card">
 
-<h3>
+    <h3>
 
-🔎 Struktur Dokumen Publish
+        📑 Daftar Isi
 
-</h3>
+    </h3>
 
-<p>
-
-<strong>Judul:</strong>
-
-${document.book.title}
-
-</p>
-
-<p>
-
-<strong>Total Bab:</strong>
-
-${document.totalChapters}
-
-</p>
-
-<p>
-
-<strong>Total Kata:</strong>
-
-${document.totalWords}
-
-</p>
+    ${tocHTML}
 
 </div>
 
 
+<!-- =========================================
+     STRUKTUR MANUSCRIPT
+========================================== -->
+
+<div class="domus-card">
+
+    <h3>
+
+        🔎 Struktur Dokumen Publish
+
+    </h3>
+
+
+    <p>
+
+        <strong>Judul:</strong>
+
+        ${this.escapeHTML(
+            documentBook.title ||
+            "Tanpa Judul"
+        )}
+
+    </p>
+
+
+    <p>
+
+        <strong>Total Bab:</strong>
+
+        ${totalChapters}
+
+    </p>
+
+
+    <p>
+
+        <strong>Total Kata:</strong>
+
+        ${totalWords}
+
+    </p>
+
+</div>
+
+
+<!-- =========================================
+     ISI BAB
+========================================== -->
+
 <div>
 
-${chaptersHTML}
+    ${chaptersHTML}
 
 </div>
 
 `;
+
+
+                    /*
+                    ========================================
+                    STATUS BERHASIL
+                    ========================================
+                    */
 
                     if (status) {
 
@@ -674,13 +996,13 @@ ${chaptersHTML}
 
 <p>
 
-<strong>Status Naskah</strong>
+    <strong>Status Naskah</strong>
 
 </p>
 
 <p>
 
-✓ Seluruh naskah berhasil dibangun.
+    ✓ Seluruh naskah berhasil dibangun.
 
 </p>
 
@@ -699,27 +1021,48 @@ ${chaptersHTML}
                     );
 
 
-                    output.innerHTML = `
+                    /*
+                    ========================================
+                    STATUS ERROR
+                    ========================================
+                    */
+
+                    if (output) {
+
+                        output.innerHTML = `
 
 <div class="domus-card">
 
-<p>
+    <h3>
 
-<strong>Status:</strong>
+        ❌ Publish Gagal
 
-❌ Publish gagal.
+    </h3>
 
-</p>
 
-<p>
+    <p>
 
-${error.message || error}
+        <strong>Status:</strong>
 
-</p>
+        Publish gagal.
+
+    </p>
+
+
+    <p>
+
+        ${this.escapeHTML(
+            error?.message ||
+            String(error)
+        )}
+
+    </p>
 
 </div>
 
 `;
+
+                    }
 
 
                     if (status) {
@@ -728,13 +1071,13 @@ ${error.message || error}
 
 <p>
 
-<strong>Status Naskah</strong>
+    <strong>Status Naskah</strong>
 
 </p>
 
 <p>
 
-❌ Terjadi kesalahan saat publish.
+    ❌ Terjadi kesalahan saat publish.
 
 </p>
 
@@ -744,6 +1087,12 @@ ${error.message || error}
 
                 }
 
+
+                /*
+                ========================================
+                UNLOCK BUTTON
+                ========================================
+                */
 
                 button.disabled = false;
 
