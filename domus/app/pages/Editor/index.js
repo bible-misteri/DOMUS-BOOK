@@ -154,31 +154,40 @@ export default class EditorPage extends Page {
     }
 
 
-    /*
-    ====================================================
-    RENDER DAFTAR BAB
-    ====================================================
-    */
+/*
+====================================================
+RENDER DAFTAR BAB
+====================================================
+*/
 
-    renderChapterList() {
+renderChapterList() {
 
-        const chapters =
-            ChapterService.getAll();
+    const chapters =
+        ChapterService.getAll();
 
+    return chapters.map((chapter, index) => {
 
-        return chapters.map(
-            (chapter, index) => {
+        const number =
+            index + 1;
 
-                const number =
-                    index + 1;
+        const title =
+            (chapter.title || "").trim();
 
+        const genericTitlePattern =
+            /^Bab\s+\d+$/i;
 
-                const title =
-                    chapter.title ||
-                    `Bab ${number}`;
+        /*
+        ====================================================
+        JIKA JUDUL MASIH GENERIK
+        ====================================================
+        */
 
+        const displayTitle =
+            genericTitlePattern.test(title)
+                ? ""
+                : title;
 
-                return `
+        return `
 
 <div
 class="domus-chapter-item ${
@@ -189,25 +198,25 @@ class="domus-chapter-item ${
 }"
 data-id="${chapter.id}">
 
-<div
-class="domus-chapter-heading">
+<div class="domus-chapter-heading">
 
 <strong>
 Bab ${number}
 </strong>
 
-<span
-class="domus-chapter-title">
-
-${title}
-
+${
+    displayTitle
+        ? `
+<span class="domus-chapter-title">
+${displayTitle}
 </span>
+`
+        : ""
+}
 
 </div>
 
-
-<div
-class="domus-chapter-actions">
+<div class="domus-chapter-actions">
 
 <button
 type="button"
@@ -217,7 +226,6 @@ data-id="${chapter.id}">
 ✏️ Rename
 
 </button>
-
 
 <button
 type="button"
@@ -234,11 +242,9 @@ data-id="${chapter.id}">
 
 `;
 
-            }
-        ).join("");
+    }).join("");
 
-    }
-
+}
 
     /*
     ====================================================
