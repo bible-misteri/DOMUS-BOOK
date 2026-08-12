@@ -11,6 +11,7 @@ import EditorPage from "../pages/Editor/index.js";
 import ReviewPage from "../pages/Review/index.js";
 import PreviewPage from "../pages/Preview/index.js";
 import PublishPage from "../pages/Publish/index.js";
+import ExportPage from "../pages/Export/index.js";
 
 const routes = [
 
@@ -54,6 +55,13 @@ const routes = [
         title: "Publish",
         icon: "🚀",
         page: PublishPage
+    }
+
+        {
+        path: "export",
+        title: "Export",
+        icon: "📕",
+        page: ExportPage
     }
 
 ];
