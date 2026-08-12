@@ -4,18 +4,33 @@ DOMUS Framework v1.0
 Preview Page
 ====================================================
 
-Menampilkan preview buku berdasarkan
-manuscript yang dibangun oleh PublishService.
+PREVIEW BOOK v1.1
 
-Alur:
+Struktur:
 
-BookService
-    ↓
-ChapterService
-    ↓
-PublishService
-    ↓
-PreviewPage
+COVER
+↓
+TITLE PAGE
+↓
+COPYRIGHT
+↓
+DEDICATION
+↓
+INTRODUCTION
+↓
+TOC
+↓
+MAIN MATTER
+↓
+BACK MATTER
+
+Preview bersifat READ-ONLY.
+
+Tidak mengubah:
+- Book
+- Chapter
+- Manuscript
+- Store
 ====================================================
 */
 
@@ -26,13 +41,6 @@ import PublishService
 
 
 export default class PreviewPage extends Page {
-
-
-    /*
-    ====================================================
-    CONSTRUCTOR
-    ====================================================
-    */
 
     constructor() {
 
@@ -45,7 +53,7 @@ export default class PreviewPage extends Page {
 
     /*
     ====================================================
-    LOAD
+    LOAD MANUSCRIPT
     ====================================================
     */
 
@@ -114,6 +122,141 @@ export default class PreviewPage extends Page {
 
     /*
     ====================================================
+    FORMAT PARAGRAPH
+    ====================================================
+    */
+
+    renderText(text = "") {
+
+        const safeText =
+            this.escapeHTML(text);
+
+        const paragraphs =
+            safeText
+                .split(/\n\s*\n/)
+                .map(
+                    paragraph => {
+
+                        const clean =
+                            paragraph.trim();
+
+                        if (!clean) {
+
+                            return "";
+
+                        }
+
+                        return `
+
+<p
+style="
+margin:0 0 1.2em 0;
+line-height:1.8;
+text-align:justify;
+">
+
+${clean.replace(
+    /\n/g,
+    "<br>"
+)}
+
+</p>
+
+`;
+
+                    }
+                )
+                .join("");
+
+        return paragraphs;
+
+    }
+
+
+    /*
+    ====================================================
+    RENDER SIMPLE PAGE
+    ====================================================
+    */
+
+    renderBookPage(
+        title,
+        content = "",
+        extraClass = ""
+    ) {
+
+        const safeTitle =
+            this.escapeHTML(
+                title || ""
+            );
+
+        const body =
+            this.renderText(
+                content || ""
+            );
+
+        return `
+
+<section
+class="
+domus-preview-page
+${extraClass}
+"
+style="
+min-height:420px;
+padding:70px 50px;
+margin-bottom:60px;
+border:1px solid #ddd;
+box-sizing:border-box;
+">
+
+<h2
+style="
+font-size:28px;
+margin:0 0 35px 0;
+border-bottom:2px solid #222;
+padding-bottom:12px;
+">
+
+${safeTitle}
+
+</h2>
+
+<div
+style="
+font-size:18px;
+">
+
+${
+    body ||
+
+    `
+
+<p
+style="
+color:#777;
+font-style:italic;
+">
+
+Belum ada isi.
+
+</p>
+
+`
+
+}
+
+</div>
+
+</section>
+
+`;
+
+    }
+
+
+    /*
+    ====================================================
     RENDER TOC
     ====================================================
     */
@@ -128,7 +271,7 @@ export default class PreviewPage extends Page {
         ) {
 
             return `
-            
+
 <p>
 Daftar Isi belum tersedia.
 </p>
@@ -155,10 +298,11 @@ Belum ada bab.
 
         return this.document.toc
             .map(
-                (item) => {
+                (item, index) => {
 
                     const number =
-                        item.number || "";
+                        item.number ||
+                        index + 1;
 
                     const title =
                         this.escapeHTML(
@@ -167,8 +311,9 @@ Belum ada bab.
                         );
 
                     const wordCount =
-                        item.wordCount || 0;
-
+                        Number(
+                            item.wordCount || 0
+                        );
 
                     return `
 
@@ -207,7 +352,6 @@ ${wordCount} kata
 `;
 
                 }
-
             )
             .join("");
 
@@ -216,7 +360,7 @@ ${wordCount} kata
 
     /*
     ====================================================
-    RENDER BAB
+    RENDER CHAPTERS
     ====================================================
     */
 
@@ -229,7 +373,28 @@ ${wordCount} kata
             )
         ) {
 
-            return "";
+            return `
+
+<p>
+Belum ada bab.
+</p>
+
+`;
+
+        }
+
+
+        if (
+            this.document.chapters.length === 0
+        ) {
+
+            return `
+
+<p>
+Belum ada bab.
+</p>
+
+`;
 
         }
 
@@ -242,116 +407,62 @@ ${wordCount} kata
                         chapter.number ||
                         index + 1;
 
-
                     const title =
                         this.escapeHTML(
-
                             chapter.title ||
                             `Bab ${number}`
-
                         );
-
 
                     const content =
                         String(
                             chapter.content || ""
                         );
 
-
-                    /*
-                    ----------------------------------------
-                    ESCAPE CONTENT
-                    ----------------------------------------
-                    */
-
-                    const safeContent =
-                        this.escapeHTML(
+                    const paragraphs =
+                        this.renderText(
                             content
                         );
 
-
-                    /*
-                    ----------------------------------------
-                    PARAGRAF
-                    ----------------------------------------
-
-                    Setiap blok kosong menjadi
-                    pemisah paragraf.
-                    ----------------------------------------
-                    */
-
-                    const paragraphs =
-                        safeContent
-                            .split(/\n\s*\n/)
-                            .map(
-                                paragraph => {
-
-                                    const clean =
-                                        paragraph
-                                            .trim();
-
-                                    if (!clean) {
-
-                                        return "";
-
-                                    }
-
-                                    return `
-
-<p
-style="
-margin:0 0 1.2em 0;
-line-height:1.75;
-text-align:justify;
-">
-
-${clean.replace(
-    /\n/g,
-    "<br>"
-)}
-
-</p>
-
-`;
-
-                                }
-
-                            )
-                            .join("");
-
+                    const wordCount =
+                        Number(
+                            chapter.wordCount || 0
+                        );
 
                     return `
 
 <article
 class="domus-preview-chapter"
 style="
-margin-top:60px;
-padding-top:40px;
+margin-top:70px;
+padding-top:45px;
 border-top:2px solid #222;
 ">
 
 
-<h2
+<div
 style="
-margin:0 0 8px 0;
-font-size:28px;
+font-family:Arial,sans-serif;
+font-size:14px;
+letter-spacing:2px;
+color:#666;
+margin-bottom:15px;
 ">
 
 BAB ${number}
 
-</h2>
+</div>
 
 
-<h3
+<h2
 style="
 margin:0 0 30px 0;
-font-size:24px;
-font-weight:600;
+font-size:30px;
+line-height:1.3;
 ">
 
 ${title}
 
-</h3>
+</h2>
 
 
 <div
@@ -385,11 +496,12 @@ Bab ini belum memiliki isi.
 <div
 style="
 margin-top:25px;
-font-size:14px;
+font-family:Arial,sans-serif;
+font-size:13px;
 color:#777;
 ">
 
-${chapter.wordCount || 0} kata
+${wordCount} kata
 
 </div>
 
@@ -399,7 +511,6 @@ ${chapter.wordCount || 0} kata
 `;
 
                 }
-
             )
             .join("");
 
@@ -416,7 +527,7 @@ ${chapter.wordCount || 0} kata
 
         /*
         ================================================
-        TIDAK ADA DOKUMEN
+        TIDAK ADA MANUSCRIPT
         ================================================
         */
 
@@ -445,16 +556,12 @@ border-radius:8px;
 ">
 
 <p>
-
 ❌ Preview belum dapat dibuat.
-
 </p>
 
 <p>
-
 Pastikan buku aktif dan naskah
 memiliki minimal satu bab.
-
 </p>
 
 </div>
@@ -483,19 +590,45 @@ memiliki minimal satu bab.
             );
 
 
+        const author =
+            this.escapeHTML(
+                book.author ||
+                "DOMUS"
+            );
+
+
+        const copyright =
+            this.escapeHTML(
+                book.copyright ||
+                ""
+            );
+
+
+        const dedication =
+            book.dedication ||
+            "";
+
+
+        const introduction =
+            book.introduction ||
+            "";
+
+
         const totalChapters =
-            this.document.totalChapters ||
-            0;
+            Number(
+                this.document.totalChapters || 0
+            );
 
 
         const totalWords =
-            this.document.totalWords ||
-            0;
+            Number(
+                this.document.totalWords || 0
+            );
 
 
         /*
         ================================================
-        TANGGAL
+        GENERATED DATE
         ================================================
         */
 
@@ -519,12 +652,20 @@ memiliki minimal satu bab.
             catch (error) {
 
                 generatedAt =
-                    this.document.generatedAt;
+                    String(
+                        this.document.generatedAt
+                    );
 
             }
 
         }
 
+
+        /*
+        ================================================
+        RETURN BOOK
+        ================================================
+        */
 
         return `
 
@@ -533,20 +674,20 @@ class="domus-preview"
 style="
 max-width:900px;
 margin:0 auto;
-padding:30px 20px 80px 20px;
-font-family:Georgia, 'Times New Roman', serif;
+padding:30px 20px 100px 20px;
+font-family:Georgia,'Times New Roman',serif;
 color:#222;
 ">
 
 
 <!-- ================================================
-     HEADER PREVIEW
+     PREVIEW HEADER
 ================================================ -->
 
 <div
 style="
-margin-bottom:30px;
-font-family:Arial, sans-serif;
+margin-bottom:35px;
+font-family:Arial,sans-serif;
 ">
 
 <h1
@@ -572,29 +713,30 @@ DOMUS Publisher v1.0
 
 
 <!-- ================================================
-     COVER / JUDUL
+     COVER
 ================================================ -->
 
 <section
 class="domus-preview-cover"
 style="
-min-height:420px;
+min-height:520px;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
 text-align:center;
-padding:50px 30px;
+padding:60px 40px;
 border:1px solid #ddd;
 margin-bottom:60px;
+box-sizing:border-box;
 ">
 
 <div
 style="
-font-family:Arial, sans-serif;
+font-family:Arial,sans-serif;
 font-size:14px;
-letter-spacing:3px;
-margin-bottom:35px;
+letter-spacing:4px;
+margin-bottom:45px;
 ">
 
 DOMUS ISAACI
@@ -604,7 +746,7 @@ DOMUS ISAACI
 
 <h1
 style="
-font-size:38px;
+font-size:40px;
 line-height:1.25;
 margin:0;
 ">
@@ -616,7 +758,7 @@ ${title}
 
 <div
 style="
-margin-top:40px;
+margin-top:45px;
 width:80px;
 border-top:2px solid #222;
 ">
@@ -630,7 +772,7 @@ margin-top:30px;
 color:#666;
 ">
 
-Preview Naskah
+${author}
 
 </p>
 
@@ -639,7 +781,51 @@ Preview Naskah
 
 
 <!-- ================================================
-     INFORMASI DOKUMEN
+     TITLE PAGE
+================================================ -->
+
+${this.renderBookPage(
+    "Halaman Judul",
+    `${book.title || "Tanpa Judul"}\n\n${book.author || "DOMUS"}`,
+    "domus-title-page"
+)}
+
+
+<!-- ================================================
+     COPYRIGHT
+================================================ -->
+
+${this.renderBookPage(
+    "Copyright",
+    copyright,
+    "domus-copyright-page"
+)}
+
+
+<!-- ================================================
+     DEDICATION
+================================================ -->
+
+${this.renderBookPage(
+    "Dedikasi",
+    dedication,
+    "domus-dedication-page"
+)}
+
+
+<!-- ================================================
+     PENDAHULUAN
+================================================ -->
+
+${this.renderBookPage(
+    "Pendahuluan",
+    introduction,
+    "domus-introduction-page"
+)}
+
+
+<!-- ================================================
+     INFORMASI MANUSCRIPT
 ================================================ -->
 
 <section
@@ -648,14 +834,13 @@ style="
 padding:20px;
 border:1px solid #ddd;
 border-radius:8px;
-margin-bottom:50px;
-font-family:Arial, sans-serif;
+margin-bottom:60px;
+font-family:Arial,sans-serif;
 ">
 
 <h2>
 Informasi Naskah
 </h2>
-
 
 <p>
 
@@ -667,7 +852,6 @@ ${totalChapters}
 
 </p>
 
-
 <p>
 
 <strong>
@@ -677,7 +861,6 @@ Total Kata:
 ${totalWords}
 
 </p>
-
 
 ${
     generatedAt
@@ -710,12 +893,12 @@ ${generatedAt}
 <section
 class="domus-preview-toc"
 style="
-margin-bottom:50px;
+margin-bottom:70px;
 ">
 
 <h2
 style="
-font-size:28px;
+font-size:30px;
 border-bottom:2px solid #222;
 padding-bottom:12px;
 ">
@@ -732,16 +915,30 @@ ${this.renderTOC()}
 
 
 <!-- ================================================
-     NASKAH
+     MAIN MATTER
 ================================================ -->
 
 <section
 class="domus-preview-manuscript"
 >
 
+<div
+style="
+font-family:Arial,sans-serif;
+font-size:13px;
+letter-spacing:3px;
+color:#666;
+margin-bottom:10px;
+">
+
+MAIN MATTER
+
+</div>
+
+
 <h2
 style="
-font-size:30px;
+font-size:32px;
 border-bottom:2px solid #222;
 padding-bottom:12px;
 ">
@@ -758,17 +955,112 @@ ${this.renderChapters()}
 
 
 <!-- ================================================
-     AKHIR DOKUMEN
+     BACK MATTER
+================================================ -->
+
+<section
+class="domus-preview-backmatter"
+style="
+margin-top:90px;
+padding-top:45px;
+border-top:2px solid #222;
+">
+
+<div
+style="
+font-family:Arial,sans-serif;
+font-size:13px;
+letter-spacing:3px;
+color:#666;
+margin-bottom:10px;
+">
+
+BACK MATTER
+
+</div>
+
+
+<h2
+style="
+font-size:30px;
+">
+
+Catatan
+
+</h2>
+
+
+<p
+style="
+line-height:1.8;
+">
+
+Bagian catatan, daftar pustaka,
+dan informasi penulis akan ditempatkan
+di sini pada tahap berikutnya.
+
+</p>
+
+
+<h2
+style="
+font-size:30px;
+margin-top:50px;
+">
+
+Daftar Pustaka
+
+</h2>
+
+
+<p
+style="
+line-height:1.8;
+color:#777;
+">
+
+Belum ada daftar pustaka.
+
+</p>
+
+
+<h2
+style="
+font-size:30px;
+margin-top:50px;
+">
+
+Tentang Penulis
+
+</h2>
+
+
+<p
+style="
+line-height:1.8;
+color:#777;
+">
+
+Belum ada informasi penulis.
+
+</p>
+
+
+</section>
+
+
+<!-- ================================================
+     FOOTER
 ================================================ -->
 
 <div
 style="
-margin-top:80px;
+margin-top:100px;
 padding-top:30px;
 border-top:1px solid #ddd;
 text-align:center;
 color:#777;
-font-family:Arial, sans-serif;
+font-family:Arial,sans-serif;
 ">
 
 DOMUS Framework v1.0
@@ -793,8 +1085,7 @@ DOMUS Framework v1.0
 
         /*
         --------------------------------------------
-        Preview bersifat read-only.
-        Tidak ada autosave.
+        PREVIEW READ-ONLY
         --------------------------------------------
         */
 
