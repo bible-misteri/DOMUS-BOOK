@@ -112,45 +112,6 @@ class PublishService extends Service {
 
     /*
     ====================================================
-    BUILD TOC
-    ====================================================
-    */
-
-    buildTOC(chapters = []) {
-
-        return chapters.map(
-
-            (chapter, index) => {
-
-                return {
-
-                    number:
-                        index + 1,
-
-                    id:
-                        chapter.id,
-
-                    title:
-                        chapter.title ||
-                        `Bab ${index + 1}`,
-
-                    wordCount:
-                        chapter.wordCount ||
-                        this.countWords(
-                            chapter.content || ""
-                        )
-
-                };
-
-            }
-
-        );
-
-    }
-
-
-    /*
-    ====================================================
     NORMALISASI BAB
     ====================================================
     */
@@ -179,12 +140,65 @@ class PublishService extends Service {
                         index + 1,
 
                     title:
-                        chapter?.title ||
-                        `Bab ${index + 1}`,
+                        chapter?.title?.trim()
+                        || `Bab ${index + 1}`,
 
                     content,
 
                     wordCount
+
+                };
+
+            }
+
+        );
+
+    }
+
+
+    /*
+    ====================================================
+    BUILD TOC
+    ====================================================
+    */
+
+    buildTOC(chapters = []) {
+
+        return chapters.map(
+
+            (chapter, index) => {
+
+                return {
+
+                    number:
+                        index + 1,
+
+                    id:
+                        chapter.id,
+
+                    title:
+                        chapter.title ||
+                        `Bab ${index + 1}`,
+
+                    wordCount:
+                        chapter.wordCount || 0,
+
+                    /*
+                    ------------------------------------
+                    NOMOR HALAMAN
+                    ------------------------------------
+
+                    Untuk sementara null.
+
+                    Jangan menghitung halaman
+                    berdasarkan jumlah kata.
+
+                    Nomor halaman akan ditentukan
+                    oleh sistem Preview / PDF.
+                    */
+
+                    page:
+                        null
 
                 };
 
@@ -217,7 +231,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        AMBIL BAB LANGSUNG DARI BUKU AKTIF
+        AMBIL BAB
         --------------------------------------------
         */
 
@@ -227,7 +241,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        NORMALISASI BAB
+        NORMALISASI
         --------------------------------------------
         */
 
@@ -239,7 +253,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        HITUNG TOTAL
+        TOTAL
         --------------------------------------------
         */
 
@@ -254,7 +268,7 @@ class PublishService extends Service {
 
         /*
         --------------------------------------------
-        BUILD TOC OTOMATIS
+        TOC OTOMATIS
         --------------------------------------------
         */
 
@@ -281,17 +295,13 @@ class PublishService extends Service {
 
             },
 
-            chapters:
-                chapters,
+            chapters,
 
-            toc:
-                toc,
+            toc,
 
-            totalChapters:
-                totalChapters,
+            totalChapters,
 
-            totalWords:
-                totalWords,
+            totalWords,
 
             generatedAt:
                 new Date().toISOString()
@@ -300,7 +310,11 @@ class PublishService extends Service {
 
 
         this.log(
-            `Manuscript built: ${totalChapters} chapters, ${totalWords} words.`
+
+            `Manuscript built: ` +
+            `${totalChapters} chapters, ` +
+            `${totalWords} words.`
+
         );
 
 
@@ -342,7 +356,10 @@ class PublishService extends Service {
 
 
         this.log(
-            `Publishing manuscript: ${manuscript.totalChapters} chapters.`
+
+            `Publishing manuscript: ` +
+            `${manuscript.totalChapters} chapters.`
+
         );
 
 
