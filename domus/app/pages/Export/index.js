@@ -672,11 +672,10 @@ PRINT MODE
 
 @media print {
 
-
     /*
-    --------------------------------------------
-    A5
-    --------------------------------------------
+    ====================================================
+    HALAMAN A5
+    ====================================================
     */
 
     @page {
@@ -684,22 +683,18 @@ PRINT MODE
         size: A5;
 
         margin:
-
             20mm
-
             18mm
-
             20mm
-
             18mm;
 
     }
 
 
     /*
-    --------------------------------------------
-    SEMBUNYIKAN UI DOMUS
-    --------------------------------------------
+    ====================================================
+    SEMBUNYIKAN SELURUH UI DOMUS
+    ====================================================
     */
 
     body * {
@@ -710,9 +705,9 @@ PRINT MODE
 
 
     /*
-    --------------------------------------------
+    ====================================================
     HANYA BUKU YANG DICETAK
-    --------------------------------------------
+    ====================================================
     */
 
     .print-book,
@@ -724,9 +719,9 @@ PRINT MODE
 
 
     /*
-    --------------------------------------------
-    POSISI BUKU
-    --------------------------------------------
+    ====================================================
+    RESET CONTAINER BUKU
+    ====================================================
     */
 
     .print-book {
@@ -743,47 +738,89 @@ PRINT MODE
 
         margin: 0;
 
+        padding: 0;
+
+        border: none;
+
+        background: white;
+
     }
 
 
     /*
-    --------------------------------------------
+    ====================================================
     COVER
-    --------------------------------------------
+    ====================================================
     */
 
     .print-cover {
 
-        min-height: 0;
+        height: 170mm;
 
-        height: 100vh;
+        min-height: 170mm;
+
+        padding:
+            20mm
+            15mm;
+
+        box-sizing: border-box;
 
         page-break-after: always;
+
+        break-after: page;
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+
+        align-items: center;
+
+        text-align: center;
 
     }
 
 
     /*
-    --------------------------------------------
-    TITLE PAGE
-    --------------------------------------------
+    ====================================================
+    JUDUL / TITLE PAGE
+    ====================================================
     */
 
     .print-title-page {
 
-        min-height: 0;
+        height: 170mm;
 
-        height: 100vh;
+        min-height: 170mm;
+
+        padding:
+            20mm
+            15mm;
+
+        box-sizing: border-box;
 
         page-break-after: always;
+
+        break-after: page;
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+
+        align-items: center;
+
+        text-align: center;
 
     }
 
 
     /*
-    --------------------------------------------
-    TOC
-    --------------------------------------------
+    ====================================================
+    DAFTAR ISI
+    ====================================================
     */
 
     .print-toc {
@@ -792,37 +829,64 @@ PRINT MODE
 
         height: auto;
 
+        padding:
+            15mm
+            5mm;
+
+        box-sizing: border-box;
+
         page-break-after: always;
+
+        break-after: page;
 
     }
 
 
     /*
-    --------------------------------------------
-    CHAPTER
-    --------------------------------------------
+    ====================================================
+    BAB
+    ====================================================
     */
 
     .print-chapter {
 
+        padding:
+            10mm
+            5mm;
+
+        box-sizing: border-box;
+
         page-break-before: always;
 
-        padding: 10mm 0;
+        break-before: page;
 
     }
 
 
     /*
-    --------------------------------------------
-    FONT
-    --------------------------------------------
+    ====================================================
+    JUDUL BAB
+    ====================================================
     */
 
-    .print-chapter-content {
+    .print-chapter-heading {
 
-        font-size: 11.5pt;
+        margin-bottom: 12mm;
 
-        line-height: 1.7;
+        page-break-after: avoid;
+
+        break-after: avoid;
+
+    }
+
+
+    .print-chapter-number {
+
+        font-size: 10pt;
+
+        letter-spacing: 2px;
+
+        margin-bottom: 4mm;
 
     }
 
@@ -831,8 +895,81 @@ PRINT MODE
 
         font-size: 20pt;
 
+        line-height: 1.3;
+
+        margin: 0;
+
+        page-break-after: avoid;
+
+        break-after: avoid;
+
     }
 
+
+    /*
+    ====================================================
+    ISI BAB
+    ====================================================
+    */
+
+    .print-chapter-content {
+
+        font-size: 11.5pt;
+
+        line-height: 1.7;
+
+        text-align: justify;
+
+    }
+
+
+    .print-chapter-content p {
+
+        margin:
+            0
+            0
+            1.2em
+            0;
+
+        orphans: 3;
+
+        widows: 3;
+
+    }
+
+
+    /*
+    ====================================================
+    AKHIR BUKU
+    ====================================================
+    */
+
+    .print-end {
+
+        text-align: center;
+
+        padding: 30mm 10mm;
+
+        color: #777;
+
+        page-break-before: always;
+
+        break-before: page;
+
+    }
+
+
+    /*
+    ====================================================
+    JANGAN CETAK TOMBOL
+    ====================================================
+    */
+
+    #btnPrintBook {
+
+        display: none !important;
+
+    }
 
 }
 
