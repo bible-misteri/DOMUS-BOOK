@@ -1,77 +1,551 @@
 /*
 ====================================================
-DOMUS Review Page
+DOMUS Framework v1.0
+Review Page
+====================================================
+
+Fungsi:
+
+1. Memeriksa buku aktif
+2. Memeriksa judul buku
+3. Memeriksa jumlah bab
+4. Memeriksa judul setiap bab
+5. Memeriksa isi setiap bab
+6. Menghitung jumlah kata
+7. Memberikan peringatan untuk bab yang terlalu pendek
+8. Menampilkan ringkasan naskah
+
+Review TIDAK mengubah naskah.
+
+Alur:
+
+BookService
+    ↓
+ChapterService
+    ↓
+PublishService
+    ↓
+ReviewPage
 ====================================================
 */
 
 import Page from "../../core/Page.js";
 
-import BookService from "../../services/BookService.js";
-import ChapterService from "../../services/ChapterService.js";
+import PublishService
+    from "../../services/PublishService.js";
+
 
 export default class ReviewPage extends Page {
+
+
+    /*
+    ====================================================
+    CONSTRUCTOR
+    ====================================================
+    */
 
     constructor() {
 
         super();
 
-        this.book = null;
-        this.chapters = [];
+        this.document = null;
 
     }
+
+
+    /*
+    ====================================================
+    LOAD
+    ====================================================
+    */
 
     async load() {
 
-        this.book = BookService.getActive();
+        this.document = null;
 
-        if (!this.book) {
+        try {
 
-            return;
+            this.document =
+                await PublishService.preview();
 
         }
 
-        this.chapters = ChapterService.getAll();
+        catch (error) {
+
+            console.error(
+                "DOMUS Review Error:",
+                error
+            );
+
+            this.document = null;
+
+        }
 
     }
 
+
+    /*
+    ====================================================
+    ESCAPE HTML
+    ====================================================
+    */
+
+    escapeHTML(value = "") {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    /*
+    ====================================================
+    HITUNG KATA
+    ====================================================
+    */
+
     countWords(text = "") {
 
-        if (!text.trim()) {
+        const clean =
+            String(text).trim();
+
+        if (!clean) {
 
             return 0;
 
         }
 
-        return text
-            .trim()
+        return clean
             .split(/\s+/)
             .filter(Boolean)
             .length;
 
     }
 
-    escapeHtml(text = "") {
 
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+    /*
+    ====================================================
+    STATUS CHECK
+    ====================================================
+    */
+
+    checkBook() {
+
+        return !!(
+            this.document &&
+            this.document.book
+        );
 
     }
 
-    renderContent() {
 
-        if (!this.book) {
+    checkBookTitle() {
+
+        if (
+            !this.document ||
+            !this.document.book
+        ) {
+
+            return false;
+
+        }
+
+        return !!String(
+            this.document.book.title || ""
+        ).trim();
+
+    }
+
+
+    checkChapters() {
+
+        return !!(
+            this.document &&
+            Array.isArray(
+                this.document.chapters
+            ) &&
+            this.document.chapters.length > 0
+        );
+
+    }
+
+
+    /*
+    ====================================================
+    VALIDASI BAB
+    ====================================================
+    */
+
+    getChapterChecks() {
+
+        if (
+            !this.document ||
+            !Array.isArray(
+                this.document.chapters
+            )
+        ) {
+
+            return [];
+
+        }
+
+
+        return this.document.chapters.map(
+
+            (chapter, index) => {
+
+                const number =
+                    chapter.number ||
+                    index + 1;
+
+
+                const title =
+                    String(
+                        chapter.title || ""
+                    ).trim();
+
+
+                const content =
+                    String(
+                        chapter.content || ""
+                    ).trim();
+
+
+                const wordCount =
+                    this.countWords(
+                        content
+                    );
+
+
+                return {
+
+                    number,
+
+                    title,
+
+                    content,
+
+                    wordCount,
+
+                    hasTitle:
+                        title.length > 0,
+
+                    hasContent:
+                        wordCount > 0
+
+                };
+
+            }
+
+        );
+
+    }
+
+
+    /*
+    ====================================================
+    RENDER CHECK
+    ====================================================
+    */
+
+    renderCheck(
+        passed,
+        text
+    ) {
+
+        return `
+
+<div
+style="
+display:flex;
+align-items:center;
+gap:10px;
+padding:8px 0;
+">
+
+<span
+style="
+font-size:20px;
+">
+
+${passed ? "✓" : "✗"}
+
+</span>
+
+<span>
+
+${text}
+
+</span>
+
+</div>
+
+`;
+
+    }
+
+
+    /*
+    ====================================================
+    RENDER BAB
+    ====================================================
+    */
+
+    renderChapterChecks() {
+
+        const chapters =
+            this.getChapterChecks();
+
+
+        if (chapters.length === 0) {
 
             return `
 
-<section class="domus-review">
+<div
+class="domus-card"
+style="
+padding:16px;
+border:1px solid #ddd;
+border-radius:8px;
+">
 
-<h1>Review Naskah</h1>
+<p>
 
-<p>Tidak ada buku aktif.</p>
+Belum ada bab untuk diperiksa.
+
+</p>
+
+</div>
+
+`;
+
+        }
+
+
+        return chapters.map(
+
+            (chapter) => {
+
+                /*
+                ----------------------------------------
+                STATUS PANJANG NASKAH
+                ----------------------------------------
+                */
+
+                let lengthStatus =
+                    "";
+
+
+                if (
+                    chapter.wordCount === 0
+                ) {
+
+                    lengthStatus = `
+
+<span
+style="
+color:#b00020;
+">
+
+✗ Bab masih kosong
+
+</span>
+
+`;
+
+                }
+
+                else if (
+                    chapter.wordCount < 50
+                ) {
+
+                    lengthStatus = `
+
+<span
+style="
+color:#9a6700;
+">
+
+⚠ Naskah sangat pendek
+
+</span>
+
+`;
+
+                }
+
+                else {
+
+                    lengthStatus = `
+
+<span
+style="
+color:#176b2c;
+">
+
+✓ Isi tersedia
+
+</span>
+
+`;
+
+                }
+
+
+                return `
+
+<div
+class="domus-review-chapter"
+style="
+margin-top:16px;
+padding:18px;
+border:1px solid #ddd;
+border-radius:8px;
+">
+
+
+<h3
+style="
+margin-top:0;
+">
+
+Bab ${chapter.number}
+
+</h3>
+
+
+<p>
+
+<strong>
+Judul:
+</strong>
+
+${
+    chapter.hasTitle
+
+        ? this.escapeHTML(
+            chapter.title
+        )
+
+        : `
+
+<span
+style="
+color:#b00020;
+">
+
+Belum ada judul
+
+</span>
+
+`
+}
+
+</p>
+
+
+<p>
+
+<strong>
+Jumlah Kata:
+</strong>
+
+${chapter.wordCount}
+
+</p>
+
+
+<p>
+
+${lengthStatus}
+
+</p>
+
+
+</div>
+
+`;
+
+            }
+
+        ).join("");
+
+    }
+
+
+    /*
+    ====================================================
+    RENDER CONTENT
+    ====================================================
+    */
+
+    renderContent() {
+
+        /*
+        ================================================
+        TIDAK ADA DOKUMEN
+        ================================================
+        */
+
+        if (!this.document) {
+
+            return `
+
+<section
+class="domus-review"
+style="
+max-width:900px;
+margin:0 auto;
+padding:30px 20px;
+">
+
+<h1>
+Review Naskah
+</h1>
+
+<div
+class="domus-card"
+style="
+padding:20px;
+border:1px solid #ddd;
+border-radius:8px;
+">
+
+<h3>
+⚠ Tidak dapat memuat naskah
+</h3>
+
+<p>
+
+Pastikan buku aktif tersedia.
+
+</p>
+
+</div>
 
 </section>
 
@@ -79,107 +553,473 @@ export default class ReviewPage extends Page {
 
         }
 
-        let totalWords = 0;
 
-        const chapters = this.chapters.map(
-            (chapter, index) => {
+        /*
+        ================================================
+        DATA
+        ================================================
+        */
 
-                const text =
-                    chapter.content || "";
+        const book =
+            this.document.book || {};
 
-                const words =
-                    this.countWords(text);
 
-                totalWords += words;
+        const title =
+            this.escapeHTML(
+                book.title ||
+                "Tanpa Judul"
+            );
 
-                const safeTitle =
-                    this.escapeHtml(
-                        chapter.title || `Bab ${index + 1}`
-                    );
 
-                const safeText =
-                    this.escapeHtml(text);
+        const chapters =
+            this.getChapterChecks();
 
-                const content =
-                    safeText
-                        ? safeText.replace(
-                            /\n/g,
-                            "<br>"
-                        )
-                        : `<em>Bab ini belum memiliki tulisan.</em>`;
 
-                return `
+        const totalChapters =
+            chapters.length;
 
-<article class="domus-review-chapter">
 
-<h3>
+        const totalWords =
+            this.document.totalWords ||
+            0;
 
-Bab ${index + 1} — ${safeTitle}
+
+        /*
+        ================================================
+        VALIDASI UTAMA
+        ================================================
+        */
+
+        const hasBook =
+            this.checkBook();
+
+
+        const hasTitle =
+            this.checkBookTitle();
+
+
+        const hasChapters =
+            this.checkChapters();
+
+
+        const allTitlesValid =
+            chapters.length > 0 &&
+            chapters.every(
+                chapter =>
+                    chapter.hasTitle
+            );
+
+
+        const allChaptersHaveContent =
+            chapters.length > 0 &&
+            chapters.every(
+                chapter =>
+                    chapter.hasContent
+            );
+
+
+        const ready =
+            hasBook &&
+            hasTitle &&
+            hasChapters &&
+            allTitlesValid &&
+            allChaptersHaveContent;
+
+
+        /*
+        ================================================
+        STATUS AKHIR
+        ================================================
+        */
+
+        const finalStatus =
+            ready
+
+                ? `
+
+<div
+style="
+padding:18px;
+border:2px solid #2e7d32;
+border-radius:8px;
+margin-top:25px;
+">
+
+<h3
+style="
+margin-top:0;
+">
+
+✓ Naskah Lolos Pemeriksaan Dasar
 
 </h3>
 
 <p>
 
-<strong>Jumlah Kata:</strong>
-
-${words}
+Naskah memiliki buku, judul,
+bab, dan isi.
 
 </p>
 
-<div class="domus-review-content">
+<p>
 
-${content}
+Naskah dapat dilanjutkan ke
+Preview atau Publish.
+
+</p>
 
 </div>
 
-</article>
+`
 
-<hr>
+                : `
 
-`;
+<div
+style="
+padding:18px;
+border:2px solid #b00020;
+border-radius:8px;
+margin-top:25px;
+">
 
-            }
-        ).join("");
+<h3
+style="
+margin-top:0;
+">
 
-        return `
+⚠ Naskah Belum Lolos Pemeriksaan
 
-<section class="domus-review">
-
-<h1>Review Naskah</h1>
-
-<h2>${this.escapeHtml(this.book.title)}</h2>
-
-<div class="domus-review-summary">
+</h3>
 
 <p>
 
-<strong>Total Bab:</strong>
-
-${this.chapters.length}
+Periksa kembali bagian yang
+bertanda ✗ atau ⚠.
 
 </p>
 
+</div>
+
+`;
+
+
+        return `
+
+<section
+class="domus-review"
+style="
+max-width:900px;
+margin:0 auto;
+padding:30px 20px 80px 20px;
+">
+
+
+<!-- ================================================
+     HEADER
+================================================ -->
+
+<h1>
+
+🔎 Review Naskah
+
+</h1>
+
+
+<p
+style="
+color:#666;
+">
+
+DOMUS Publisher v1.0 — Pemeriksaan
+sebelum Preview dan Publish.
+
+</p>
+
+
+<!-- ================================================
+     IDENTITAS BUKU
+================================================ -->
+
+<div
+class="domus-card"
+style="
+padding:20px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-top:25px;
+">
+
+
+<h2>
+
+Informasi Buku
+
+</h2>
+
+
 <p>
 
-<strong>Total Kata:</strong>
+<strong>
+Judul:
+</strong>
+
+${title}
+
+</p>
+
+
+<p>
+
+<strong>
+Total Bab:
+</strong>
+
+${totalChapters}
+
+</p>
+
+
+<p>
+
+<strong>
+Total Kata:
+</strong>
 
 ${totalWords}
 
 </p>
 
-</div>
-
-<hr>
-
-<div class="domus-review-chapters">
-
-${chapters}
 
 </div>
+
+
+<!-- ================================================
+     PEMERIKSAAN UMUM
+================================================ -->
+
+<div
+class="domus-card"
+style="
+padding:20px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-top:25px;
+">
+
+
+<h2>
+
+Pemeriksaan Umum
+
+</h2>
+
+
+${this.renderCheck(
+    hasBook,
+    "Buku aktif tersedia"
+)}
+
+
+${this.renderCheck(
+    hasTitle,
+    "Judul buku tersedia"
+)}
+
+
+${this.renderCheck(
+    hasChapters,
+    "Minimal satu bab tersedia"
+)}
+
+
+${this.renderCheck(
+    allTitlesValid,
+    "Semua bab memiliki judul"
+)}
+
+
+${this.renderCheck(
+    allChaptersHaveContent,
+    "Semua bab memiliki isi"
+)}
+
+
+</div>
+
+
+<!-- ================================================
+     PEMERIKSAAN PER BAB
+================================================ -->
+
+<div
+style="
+margin-top:35px;
+">
+
+
+<h2>
+
+Pemeriksaan Setiap Bab
+
+</h2>
+
+
+${this.renderChapterChecks()}
+
+
+</div>
+
+
+<!-- ================================================
+     STATUS AKHIR
+================================================ -->
+
+${finalStatus}
+
+
+<!-- ================================================
+     RINGKASAN
+================================================ -->
+
+<div
+class="domus-card"
+style="
+padding:20px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-top:25px;
+">
+
+
+<h2>
+
+Ringkasan
+
+</h2>
+
+
+<p>
+
+<strong>
+Bab:
+</strong>
+
+${totalChapters}
+
+</p>
+
+
+<p>
+
+<strong>
+Kata:
+</strong>
+
+${totalWords}
+
+</p>
+
+
+<p>
+
+<strong>
+Status:
+</strong>
+
+${
+    ready
+        ? "Siap"
+        : "Perlu diperiksa"
+}
+
+</p>
+
+
+</div>
+
+
+<!-- ================================================
+     CATATAN
+================================================ -->
+
+<div
+style="
+margin-top:35px;
+padding:18px;
+background:#f7f7f7;
+border-radius:8px;
+">
+
+<p
+style="
+margin-top:0;
+">
+
+<strong>
+Catatan:
+</strong>
+
+</p>
+
+<p>
+
+Review tidak mengubah isi naskah.
+Pemeriksaan hanya membaca data
+manuscript.
+
+</p>
+
+<p
+style="
+margin-bottom:0;
+">
+
+Peringatan "naskah sangat pendek"
+bukan error. Itu hanya pengingat
+bahwa isi bab masih sedikit.
+
+</p>
+
+</div>
+
+
+<!-- ================================================
+     FOOTER
+================================================ -->
+
+<div
+style="
+margin-top:60px;
+padding-top:25px;
+border-top:1px solid #ddd;
+text-align:center;
+color:#777;
+">
+
+DOMUS Framework v1.0
+
+</div>
+
 
 </section>
 
 `;
+
+    }
+
+
+    /*
+    ====================================================
+    AFTER RENDER
+    ====================================================
+    */
+
+    afterRender() {
+
+        console.log(
+            "DOMUS Review rendered.",
+            this.document
+        );
 
     }
 
