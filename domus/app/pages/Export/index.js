@@ -1167,11 +1167,13 @@ PRINT MODE
 
     .print-chapter-heading {
 
-        margin-bottom: 12mm;
+        margin-bottom: 18mm;
 
-        page-break-after: avoid;
+        text-align: left;
 
         break-after: avoid;
+
+        page-break-after: avoid;
 
     }
 
