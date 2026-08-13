@@ -272,6 +272,12 @@ ${
 
 </div>
 
+<footer class="print-footer">
+
+    <span>DOMUS ISAACI</span>
+
+</footer>
+
 
 </section>
 
@@ -581,9 +587,96 @@ TITLE PAGE — A5 PROFESSIONAL
 
 /*
 ====================================================
-TABLE OF CONTENTS
+COPYRIGHT PAGE
 ====================================================
 */
+
+.print-copyright {
+
+    min-height: 700px;
+
+    padding:
+        80px 55px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    page-break-after: always;
+
+}
+
+
+.copyright-content {
+
+    max-width: 430px;
+
+    font-size: 10pt;
+
+    line-height: 1.7;
+
+    color: #444;
+
+}
+
+
+.copyright-brand {
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 10pt;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 35px;
+
+}
+
+
+.copyright-content h2 {
+
+    font-size: 14pt;
+
+    line-height: 1.5;
+
+    margin-bottom: 30px;
+
+}
+
+
+.copyright-year {
+
+    font-size: 10pt;
+
+    margin-bottom: 25px;
+
+}
+
+
+.copyright-content p {
+
+    margin-bottom: 18px;
+
+}
+
+
+.copyright-publisher {
+
+    margin-top: 50px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 9pt;
+
+    color: #777;
+
+}
 
 /*
 ====================================================
@@ -739,6 +832,35 @@ CHAPTER — A5 BOOK
 
 }
 
+/*
+====================================================
+BOOK FOOTER
+====================================================
+*/
+
+.print-footer {
+
+    margin-top: 35mm;
+
+    padding-top: 5mm;
+
+    border-top:
+        1px solid #ddd;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 8pt;
+
+    letter-spacing: 1.5px;
+
+    text-align: center;
+
+    color: #888;
+
+}
+
 
 /*
 ====================================================
@@ -787,6 +909,23 @@ PRINT MODE
 
 }
 
+    .print-copyright {
+
+        min-height: 0;
+
+        height: 170mm;
+
+        padding:
+            20mm
+            5mm;
+
+        box-sizing: border-box;
+
+        page-break-after: always;
+
+        break-after: page;
+
+}
 
     /*
     ====================================================
@@ -1276,6 +1415,46 @@ ${title}
     <p class="title-page-publisher">
         DOMUS Framework v1.1
     </p>
+
+</section>
+
+<!-- COPYRIGHT PAGE -->
+
+<section class="print-copyright">
+
+    <div class="copyright-content">
+
+        <p class="copyright-brand">
+            DOMUS ISAACI
+        </p>
+
+        <h2>
+            Membaca Kembali Kisah Yakub dan Esau
+            dalam Terang Kristus
+        </h2>
+
+        <p class="copyright-year">
+            © 2026 Norman Sandhi
+        </p>
+
+        <p>
+            Hak cipta dilindungi.
+        </p>
+
+        <p>
+            Tidak ada bagian dari buku ini yang boleh
+            diperbanyak, disimpan, atau disebarluaskan
+            dalam bentuk apa pun tanpa izin dari penulis,
+            kecuali untuk kepentingan kutipan dan kajian
+            yang sesuai dengan ketentuan yang berlaku.
+        </p>
+
+        <p class="copyright-publisher">
+            DOMUS ISAACI<br>
+            DOMUS Framework
+        </p>
+
+    </div>
 
 </section>
 
