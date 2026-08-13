@@ -769,7 +769,9 @@ CHAPTER — A5 BOOK
 
 .print-chapter-heading {
 
-    margin-bottom: 28mm;
+    margin-bottom: 18mm;
+
+    text-align: left;
 
 }
 
@@ -777,27 +779,27 @@ CHAPTER — A5 BOOK
 .print-chapter-number {
 
     font-family:
-
         Arial,
-
         sans-serif;
 
-    font-size: 10pt;
+    font-size: 9pt;
 
-    letter-spacing: 2.5px;
+    letter-spacing: 3px;
 
-    margin-bottom: 10px;
+    text-transform: uppercase;
 
-    color: #555;
+    margin-bottom: 5mm;
+
+    color: #777;
 
 }
 
 
 .print-chapter h2 {
 
-    font-size: 22pt;
+    font-size: 20pt;
 
-    line-height: 1.35;
+    line-height: 1.3;
 
     font-weight: 600;
 
@@ -808,9 +810,9 @@ CHAPTER — A5 BOOK
 
 .print-chapter-content {
 
-    font-size: 11.5pt;
+    font-size: 16px;
 
-    line-height: 1.75;
+    line-height: 1.8;
 
     text-align: justify;
 
@@ -820,8 +822,13 @@ CHAPTER — A5 BOOK
 .print-chapter-content p {
 
     margin:
+        0 0 1em 0;
 
-        0 0 1.25em 0;
+    text-indent: 8mm;
+
+    orphans: 3;
+
+    widows: 3;
 
 }
 
