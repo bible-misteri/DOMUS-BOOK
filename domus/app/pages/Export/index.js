@@ -810,11 +810,18 @@ CHAPTER — A5 BOOK
 
 .print-chapter-content {
 
-    font-size: 16px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    line-height: 1.8;
+    font-size: 11.5pt;
+
+    line-height: 1.7;
 
     text-align: justify;
+
+    text-justify: inter-word;
 
 }
 
@@ -1143,7 +1150,7 @@ PRINT MODE
 
     padding:
 
-        15mm
+        12mm
 
         0
 
