@@ -828,6 +828,8 @@ CHAPTER — A5 BOOK
 
     text-justify: inter-word;
 
+    flex: 1;
+
 }
 
 
