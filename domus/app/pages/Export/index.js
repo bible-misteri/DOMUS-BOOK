@@ -861,12 +861,9 @@ BOOK FOOTER
 
 .print-footer {
 
-    margin-top: 35mm;
+    margin-top: 20mm;
 
-    padding-top: 5mm;
-
-    border-top:
-        1px solid #ddd;
+    padding-top: 4mm;
 
     font-family:
         Arial,
@@ -880,7 +877,12 @@ BOOK FOOTER
 
     color: #888;
 
+    border-top:
+        0.5px solid #ddd;
+
 }
+
+
 
 
 /*
