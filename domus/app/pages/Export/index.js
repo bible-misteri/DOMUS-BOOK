@@ -1149,17 +1149,19 @@ PRINT MODE
     ====================================================
     */
 
-    .print-chapter {
+.print-chapter {
 
     page-break-before: always;
+    break-before: page;
 
-    padding:
+    padding: 10mm 0;
 
-        12mm
+}
 
-        0
+.print-chapter-heading {
 
-        10mm;
+    page-break-after: avoid;
+    break-after: avoid;
 
 }
 
