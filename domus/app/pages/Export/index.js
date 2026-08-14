@@ -247,17 +247,15 @@ ${clean.replace(
 
 <section class="print-chapter">
 
-
 <div class="print-chapter-heading">
 
-<div class="print-chapter-number">
-BAB ${number}
-</div>
+    <div class="print-chapter-number">
+        BAB ${number}
+    </div>
 
-
-<h2>
-${title}
-</h2>
+    <h2>
+        ${title}
+    </h2>
 
 </div>
 
@@ -272,6 +270,7 @@ ${
 
 </div>
 
+
 <footer class="print-footer">
 
     <span>DOMUS ISAACI</span>
@@ -279,10 +278,16 @@ ${
 </footer>
 
 
+<div class="print-page-number">
+
+    ${number}
+
+</div>
+
+
 </section>
 
 `;
-
                 }
             )
             .join("");
@@ -1200,6 +1205,22 @@ PRINT MODE
         page-break-after: avoid;
 
         break-after: avoid;
+
+    }
+
+    .print-page-number {
+
+        margin-top: 8mm;
+
+        font-family:
+            Arial,
+            sans-serif;
+
+        font-size: 8pt;
+
+        color: #888;
+
+        text-align: center;
 
     }
 
