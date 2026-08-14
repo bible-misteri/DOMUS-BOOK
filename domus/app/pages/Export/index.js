@@ -277,14 +277,6 @@ ${
 
 </footer>
 
-
-<div class="print-page-number">
-
-    ${number}
-
-</div>
-
-
 </section>
 
 `;
@@ -902,7 +894,7 @@ NOMOR HALAMAN
 
         position: fixed;
 
-        bottom: 8mm;
+        bottom: 5mm;
 
         left: 0;
 
