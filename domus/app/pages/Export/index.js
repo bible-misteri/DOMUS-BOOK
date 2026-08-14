@@ -882,7 +882,52 @@ BOOK FOOTER
 
 }
 
+/*
+====================================================
+NOMOR HALAMAN
+====================================================
+*/
 
+.print-page-number {
+
+    display: none;
+
+}
+
+@media print {
+
+    .print-page-number {
+
+        display: block;
+
+        position: fixed;
+
+        bottom: 8mm;
+
+        left: 0;
+
+        right: 0;
+
+        text-align: center;
+
+        font-family:
+            Arial,
+            sans-serif;
+
+        font-size: 8pt;
+
+        color: #888;
+
+    }
+
+    .print-page-number::after {
+
+        content:
+            counter(page);
+
+    }
+
+}
 
 
 /*
@@ -1414,6 +1459,7 @@ type="button">
 
 <div class="print-book">
 
+<div class="print-page-number"></div>
 
 <!-- COVER -->
 
