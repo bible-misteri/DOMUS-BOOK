@@ -41,105 +41,6 @@ export default class ExportPage extends Page {
 
     }
 
-/*
-====================================================
-ROMAN NUMERAL
-====================================================
-*/
-
-toRoman(number) {
-
-    const values = [
-        [1000, "M"],
-        [900, "CM"],
-        [500, "D"],
-        [400, "CD"],
-        [100, "C"],
-        [90, "XC"],
-        [50, "L"],
-        [40, "XL"],
-        [10, "X"],
-        [9, "IX"],
-        [5, "V"],
-        [4, "IV"],
-        [1, "I"]
-    ];
-
-    let result = "";
-
-    let value = Number(number);
-
-    for (const [arabic, roman] of values) {
-
-        while (value >= arabic) {
-
-            result += roman;
-
-            value -= arabic;
-
-        }
-
-    }
-
-    return result.toLowerCase();
-
-}
-
-/*
-====================================================
-PAGE NUMBER
-====================================================
-*/
-
-formatPageNumber(number, section) {
-
-    /*
-    --------------------------------------------
-    FRONT MATTER
-    --------------------------------------------
-    */
-
-    if (section === "front") {
-
-        return this.toRoman(number);
-
-    }
-
-
-    /*
-    --------------------------------------------
-    MAIN MATTER
-    --------------------------------------------
-    */
-
-    return String(number);
-
-}
-
-/*
-====================================================
-PAGE LABEL
-====================================================
-*/
-
-getPageLabel(pageNumber, section = "main", showNumber = true) {
-
-    if (!showNumber) {
-
-        return "";
-
-    }
-
-    if (section === "front") {
-
-        return this.toRoman(pageNumber);
-
-    }
-
-    return String(pageNumber);
-
-}
-
 
     /*
     ====================================================
@@ -1011,8 +912,10 @@ NOMOR HALAMAN
 
     }
 
-    .print-page-number {
+    .print-page-number::after {
 
+        content:
+            counter(page);
 
     }
 
