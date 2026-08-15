@@ -912,13 +912,6 @@ NOMOR HALAMAN
 
     }
 
-    .print-page-number::after {
-
-        content:
-            counter(page);
-
-    }
-
 }
 
 
