@@ -43,7 +43,7 @@ export default class ExportPage extends Page {
 
 /*
 ====================================================
-DOMUS PAGINATION ENGINE
+ROMAN NUMERAL
 ====================================================
 */
 
@@ -65,9 +65,9 @@ toRoman(number) {
         [1, "I"]
     ];
 
-    let value = Number(number);
-
     let result = "";
+
+    let value = Number(number);
 
     for (const [arabic, roman] of values) {
 
@@ -85,14 +85,19 @@ toRoman(number) {
 
 }
 
-
 /*
 ====================================================
-FORMAT PAGE NUMBER
+PAGE NUMBER
 ====================================================
 */
 
-formatPageNumber(number, section = "main") {
+formatPageNumber(number, section) {
+
+    /*
+    --------------------------------------------
+    FRONT MATTER
+    --------------------------------------------
+    */
 
     if (section === "front") {
 
@@ -100,10 +105,16 @@ formatPageNumber(number, section = "main") {
 
     }
 
+
+    /*
+    --------------------------------------------
+    MAIN MATTER
+    --------------------------------------------
+    */
+
     return String(number);
 
 }
-
 
 /*
 ====================================================
@@ -111,11 +122,7 @@ PAGE LABEL
 ====================================================
 */
 
-getPageLabel(
-    number,
-    section = "main",
-    showNumber = true
-) {
+getPageLabel(pageNumber, section = "main", showNumber = true) {
 
     if (!showNumber) {
 
@@ -123,40 +130,37 @@ getPageLabel(
 
     }
 
-    return this.formatPageNumber(
-        number,
-        section
-    );
+    if (section === "front") {
+
+        return this.toRoman(pageNumber);
+
+    }
+
+    return String(pageNumber);
 
 }
 
 
 /*
 ====================================================
-CREATE PAGE NUMBER
+CREATE PAGE NUMBER ELEMENT
 ====================================================
 */
 
-createPageNumber(
-    number,
-    section = "main",
-    showNumber = true
-) {
+createPageNumber(pageNumber, section = "main", showNumber = true) {
 
     const label =
         this.getPageLabel(
-            number,
+            pageNumber,
             section,
             showNumber
         );
-
 
     if (!label) {
 
         return "";
 
     }
-
 
     return `
 
@@ -167,6 +171,60 @@ createPageNumber(
     ${label}
 
 </div>
+
+`;
+
+}
+
+
+/*
+====================================================
+CREATE DOMUS PAGE
+====================================================
+*/
+
+createDomusPage(
+    content = "",
+    section = "main",
+    pageNumber = 1,
+    showNumber = true
+) {
+
+    const pageLabel =
+        this.getPageLabel(
+            pageNumber,
+            section,
+            showNumber
+        );
+
+    return `
+
+<section
+    class="domus-page"
+    data-section="${section}"
+    data-page="${pageNumber}">
+
+    <div class="domus-page-content">
+
+        ${content}
+
+    </div>
+
+    ${
+        pageLabel
+        ? `
+        <div
+            class="print-page-number"
+            aria-hidden="true">
+
+            ${pageLabel}
+
+        </div>
+        `
+        : ""
+    }
+
+</section>
 
 `;
 
@@ -480,9 +538,9 @@ renderContent() {
 
 
     /*
-    -------------------------------------------
+    --------------------------------------------
     DATA BUKU
-    -------------------------------------------
+    --------------------------------------------
     */
 
     const book =
@@ -626,7 +684,7 @@ DOMUS A5 PAGE
 
 /*
 ====================================================
-DOMUS PAGE NUMBER
+PAGE NUMBER
 ====================================================
 */
 
@@ -638,7 +696,7 @@ DOMUS PAGE NUMBER
 
     right: 0;
 
-    bottom: 8mm;
+    bottom: 5mm;
 
     text-align: center;
 
@@ -648,34 +706,9 @@ DOMUS PAGE NUMBER
 
     font-size: 8pt;
 
-    line-height: 1;
-
     color: #888;
 
-}
-
-
-/*
-====================================================
-PRINT PAGE NUMBER
-====================================================
-*/
-
-@media print {
-
-    .print-page-number {
-
-        position: absolute;
-
-        bottom: 5mm;
-
-        left: 0;
-
-        right: 0;
-
-        text-align: center;
-
-    }
+    line-height: 1;
 
 }
 
