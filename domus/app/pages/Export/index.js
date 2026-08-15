@@ -43,7 +43,7 @@ export default class ExportPage extends Page {
 
 /*
 ====================================================
-ROMAN NUMERAL
+DOMUS PAGINATION ENGINE
 ====================================================
 */
 
@@ -65,9 +65,9 @@ toRoman(number) {
         [1, "I"]
     ];
 
-    let result = "";
-
     let value = Number(number);
+
+    let result = "";
 
     for (const [arabic, roman] of values) {
 
@@ -85,19 +85,14 @@ toRoman(number) {
 
 }
 
+
 /*
 ====================================================
-PAGE NUMBER
+FORMAT PAGE NUMBER
 ====================================================
 */
 
-formatPageNumber(number, section) {
-
-    /*
-    --------------------------------------------
-    FRONT MATTER
-    --------------------------------------------
-    */
+formatPageNumber(number, section = "main") {
 
     if (section === "front") {
 
@@ -105,16 +100,10 @@ formatPageNumber(number, section) {
 
     }
 
-
-    /*
-    --------------------------------------------
-    MAIN MATTER
-    --------------------------------------------
-    */
-
     return String(number);
 
 }
+
 
 /*
 ====================================================
@@ -122,7 +111,11 @@ PAGE LABEL
 ====================================================
 */
 
-getPageLabel(pageNumber, section = "main", showNumber = true) {
+getPageLabel(
+    number,
+    section = "main",
+    showNumber = true
+) {
 
     if (!showNumber) {
 
@@ -130,37 +123,40 @@ getPageLabel(pageNumber, section = "main", showNumber = true) {
 
     }
 
-    if (section === "front") {
-
-        return this.toRoman(pageNumber);
-
-    }
-
-    return String(pageNumber);
+    return this.formatPageNumber(
+        number,
+        section
+    );
 
 }
 
 
 /*
 ====================================================
-CREATE PAGE NUMBER ELEMENT
+CREATE PAGE NUMBER
 ====================================================
 */
 
-createPageNumber(pageNumber, section = "main", showNumber = true) {
+createPageNumber(
+    number,
+    section = "main",
+    showNumber = true
+) {
 
     const label =
         this.getPageLabel(
-            pageNumber,
+            number,
             section,
             showNumber
         );
+
 
     if (!label) {
 
         return "";
 
     }
+
 
     return `
 
@@ -171,60 +167,6 @@ createPageNumber(pageNumber, section = "main", showNumber = true) {
     ${label}
 
 </div>
-
-`;
-
-}
-
-
-/*
-====================================================
-CREATE DOMUS PAGE
-====================================================
-*/
-
-createDomusPage(
-    content = "",
-    section = "main",
-    pageNumber = 1,
-    showNumber = true
-) {
-
-    const pageLabel =
-        this.getPageLabel(
-            pageNumber,
-            section,
-            showNumber
-        );
-
-    return `
-
-<section
-    class="domus-page"
-    data-section="${section}"
-    data-page="${pageNumber}">
-
-    <div class="domus-page-content">
-
-        ${content}
-
-    </div>
-
-    ${
-        pageLabel
-        ? `
-        <div
-            class="print-page-number"
-            aria-hidden="true">
-
-            ${pageLabel}
-
-        </div>
-        `
-        : ""
-    }
-
-</section>
 
 `;
 
@@ -684,7 +626,7 @@ DOMUS A5 PAGE
 
 /*
 ====================================================
-PAGE NUMBER
+DOMUS PAGE NUMBER
 ====================================================
 */
 
@@ -696,7 +638,7 @@ PAGE NUMBER
 
     right: 0;
 
-    bottom: 5mm;
+    bottom: 8mm;
 
     text-align: center;
 
@@ -706,9 +648,34 @@ PAGE NUMBER
 
     font-size: 8pt;
 
+    line-height: 1;
+
     color: #888;
 
-    line-height: 1;
+}
+
+
+/*
+====================================================
+PRINT PAGE NUMBER
+====================================================
+*/
+
+@media print {
+
+    .print-page-number {
+
+        position: absolute;
+
+        bottom: 5mm;
+
+        left: 0;
+
+        right: 0;
+
+        text-align: center;
+
+    }
 
 }
 
