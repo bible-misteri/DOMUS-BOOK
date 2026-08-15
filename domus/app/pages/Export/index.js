@@ -1444,11 +1444,11 @@ type="button">
 
 <div class="print-book">
 
-<div class="print-page-number"></div>
-
 <!-- COVER -->
 
 <section class="print-cover">
+
+<div class="print-page-number"></div>
 
 <div class="print-brand">
 
@@ -1496,6 +1496,8 @@ ${title}
 
 <section class="print-copyright">
 
+    <div class="print-page-number"></div>
+
     <div class="copyright-content">
 
         <p class="copyright-brand">
@@ -1536,6 +1538,7 @@ ${title}
 <!-- TABLE OF CONTENTS -->
 
 <section class="print-toc">
+    <div class="print-page-number"></div>
 
 <h2>
 Daftar Isi
@@ -1556,6 +1559,8 @@ ${this.renderChapters()}
 <!-- END -->
 
 <section class="print-end">
+
+    <div class="print-page-number"></div>
 
 DOMUS Framework v1.1
 
