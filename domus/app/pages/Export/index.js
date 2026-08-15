@@ -1285,7 +1285,11 @@ SCREEN
      MAIN MATTER — BAB
 ================================================ -->
 
-${this.document.chapters
+${(
+    Array.isArray(this.document.chapters)
+        ? this.document.chapters
+        : []
+)
     .map((chapter, index) => {
 
         const number =
