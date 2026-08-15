@@ -141,6 +141,96 @@ getPageLabel(pageNumber, section = "main", showNumber = true) {
 }
 
 
+/*
+====================================================
+CREATE PAGE NUMBER ELEMENT
+====================================================
+*/
+
+createPageNumber(pageNumber, section = "main", showNumber = true) {
+
+    const label =
+        this.getPageLabel(
+            pageNumber,
+            section,
+            showNumber
+        );
+
+    if (!label) {
+
+        return "";
+
+    }
+
+    return `
+
+<div
+    class="print-page-number"
+    aria-hidden="true">
+
+    ${label}
+
+</div>
+
+`;
+
+}
+
+
+/*
+====================================================
+CREATE DOMUS PAGE
+====================================================
+*/
+
+createDomusPage(
+    content = "",
+    section = "main",
+    pageNumber = 1,
+    showNumber = true
+) {
+
+    const pageLabel =
+        this.getPageLabel(
+            pageNumber,
+            section,
+            showNumber
+        );
+
+    return `
+
+<section
+    class="domus-page"
+    data-section="${section}"
+    data-page="${pageNumber}">
+
+    <div class="domus-page-content">
+
+        ${content}
+
+    </div>
+
+    ${
+        pageLabel
+        ? `
+        <div
+            class="print-page-number"
+            aria-hidden="true">
+
+            ${pageLabel}
+
+        </div>
+        `
+        : ""
+    }
+
+</section>
+
+`;
+
+}
+
+
     /*
     ====================================================
     LOAD
