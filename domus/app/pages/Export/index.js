@@ -431,6 +431,8 @@ COVER
 
 .print-cover {
 
+    position: relative;
+
     min-height: 900px;
 
     display: flex;
@@ -522,6 +524,8 @@ TITLE PAGE — A5 PROFESSIONAL
 
 .print-title-page {
 
+    position: relative;
+
     min-height: 900px;
 
     display: flex;
@@ -589,6 +593,8 @@ COPYRIGHT PAGE
 */
 
 .print-copyright {
+
+    position: relative;
 
     min-height: 700px;
 
@@ -683,6 +689,8 @@ TABLE OF CONTENTS — A5
 
 .print-toc {
 
+    position: relative;
+
     min-height: 700px;
 
     padding: 70px 55px;
@@ -748,6 +756,8 @@ CHAPTER — A5 BOOK
 */
 
 .print-chapter {
+
+    position: relative;
 
     padding:
 
@@ -880,11 +890,42 @@ NOMOR HALAMAN
 ====================================================
 */
 
+/*
+----------------------------------------------------
+SETIAP BAGIAN BUKU MENJADI CONTAINER
+----------------------------------------------------
+*/
+
+.print-cover,
+.print-title-page,
+.print-copyright,
+.print-toc,
+.print-chapter,
+.print-end {
+
+    position: relative;
+
+}
+
+
+/*
+----------------------------------------------------
+NOMOR HALAMAN — SCREEN
+----------------------------------------------------
+*/
+
 .print-page-number {
 
     display: none;
 
 }
+
+
+/*
+----------------------------------------------------
+NOMOR HALAMAN — PRINT / PDF
+----------------------------------------------------
+*/
 
 @media print {
 
@@ -892,13 +933,13 @@ NOMOR HALAMAN
 
         display: block;
 
-        position: fixed;
-
-        bottom: 5mm;
+        position: absolute;
 
         left: 0;
 
         right: 0;
+
+        bottom: 5mm;
 
         text-align: center;
 
@@ -908,7 +949,15 @@ NOMOR HALAMAN
 
         font-size: 8pt;
 
+        line-height: 1;
+
         color: #888;
+
+        letter-spacing: 0;
+
+        margin: 0;
+
+        padding: 0;
 
     }
 
@@ -922,6 +971,8 @@ END
 */
 
 .print-end {
+
+    position: relative;
 
     text-align: center;
 
@@ -1474,6 +1525,8 @@ ${title}
 
 <section class="print-title-page">
 
+    <div class="print-page-number"></div>
+
     <div class="title-page-spacer"></div>
 
     <h1>
@@ -1578,25 +1631,48 @@ DOMUS Framework v1.1
 
 
     /*
-    ====================================================
-    AFTER RENDER
-    ====================================================
+====================================================
+AFTER RENDER
+====================================================
+*/
+
+afterRender() {
+
+    /*
+    ================================================
+    NOMOR HALAMAN
+    ================================================
     */
 
-    afterRender() {
-
-        const button =
-            this.element.querySelector(
-                "#btnPrintBook"
-            );
+    const pageNumbers =
+        this.element.querySelectorAll(
+            ".print-book .print-page-number"
+        );
 
 
-        if (!button) {
+    pageNumbers.forEach(
+        (page, index) => {
 
-            return;
+            page.textContent =
+                String(index + 1);
 
         }
+    );
 
+
+    /*
+    ================================================
+    TOMBOL CETAK / PDF
+    ================================================
+    */
+
+    const button =
+        this.element.querySelector(
+            "#btnPrintBook"
+        );
+
+
+    if (button) {
 
         button.onclick = () => {
 
@@ -1604,12 +1680,18 @@ DOMUS Framework v1.1
 
         };
 
-
-        console.log(
-            "DOMUS Export v1.1 rendered.",
-            this.document
-        );
-
     }
+
+
+    /*
+    ================================================
+    DEBUG
+    ================================================
+    */
+
+    console.log(
+        "DOMUS Export v1.1 rendered.",
+        this.document
+    );
 
 }
