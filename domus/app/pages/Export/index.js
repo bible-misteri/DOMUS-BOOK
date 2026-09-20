@@ -247,6 +247,8 @@ ${clean.replace(
 
 <section class="print-chapter">
 
+<div class="print-page-number"></div>
+
 <div class="print-chapter-heading">
 
     <div class="print-chapter-number">
@@ -1448,8 +1450,6 @@ type="button">
 
 <section class="print-cover">
 
-<div class="print-page-number"></div>
-
 <div class="print-brand">
 
 DOMUS ISAACI
@@ -1474,6 +1474,8 @@ ${title}
 
 <section class="print-title-page">
 
+    <div class="print-page-number">i</div>
+
     <div class="title-page-spacer"></div>
 
     <h1>
@@ -1496,7 +1498,7 @@ ${title}
 
 <section class="print-copyright">
 
-    <div class="print-page-number"></div>
+    <div class="print-page-number">ii</div>
 
     <div class="copyright-content">
 
@@ -1538,7 +1540,7 @@ ${title}
 <!-- TABLE OF CONTENTS -->
 
 <section class="print-toc">
-    <div class="print-page-number"></div>
+    <div class="print-page-number">iii</div>
 
 <h2>
 Daftar Isi
@@ -1576,6 +1578,56 @@ DOMUS Framework v1.1
 
     }
 
+        /*
+    ====================================================
+    PAGE NUMBERS
+    ====================================================
+    */
+
+    applyPageNumbers() {
+
+        const frontMatter =
+            this.element.querySelectorAll(
+                ".print-title-page .print-page-number, " +
+                ".print-copyright .print-page-number, " +
+                ".print-toc .print-page-number"
+            );
+
+
+        const romanNumbers = [
+            "i",
+            "ii",
+            "iii"
+        ];
+
+
+        frontMatter.forEach(
+            (element, index) => {
+
+                element.textContent =
+                    romanNumbers[index] || "";
+
+            }
+        );
+
+
+        const chapters =
+            this.element.querySelectorAll(
+                ".print-chapter .print-page-number"
+            );
+
+
+        chapters.forEach(
+            (element, index) => {
+
+                element.textContent =
+                    String(index + 1);
+
+            }
+        );
+
+    }
+
 
     /*
     ====================================================
@@ -1603,6 +1655,8 @@ DOMUS Framework v1.1
             window.print();
 
         };
+
+        this.applyPageNumbers();
 
 
         console.log(
