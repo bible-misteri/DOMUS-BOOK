@@ -927,42 +927,6 @@ NOMOR HALAMAN — PRINT / PDF
 ----------------------------------------------------
 */
 
-@media print {
-
-    .print-page-number {
-
-        display: block;
-
-        position: absolute;
-
-        left: 0;
-
-        right: 0;
-
-        bottom: 5mm;
-
-        text-align: center;
-
-        font-family:
-            Arial,
-            sans-serif;
-
-        font-size: 8pt;
-
-        line-height: 1;
-
-        color: #888;
-
-        letter-spacing: 0;
-
-        margin: 0;
-
-        padding: 0;
-
-    }
-
-}
-
 
 /*
 ====================================================
