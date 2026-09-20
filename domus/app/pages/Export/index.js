@@ -1630,7 +1630,7 @@ DOMUS Framework v1.1
     }
 
 
-    /*
+/*
 ====================================================
 AFTER RENDER
 ====================================================
@@ -1638,26 +1638,17 @@ AFTER RENDER
 
 afterRender() {
 
-    /*
-    ================================================
-    NOMOR HALAMAN
-    ================================================
-    */
+/*
+====================================================
+NOMOR HALAMAN
+====================================================
+*/
 
-    const pageNumbers =
-        this.element.querySelectorAll(
-            ".print-book .print-page-number"
-        );
+.print-page-number {
 
+    display: none;
 
-    pageNumbers.forEach(
-        (page, index) => {
-
-            page.textContent =
-                String(index + 1);
-
-        }
-    );
+}
 
 
     /*
