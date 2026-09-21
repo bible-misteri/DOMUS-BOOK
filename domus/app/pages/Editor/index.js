@@ -10,6 +10,12 @@ import Router from "../../core/Router.js";
 import BookService from "../../services/BookService.js";
 import ChapterService from "../../services/ChapterService.js";
 
+import AIEditorPanel
+    from "../../components/editor/AIEditorPanel.js";
+
+import AIService
+    from "../../services/AIService.js";
+
 
 export default class EditorPage extends Page {
 
@@ -430,6 +436,11 @@ Tersimpan
 
 </div>
 
+<div
+id="domus-ai-container"
+class="domus-ai-container">
+
+</div>
 
 </section>
 
@@ -442,6 +453,149 @@ Tersimpan
 `;
 
     }
+
+/*
+====================================================
+DOMUS AI ACTION
+====================================================
+*/
+
+async handleAIAction(action) {
+
+    const editor =
+        this.element.querySelector(
+            "#editor"
+        );
+
+    if (!editor) {
+
+        return;
+
+    }
+
+    const text =
+        editor.value.trim();
+
+    if (!text) {
+
+        if (this.aiPanel) {
+
+            this.aiPanel.showError(
+                "Tuliskan isi bab terlebih dahulu."
+            );
+
+        }
+
+        return;
+
+    }
+
+    if (this.aiPanel) {
+
+        this.aiPanel.showLoading();
+
+    }
+
+    try {
+
+        let result = "";
+
+        const context = {
+
+            book: this.book,
+            chapter: this.chapter,
+
+            chapterTitle:
+                this.chapter.title,
+
+            chapterContent:
+                text
+
+        };
+
+
+        switch (action) {
+
+            case "improve":
+
+                result =
+                    await AIService.improve(
+                        text,
+                        context
+                    );
+
+                break;
+
+
+            case "expand":
+
+                result =
+                    await AIService.expand(
+                        text,
+                        context
+                    );
+
+                break;
+
+
+            case "summarize":
+
+                result =
+                    await AIService.summarize(
+                        text,
+                        context
+                    );
+
+                break;
+
+
+            case "analyze":
+
+                result =
+                    await AIService.analyze(
+                        text,
+                        context
+                    );
+
+                break;
+
+
+            default:
+
+                throw new Error(
+                    "Perintah AI tidak dikenal."
+                );
+
+        }
+
+
+        if (this.aiPanel) {
+
+            this.aiPanel.showResult(
+                result
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "DOMUS AI:",
+            error
+        );
+
+        if (this.aiPanel) {
+
+            this.aiPanel.showError(
+                error.message ||
+                "DOMUS AI belum tersedia."
+            );
+
+        }
+
+    }
+
+}
 
 
     /*
@@ -495,6 +649,42 @@ Tersimpan
             return;
 
         }
+
+/*
+====================================================
+DOMUS AI PANEL
+====================================================
+*/
+
+const aiContainer =
+    this.element.querySelector(
+        "#domus-ai-container"
+    );
+
+if (aiContainer) {
+
+    const aiPanel =
+        new AIEditorPanel({
+
+            onAction:
+                (action) => {
+
+                    this.handleAIAction(
+                        action
+                    );
+
+                }
+
+        });
+
+    aiPanel.mount(
+        aiContainer
+    );
+
+    this.aiPanel =
+        aiPanel;
+
+}
 
 
         /*
