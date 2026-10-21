@@ -1,8 +1,8 @@
-
+ 
 /*
 ====================================================
 DOMUS Books Page
-Create Book + Cover Image
+Create Book + Cover Image + Delete Book
 ====================================================
 */
 
@@ -35,7 +35,8 @@ export default class BooksPage extends Page {
 
     renderContent() {
         return `
-<section class="domus-books" style="max-width:1000px;margin:auto;padding:20px">
+<section class="domus-books"
+    style="max-width:1000px;margin:auto;padding:20px">
 
     <h1>Buku Saya</h1>
     <p>Kelola buku, identitas penulis, dan sampul Anda.</p>
@@ -47,8 +48,7 @@ export default class BooksPage extends Page {
         + Buat Buku Baru
     </button>
 
-    <div
-        id="newBookForm"
+    <div id="newBookForm"
         style="display:none;margin-top:24px;padding:20px;
         border:1px solid #ddd;border-radius:12px">
 
@@ -99,8 +99,7 @@ export default class BooksPage extends Page {
                 accept="image/jpeg,image/png,image/webp"
                 style="display:block;max-width:100%;margin:10px 0">
 
-            <div
-                id="coverPreviewBox"
+            <div id="coverPreviewBox"
                 style="display:none;margin:16px 0">
 
                 <p><strong>Pratinjau Sampul</strong></p>
@@ -112,15 +111,15 @@ export default class BooksPage extends Page {
                     object-fit:contain;border:1px solid #ddd;
                     border-radius:6px">
 
-                <button
-                    id="removeCover"
+                <button id="removeCover"
                     type="button"
                     style="margin-top:8px">
                     Hapus Gambar
                 </button>
             </div>
 
-            <p id="coverStatus" role="status" style="font-size:14px"></p>
+            <p id="coverStatus" role="status"
+                style="font-size:14px"></p>
 
             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
                 <button
@@ -137,7 +136,6 @@ export default class BooksPage extends Page {
                     Batal
                 </button>
             </div>
-
         </form>
     </div>
 
@@ -161,19 +159,24 @@ export default class BooksPage extends Page {
             const subtitle = this.escapeHTML(book.subtitle || "");
             const author = this.escapeHTML(book.author || "");
             const description = this.escapeHTML(book.description || "");
-            const cover = typeof book.coverImage === "string"
-                && book.coverImage.startsWith("data:image/")
-                ? book.coverImage
-                : "";
+            const id = this.escapeHTML(book.id || "");
+
+            const cover =
+                typeof book.coverImage === "string" &&
+                book.coverImage.startsWith("data:image/")
+                    ? book.coverImage
+                    : "";
 
             return `
 <div
     class="domus-card domus-book"
-    data-id="${this.escapeHTML(book.id)}"
+    data-id="${id}"
     tabindex="0"
     role="button"
+    aria-label="Buka buku ${title}"
     style="display:flex;gap:16px;align-items:flex-start;
-    padding:16px;margin:16px 0;cursor:pointer">
+    padding:16px;margin:16px 0;cursor:pointer;
+    border:1px solid #ddd;border-radius:10px">
 
     ${cover ? `
         <img
@@ -192,12 +195,27 @@ export default class BooksPage extends Page {
         </div>
     `}
 
-    <div style="min-width:0">
+    <div style="min-width:0;flex:1">
         <h3>${title}</h3>
+
         ${subtitle ? `<p>${subtitle}</p>` : ""}
         ${author ? `<p>Penulis: ${author}</p>` : ""}
         ${description ? `<p>${description}</p>` : ""}
+
         <small>Buka buku untuk melanjutkan penulisan.</small>
+
+        <div style="margin-top:16px">
+            <button
+                type="button"
+                class="btn-delete-book"
+                data-id="${id}"
+                aria-label="Hapus buku ${title}"
+                style="padding:8px 14px;border:1px solid #b42318;
+                border-radius:6px;background:#fff;color:#b42318;
+                cursor:pointer">
+                Hapus Buku
+            </button>
+        </div>
     </div>
 </div>
 `;
@@ -206,6 +224,7 @@ export default class BooksPage extends Page {
 
     afterRender() {
         const root = this.element;
+
         const newButton = root.querySelector("#btnNewBook");
         const formPanel = root.querySelector("#newBookForm");
         const form = root.querySelector("#bookForm");
@@ -217,6 +236,8 @@ export default class BooksPage extends Page {
         const preview = root.querySelector("#coverPreview");
         const status = root.querySelector("#coverStatus");
         const saveButton = root.querySelector("#btnSaveBook");
+        const cancelButton = root.querySelector("#btnCancelBook");
+        const removeCoverButton = root.querySelector("#removeCover");
 
         if (!newButton || !formPanel || !form) return;
 
@@ -233,13 +254,13 @@ export default class BooksPage extends Page {
             titleInput.focus();
         };
 
-        root.querySelector("#btnCancelBook").onclick = () => {
+        cancelButton.onclick = () => {
             form.reset();
             resetCover();
             formPanel.style.display = "none";
         };
 
-        root.querySelector("#removeCover").onclick = resetCover;
+        removeCoverButton.onclick = resetCover;
 
         coverInput.onchange = async () => {
             resetCover();
@@ -263,6 +284,7 @@ export default class BooksPage extends Page {
 
             try {
                 const data = await this.compressCover(file);
+
                 this.coverData = data;
                 preview.src = data;
                 previewBox.style.display = "block";
@@ -270,7 +292,8 @@ export default class BooksPage extends Page {
             } catch (error) {
                 console.error("DOMUS cover error:", error);
                 resetCover();
-                status.textContent = "Gambar tidak dapat diproses. Coba gambar lain.";
+                status.textContent =
+                    "Gambar tidak dapat diproses. Coba gambar lain.";
             }
         };
 
@@ -306,12 +329,16 @@ export default class BooksPage extends Page {
                 await Router.go("editor");
             } catch (error) {
                 console.error("DOMUS create book error:", error);
-                alert("Buku gagal dibuat. Periksa ruang penyimpanan browser.");
+                alert(
+                    "Buku gagal dibuat. Periksa ruang penyimpanan browser."
+                );
+
                 saveButton.disabled = false;
                 saveButton.textContent = "Simpan dan Buka Editor";
             }
         };
 
+        // Buka Editor saat kartu buku diklik.
         root.querySelectorAll(".domus-book").forEach(card => {
             const openBook = async () => {
                 const book = this.books.find(
@@ -327,9 +354,65 @@ export default class BooksPage extends Page {
             card.onclick = openBook;
 
             card.onkeydown = event => {
+                if (event.target !== card) return;
+
                 if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
                     openBook();
+                }
+            };
+        });
+
+        // Hapus buku dengan konfirmasi.
+        root.querySelectorAll(".btn-delete-book").forEach(button => {
+            button.onclick = event => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const id = button.dataset.id;
+                const book = this.books.find(item => item.id === id);
+
+                if (!book) {
+                    alert("Buku tidak ditemukan. Muat ulang halaman.");
+                    return;
+                }
+
+                const confirmed = confirm(
+                    `Apakah Anda yakin ingin menghapus buku "${book.title || "Tanpa Judul"}"?\n\n` +
+                    "Data buku ini akan dihapus dari DOMUS Studio. " +
+                    "Pastikan Anda tidak lagi memerlukannya."
+                );
+
+                if (!confirmed) return;
+
+                try {
+                    const activeBook = BookService.getActive();
+
+                    // Hapus buku dari daftar dan penyimpanan.
+                    BookService.remove(id);
+
+                    // Bersihkan status aktif jika buku yang dihapus sedang aktif.
+                    if (activeBook?.id === id) {
+                        BookService.setActive(null);
+                    }
+
+                    // Perbarui daftar tanpa memuat ulang seluruh halaman.
+                    this.books = BookService.getAll();
+
+                    const list = root.querySelector("#bookList");
+
+                    if (list) {
+                        list.innerHTML = this.renderBooks();
+                    }
+
+                    // Pasang kembali event untuk kartu dan tombol yang tersisa.
+                    this.afterRender();
+
+                } catch (error) {
+                    console.error("DOMUS delete book error:", error);
+                    alert(
+                        "Buku gagal dihapus. Silakan muat ulang halaman dan coba lagi."
+                    );
                 }
             };
         });
@@ -344,11 +427,13 @@ export default class BooksPage extends Page {
             reader.onload = () => {
                 const image = new Image();
 
-                image.onerror = () => reject(new Error("File bukan gambar valid"));
+                image.onerror = () =>
+                    reject(new Error("File bukan gambar valid"));
 
                 image.onload = () => {
                     const maxWidth = 600;
                     const maxHeight = 900;
+
                     const scale = Math.min(
                         1,
                         maxWidth / image.width,
@@ -356,8 +441,16 @@ export default class BooksPage extends Page {
                     );
 
                     const canvas = document.createElement("canvas");
-                    canvas.width = Math.max(1, Math.round(image.width * scale));
-                    canvas.height = Math.max(1, Math.round(image.height * scale));
+
+                    canvas.width = Math.max(
+                        1,
+                        Math.round(image.width * scale)
+                    );
+
+                    canvas.height = Math.max(
+                        1,
+                        Math.round(image.height * scale)
+                    );
 
                     const context = canvas.getContext("2d");
 
@@ -368,7 +461,14 @@ export default class BooksPage extends Page {
 
                     context.fillStyle = "#ffffff";
                     context.fillRect(0, 0, canvas.width, canvas.height);
-                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+                    context.drawImage(
+                        image,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
 
                     resolve(canvas.toDataURL("image/jpeg", 0.72));
                 };
@@ -380,4 +480,3 @@ export default class BooksPage extends Page {
         });
     }
 }
- 
